@@ -476,6 +476,7 @@ var page4 = $('#page4');
 var curPage = page1;
 var address = 'http://activity.bb.bbwc.cn/html/iBBSepShare/';
 var newArr = [];
+var sendFlag = true;
 function isInArr (index) {
 	var i =0, l = newArr.length;
 	for(; i < l; i++) {
@@ -547,6 +548,9 @@ $(function(){
 		if(!content){
 			return;
 		}
+		if(sendFlag === false)
+			return false;
+		sendFlag = false;
 		$.ajax({
 		  type: 'POST',
 		  url: 'http://activity.bb.bbwc.cn/mail/send',//
