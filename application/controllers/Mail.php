@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * filname      Mail.php
+ * author       jinxin
+ * Description  Description of Mail
+ * Date         2014-9-26 17:28:30
+ */
+
+/**
+ * Description of Mail
+ *
+ * @author jinxin
+ */
+class MailController extends BaseController {
+	public $model;
+	public function init() {
+		parent::init();
+		$this->model = new snModel();
+	}
+	public function sendAction(){
+		$postdata = $this->getparams();
+		if(empty($postdata['to'])){
+			echo json_encode($this->error($postdata));return;
+		}
+		if(empty($postdata['from'])){
+			echo json_encode($this->error($postdata));return;
+		}
+		if(empty($postdata['toName'])){
+			echo json_encode($this->error($postdata));return;
+		}
+		if(empty($postdata['content'])){
+			echo json_encode($this->error($postdata));return;
+		}
+		$sn = $this->model->getSn(5184000);
+		$third = $this->model->getThirdSn('GeWaLa');
+		$this->model->updateSnStatus($sn['id'],3);
+		$this->model->updateSnStatus($third['id'],2);
+		$html = $this->render('Mail/ibb_9_share.twig',array(
+			'to'=>$postdata['toName'],
+			'from'=>$postdata['from'],
+			'thumb'=>$postdata['thumb'],
+			'token'=> base64_encode($third['id'].'_'.md5($third['id'].$third['sn'])),
+			'sn'=>$sn['num'],
+			'contents'=>$postdata['content']));
+		$mailData = array(
+			'to'=>$postdata['to'],
+			'from'=>'noreply@bbwc.cn',
+			'fromname'=>$postdata['from'],
+			'subject'=>"送你一张商周电子卡片！",
+			'contents'=>$html
+		);
+		$ret = $this->getHttpResponse($this->mailApi.'/api/customSend',$mailData);
+//		echo $this->mailApi.'/api/customSend';
+		echo json_encode($ret);
+		return;
+	}
+	public function testTplAction(){
+//		$this->display('Mail/ibb_9_share.twig');
+		$sn = $this->model->getSn(5184000);
+		$third = $this->model->getThirdSn('GeWaLa');
+		echo $third['id'].'_'.md5($third['id'].$third['sn']);
+		echo $this->render('Mail/ibb_9_share.twig',array(
+			'to'=>'sdfsfs',
+			'from'=>'jinxin',
+			'thumb'=>'http://debug.bbwc.cn/jinxin/yaf_active/public/html/iBBSepShare/images/src/friend/1.png',
+			'token'=> base64_encode($third['id'].'_'.md5($third['id'].$third['sn'])),
+			'sn'=>$sn['num'],
+			'contents'=>'六十多家发上来稍等发了开始'));
+	}
+}

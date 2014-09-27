@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="apple-touch-fullscreen" content="YES" />
+  <meta name="HandheldFriendly" content="true">
+ <title>商周智趣卡片分享</title>
+ <meta name="keywords" content="" />
+ <meta name="description" content="" />
+ <meta name="apple-mobile-web-app-capable" content="yes" />
+ <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+ <meta name="format-detection" content="telephone=no">
+ <link href="css/index.css?v=1.0" rel="stylesheet"/>			
+</head>
+<body>
+<!-- 首屏-->
+<div class="container" id="page1" style="display:block">
+</div>
+
+<!-- Step1. 点击选择一张卡片-->
+<div class="container" id="page2" style="display:none">
+	<h1><span>Step1. </span>点击选择一张卡片</h1>
+	<div class="box" id="ul1">
+		<ul class="ul ">
+			
+		</ul>
+		<div class="navdot" id="dot1">
+			
+		</div>
+	</div>
+	
+	<div class="box" id="ul2" style="display:none">
+		<ul class="ul ">
+		</ul>
+		<div class="navdot" id="dot2">
+		</div>
+	</div>
+	
+	<div class="box" id="ul3" style="display:none">
+		<ul class="ul ">
+			
+		</ul>
+		<div class="navdot" id="dot3">	
+		</div>
+	</div>
+	
+	<div class="box" id="ul4" style="display:none">
+		<ul class="ul ">
+		</ul>
+		<div class="navdot" id="dot4">
+		</div>
+	</div>
+	<div class="nav">
+		<div class="col">
+		<a href="#" index="1" class="on">朋友</a>
+		<a href="#" index="2">家人</a>
+		<a href="#" index="3">恋人</a>
+		<a href="#" index="4">自己</a>
+		</div>
+	</div>
+</div>
+
+<!-- Step2. 填写信息 发送卡片-->
+<div class="container" id="page3" style="display:none">
+ <h1><span>Step2. </span>填写信息 发送卡片</h1>
+ <div class="box">
+    <div class="img">
+	<img src="" />
+	</div>
+ </div>
+ <div class="form" id="form">
+	<div class="z"><div class="zoom"></div></div>
+	<dl>
+		<dt>From</dt>
+		<dd><input type="text" id="mailFrom" name="form" required placeholder="你的姓名"></dd>
+	</dl>
+	<dl>
+		<dt>to</dt>
+		<dd><input type="text" id="mailSend" name="to" required placeholder="收信人的姓名"></dd>
+	</dl>
+	<dl class="isshow">
+		<dt></dt>
+		<dd><input type="text" id="mailTo" required placeholder="收信人的邮箱"></dd>
+	</dl>
+	<div  class="tbox isshow">
+		<textarea id="mailContent" required placeholder="你想对他说"></textarea>
+	</div>
+	<div class="bbox isshow">
+		<a href="#" class="btn1">再看看</a>
+		<a href="#" class="btn2">发送</a>
+	</div>
+ </div>
+</div>
+
+<!--成功页-->
+<div class="container" id="page4" style="display:none">
+  <h1 class="success"></h1>
+  <div class="box"><img src="img/aa1.png" /></div>
+  <div class="btnbox"><a href="#" class="return">再发一封</a></div>
+</div>
+
+
+<script src="js/lib.min.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>

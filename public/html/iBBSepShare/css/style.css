@@ -1,0 +1,30 @@
+body,h1,h2,h3,h4,h5,h6,dl,dt,dd,ul,ol,li,th,td,p,form,input,button,textarea,hr,article,footer,header,menu,nav,section{margin:0;padding:0}
+body{margin:0;color:#fff;font:normal 16px/1.5 "Microsoft Yahei","Helvetica Neue",Helvetica,Arial,STHeiTi,sans-serif;-webkit-tap-highlight-color:transparent;-webkit-tap-highlight-color:transparent;}
+div {width:1024px;margin: 0 auto;}
+.code{
+	padding-left:24px;
+	height:133px;
+	font-size: 51px;
+	line-height:133px;
+	font-weight:bold;
+	color: rgb( 36, 81, 104 );
+	text-align: left;
+	width:1000px;
+	background:url(../img/code.jpg) no-repeat;
+}
+.p1 {
+	background:url(../img/p1.jpg) no-repeat;
+	height:310px;
+}
+.p2 {
+	background:url(../img/p2.jpg) no-repeat;
+	height:478px;
+}
+.p3 {
+	background:url(../img/p3.jpg) no-repeat;
+	height:720px;
+}
+.p4 {
+	background:url(../img/p4.jpg) no-repeat;
+	height:300px;
+}
