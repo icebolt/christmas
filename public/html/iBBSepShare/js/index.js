@@ -604,7 +604,7 @@ document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
           "img_width": "640",
           "img_height": "640",
           "link": 'http://activity.bb.bbwc.cn/html/iBBSepShare/',
-          "title": "HOW TO BEAT？不破不立！选送一张智趣卡片，享受彭博商业周刊APP免费畅读！",
+          "title": "选送一张智趣卡片，享受彭博商业周刊APP免费畅读！",
           "desc": "选送一张智趣卡片，享受彭博商业周刊APP免费畅读！"
       }, function (res) {
           // 回调
@@ -619,7 +619,7 @@ document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
           "img_height": "640",
           "link": 'http://activity.bb.bbwc.cn/html/iBBSepShare/',
           "desc": "选送一张智趣卡片，享受彭博商业周刊APP免费畅读！",
-          "title": "HOW TO BEAT？不破不立！选送一张智趣卡片，享受彭博商业周刊APP免费畅读！"
+          "title": "选送一张智趣卡片，享受彭博商业周刊APP免费畅读！"
       }, function (res) {
           // 回调
       });
