@@ -571,6 +571,7 @@ $(function(){
 				curPage = page4;
 				page4.find('img').attr('src', newsrc);
 				curPage.css('display', 'block');
+				sendFlag = true;
 			} else {
 				
 			}
