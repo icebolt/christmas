@@ -30,7 +30,7 @@ class ThirdController extends BaseController {
 			return $this->displayError('wrong token');
 		if($snRow['used'] == 1)
 			return $this->displayError("{$snRow['sn']} has been used");
-		$this->model->updateSnStatus($snId,1);
+		$this->model->updateThirdSnStatus($snId,1);
 		$this->display("{$snRow['type']}/ibb_9_gewala.twig",array('sn'=>$snRow['sn']));
 	}
 }
