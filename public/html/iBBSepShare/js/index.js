@@ -486,6 +486,21 @@ function isInArr (index) {
 	}
 	return true;
 }
+//判断android设备
+function isAndroid(){
+    var u = navigator.userAgent;
+    if(u.indexOf('Android') > -1 || u.indexOf('Linux') > -1){
+      return true;
+    }
+}
+
+//判断是否为微信浏览器
+function isWeiXin(){
+    var ua = window.navigator.userAgent.toLowerCase(); 
+    if(ua.match(/MicroMessenger/i) == 'micromessenger'){ 
+      return true; 
+    }
+}
 $(function(){
 	
 	var h = winH(), form = $('#form'), zoom = form.find('.zoom'), 
@@ -582,8 +597,47 @@ $(function(){
 		});
 	});
 	//con.css('height', h+"px");
+	var f = $("#mailFrom"), t = $("#mailSend"), smallh, resizeFlag = false;
+	var zoomBtn = new Zoom(form, zoom.closest('.z'), conB);
+	if(isAndroid() && isWeiXin()) {
+		f.focus(function(e){
+			resizeFlag = true;
+			zoomBtn.flag = true;
+			form.css("bottom", -conB+"px");
+		});
+		t.focus(function(e){
+		   resizeFlag = true;
+		   zoomBtn.flag = true;
+		   form.css("bottom", -conB+"px");
+		});
+		f.blur(function(e){
+			zoomBtn.flag = false;
+			resizeFlag = false;
+			form.css("bottom", 0);
+		});
+		t.blur(function(e){
+			zoomBtn.flag = false;
+			resizeFlag = false;
+			form.css("bottom", 0);
+		});
+	  window.onresize = function() {
+		setTimeout(function(){
+			if(!resizeFlag) {
+				return;
+			}
+			smallh = winH();
+			if(smallh < h) {
+				zoomBtn.flag = true;
+				form.css("bottom", -conB+"px");
+			} else {
+				zoomBtn.flag = false;
+				resizeFlag = false;
+				form.css("bottom", 0);
+			}
+		}, 100);
+	  }
+	}
 	form.css('height', conH+'px');
-	new Zoom(form, zoom.closest('.z'), conB);
 	//page4
 	page4.find('.return').on(click, function(e){
 		e.preventDefault();
