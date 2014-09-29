@@ -34,8 +34,6 @@ class MailController extends BaseController {
 		}
 		$sn = $this->model->getSn(5184000);
 		$third = $this->model->getThirdSn('GeWaLa');
-		$this->model->updateSnStatus($sn['id'],3);
-		$this->model->updateSnStatus($third['id'],2);
 		$html = $this->render('Mail/ibb_9_share.twig',array(
 			'to'=>$postdata['toName'],
 			'from'=>$postdata['from'],
@@ -52,6 +50,11 @@ class MailController extends BaseController {
 		);
 		$ret = $this->getHttpResponse($this->mailApi.'/api/customSend',$mailData);
 //		echo $this->mailApi.'/api/customSend';
+		if($ret['status'] == 'success' && $ret['data']['message'] == 'success'){
+			$this->model->updateSnStatus($sn['id'],3);
+			$this->model->updateThirdSnStatus($third['id'],2);
+			$this->model->addLog(array('userid'=>uniqid(),'sn'=>$sn['num'],'time'=>$_SERVER['REQUEST_TIME']));
+		}
 		echo json_encode($ret);
 		return;
 	}

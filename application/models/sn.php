@@ -38,4 +38,8 @@ class snModel extends baseModel {
 		$row = $this->db->getRow($sql);
 		return $row;
 	}
+	
+	public function addLog($data){
+		$this->db->insert('getsn_log',$data);
+	}
 }
