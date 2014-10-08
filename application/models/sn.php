@@ -40,6 +40,7 @@ class snModel extends baseModel {
 	}
 	
 	public function addLog($data){
-		$this->db->insert('getsn_log',$data);
+		$id = $this->db->insert('getsn_log',$data);
+		return $id;
 	}
 }

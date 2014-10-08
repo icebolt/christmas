@@ -25,6 +25,8 @@ class ThirdController extends BaseController {
 			return $this->displayError('no token');
 		$tokenStr = base64_decode($token);
 		list($snId,$key) = explode('_', $tokenStr);
+		if(empty($snId))
+			return $this->displayError('wrong id');
 		$snRow = $this->model->getThirdSnById($snId);
 		if(empty($snRow) || $key != md5($snRow['id'].$snRow['sn']))
 			return $this->displayError('wrong token');

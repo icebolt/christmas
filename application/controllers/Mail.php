@@ -34,13 +34,15 @@ class MailController extends BaseController {
 		}
 		$sn = $this->model->getSn(5184000);
 		$third = $this->model->getThirdSn('GeWaLa');
-		$html = $this->render('Mail/ibb_9_share.twig',array(
+		$renderData = array(
 			'to'=>$postdata['toName'],
 			'from'=>$postdata['from'],
 			'thumb'=>$postdata['thumb'],
-			'token'=> base64_encode($third['id'].'_'.md5($third['id'].$third['sn'])),
 			'sn'=>$sn['num'],
-			'contents'=>$postdata['content']));
+			'contents'=>$postdata['content']);
+		if(!empty($third))
+			$renderData['token'] = base64_encode($third['id'].'_'.md5($third['id'].$third['sn']));
+		$html = $this->render('Mail/ibb_9_share.twig',$renderData);
 		$mailData = array(
 			'to'=>$postdata['to'],
 			'from'=>'noreply@bbwc.cn',
@@ -52,7 +54,8 @@ class MailController extends BaseController {
 //		echo $this->mailApi.'/api/customSend';
 		if($ret['status'] == 'success' && $ret['data']['message'] == 'success'){
 			$this->model->updateSnStatus($sn['id'],3);
-			$this->model->updateThirdSnStatus($third['id'],2);
+			if($third)
+				$this->model->updateThirdSnStatus($third['id'],2);
 			$this->model->addLog(array('userid'=>uniqid(),'sn'=>$sn['num'],'time'=>$_SERVER['REQUEST_TIME']));
 		}
 		echo json_encode($ret);
@@ -63,6 +66,7 @@ class MailController extends BaseController {
 		$sn = $this->model->getSn(5184000);
 		$third = $this->model->getThirdSn('GeWaLa');
 		echo $third['id'].'_'.md5($third['id'].$third['sn']);
+		$this->model->addLog(array('userid'=>uniqid(),'sn'=>$sn['num'],'time'=>$_SERVER['REQUEST_TIME']));
 		echo $this->render('Mail/ibb_9_share.twig',array(
 			'to'=>'sdfsfs',
 			'from'=>'jinxin',
