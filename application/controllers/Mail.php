@@ -52,7 +52,7 @@ class MailController extends BaseController {
 		);
 		$ret = $this->getHttpResponse($this->mailApi.'/api/customSend',$mailData);
 //		echo $this->mailApi.'/api/customSend';
-		if($ret['status'] == 'success' && $ret['data']['message'] == 'success'){
+		if($ret['status'] == 'success' && $ret['data']['data']['message'] == 'success'){
 			$this->model->updateSnStatus($sn['id'],3);
 			if($third)
 				$this->model->updateThirdSnStatus($third['id'],2);

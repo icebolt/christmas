@@ -35,5 +35,28 @@ class ThirdController extends BaseController {
 		$this->model->updateThirdSnStatus($snId,1);
 		$this->display("{$snRow['type']}/ibb_9_gewala.twig",array('sn'=>$snRow['sn']));
 	}
+	
+	public function importAction(){
+		if(!$this->is_post()){
+			echo '<form method="POST">';
+			echo '<p><input type="text" name="type" placeholder="type"/></p>';
+			echo '<p><textarea name="str" placeholder="sn"></textarea></p>';
+			echo '<p><input type="submit" value="submit"/></p>';
+			echo '</form>';
+			return false;
+		}
+		$str = trim($this->getParam('str',''));
+		$type = trim($this->getParam('type'));
+		$snArr = explode("\n", $str);
+		$valArr = array();
+		foreach($snArr as $row){
+			$sn = trim($row);
+			if(!empty($sn) && !empty($type))
+				$valArr[] = "('{$type}','{$sn}',{$_SERVER['REQUEST_TIME']})";
+		}
+		$values = implode(',', $valArr);
+		$sql = "INSERT INTO `third_sn` (`type`,`sn`,`time`) VALUES {$values};";
+		echo $sql;
+	}
 }
 //http://activity.bb.bbwc.cn/third/sn/token/MV8yMTY0YWQ0ZWI5NjZlNjczODcxNTcxZTcwNGFmZmRiMA==
