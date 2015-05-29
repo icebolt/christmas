@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>会员资料</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+	body{margin: auto;width: 500px;}
+	p{text-align: center;}
+	dl dt{display: inline-block; width: 100px;text-align: right;}
+	dl dd{display: inline-block;}
+	.input {border:0px; border-bottom:1px solid #8c8c8c;width: 200px;}
+</style>
+</head>
+<body>
+	<form method="POST" action="{{action}}">
+	<input type="hidden" name="uid" class="input" value="{{user.uid}}"/>
+	<input type="hidden" name="token" class="input" value="{{user.token}}"/>
+	<p>您的会员信息如下</p>
+	<dl>
+		<dt> </dt>
+		<dd><img src="{{user.avatar}}"/></dd>
+	</dl>
+	<dl>
+		<dt>昵称</dt>
+		<dd><input type="text" name="nickname" class="input" value="{{user.nickname}}"/></dd>
+	</dl>
+	<dl>
+		<dt>简介</dt>
+		<dd><input type="text" name="desc" class="input" value="{{user.desc}}"/></dd>
+	</dl>
+	<dl>
+		<dt> </dt>
+		<dd><input type="text" name="desc2" class="input" value="{{user.desc}}"/></dd>
+	</dl>
+	<dl>
+		<dt>姓名</dt>
+		<dd><input type="text" name="name" class="input" value="{{user.name}}"/></dd>
+	</dl>
+	<dl>
+		<dt>性别</dt>
+		<dd><input type="text" name="sex" class="input" value="{{user.sex}}"/></dd>
+	</dl>
+	<dl>
+		<dt>手机号</dt>
+		<dd><input type="text" name="mobile" class="input" value="{{user.mobile}}"/></dd>
+	</dl>
+	<dl>
+		<dt>微信号</dt>
+		<dd><input type="text" name="wechat" class="input" value="{{user.wechat}}"/></dd>
+	</dl>
+	<dl>
+		<dt>公司</dt>
+		<dd><input type="text" name="company" class="input" value="{{user.company}}"/></dd>
+	</dl>
+	<dl>
+		<dt>职位</dt>
+		<dd><input type="text" name="profession" class="input" value="{{user.profession}}"/></dd>
+	</dl>
+	<dl>
+		<dt>通信地址</dt>
+		<dd><input type="text" name="address" class="input" value="{{user.address}}"/></dd>
+	</dl>
+	<dl>
+		<dt> </dt>
+		<dd><input type="text" name="address2" class="input" value="{{user.address}}"/></dd>
+	</dl>
+	<dl>
+		<dt>邮编</dt>
+		<dd><input type="text" name="code" class="input" value="{{user.code}}"/></dd>
+	</dl>
+	<dl>
+		<dt> </dt>
+		<dd><input type="submit"  value="保存"/></dd>
+	</dl>
+	</form>
+</body>
+</html>

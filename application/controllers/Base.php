@@ -25,6 +25,7 @@ class BaseController extends \SlatePF\Extras\ExtrasController {
 		$this->curPage = $this->getParam('page',1);
 		$this->pagesize = 20;
 		$this->httpRequest = new \GuzzleHttp\Client();
+		$this->api = $config->api;
 	}
 	
 	/**
