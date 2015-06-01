@@ -26,10 +26,13 @@ body {
 }
 
 label {
+	color: #8c8c8c;
 	vertical-align: top;
-	width: 20%;
+	width: 12%;
 	padding-right: 10px;
 	padding-top: 5px;
+	display: inline-block;
+	text-align: right;
 }
 
 label.bottom{
@@ -44,6 +47,10 @@ label.bottom{
 	margin: 10px auto;
 }
 
+.btn{
+	
+}
+
 .text {
 	width: 78%;
 	border: 0 none;
@@ -53,11 +60,12 @@ label.bottom{
 	font-size: 13px;
 	border-radius: 0;
 	-webkit-tap-highlight-color: rgba(255,255,255,0);
+	display: inline-block;
 }
 
 .textarea {
 	font-size: 13px;
-	width: 80%;
+	width: 78%;
 	vertical-align: middle;
 	border: 0 none;
 	overflow: hidden;
@@ -73,77 +81,71 @@ label.bottom{
 </style>
 </head>
 <body>
+	<div class="wrapper">
 	<form method="POST" action="{{action}}">
 	<input type="hidden" name="uid" class="input" value="{{user.uid}}"/>
 	<input type="hidden" name="token" class="input" value="{{user.token}}"/>
-	<p>您的会员信息如下</p>
+	<input type="hidden" name="appid" class="input" value="{{appid}}"/>
+	<input type="hidden" name="aid" class="input" value="{{aid}}"/>
+	<input type="hidden" name="id" class="input" value="{{id}}"/>
 	<div class="line">
-        <img class="photo" src="https://assets.servedby-buysellads.com/p/manage/asset/id/16148">
+        <label class="bottom"> </label>
+        <p style="display:inline-block;">您的会员信息如下</p>
+    </div>
+	<div class="line">
+        <img class="photo" src="{{user.avatar|default('https://assets.servedby-buysellads.com/p/manage/asset/id/16148')}}">
     </div>
 	<div class="line">
         <label class="bottom">昵称</label>
-        <input type="text" class="text">
+        <input type="text" name="nickname" value="{{user.nickname}}" class="text">
     </div>
 	<div class="line">
         <label>简介</label>
-        <textarea name="" id="" cols="30" rows="2" class="textarea"></textarea>
+        <textarea name="" id="" name="desc" cols="30" rows="2" class="textarea">
+			{{user.desc}}
+		</textarea>
     </div>
-	<dl>
-		<dt> </dt>
-		<dd><img src="{{user.avatar}}"/></dd>
-	</dl>
-	<dl>
-		<dt>昵称</dt>
-		<dd><input type="text" name="nickname" class="input" value="{{user.nickname}}"/></dd>
-	</dl>
-	<dl>
-		<dt>简介</dt>
-		<dd><input type="text" name="desc" class="input" value="{{user.desc}}"/></dd>
-	</dl>
-	<dl>
-		<dt> </dt>
-		<dd><input type="text" name="desc2" class="input" value="{{user.desc}}"/></dd>
-	</dl>
-	<dl>
-		<dt>姓名</dt>
-		<dd><input type="text" name="name" class="input" value="{{user.name}}"/></dd>
-	</dl>
-	<dl>
-		<dt>性别</dt>
-		<dd><input type="text" name="sex" class="input" value="{{user.sex}}"/></dd>
-	</dl>
-	<dl>
-		<dt>手机号</dt>
-		<dd><input type="text" name="mobile" class="input" value="{{user.mobile}}"/></dd>
-	</dl>
-	<dl>
-		<dt>微信号</dt>
-		<dd><input type="text" name="wechat" class="input" value="{{user.wechat}}"/></dd>
-	</dl>
-	<dl>
-		<dt>公司</dt>
-		<dd><input type="text" name="company" class="input" value="{{user.company}}"/></dd>
-	</dl>
-	<dl>
-		<dt>职位</dt>
-		<dd><input type="text" name="profession" class="input" value="{{user.profession}}"/></dd>
-	</dl>
-	<dl>
-		<dt>通信地址</dt>
-		<dd><input type="text" name="address" class="input" value="{{user.address}}"/></dd>
-	</dl>
-	<dl>
-		<dt> </dt>
-		<dd><input type="text" name="address2" class="input" value="{{user.address}}"/></dd>
-	</dl>
-	<dl>
-		<dt>邮编</dt>
-		<dd><input type="text" name="code" class="input" value="{{user.code}}"/></dd>
-	</dl>
-	<dl>
-		<dt> </dt>
-		<dd><input type="submit"  value="保存"/></dd>
-	</dl>
+	<div class="line">
+        <label class="bottom">姓名</label>
+        <input type="text" name="name" value="{{user.name}}" class="text">
+    </div>
+	<div class="line">
+        <label class="bottom">性别</label>
+        <input type="text" name="sex" value="{{user.sex}}" class="text">
+    </div>
+	<div class="line">
+        <label class="bottom">手机号</label>
+        <input type="text" name="mobile" value="{{user.mobile}}" class="text">
+    </div>
+	<div class="line">
+        <label class="bottom">微信号</label>
+        <input type="text" name="wachart" value="{{user.wachart}}" class="text">
+    </div>
+	<div class="line">
+        <label class="bottom">公司</label>
+        <input type="text" name="company" value="{{user.company}}" class="text">
+    </div>
+	<div class="line">
+        <label class="bottom">职位</label>
+        <input type="text" name="profession" value="{{user.profession}}" class="text">
+    </div>
+	
+	<div class="line">
+        <label>地址</label>
+        <textarea name="" id="" name="address" cols="30" rows="2" class="textarea">
+			{{user.address}}
+		</textarea>
+    </div>
+	
+	<div class="line">
+        <label class="bottom">邮编</label>
+        <input type="text" name="postcode" value="{{user.postcode}}" class="text">
+    </div>
+	<div class="line">
+        <label class="bottom"> </label>
+        <input type="submit" class="btn"  value="保存"/>
+    </div>
 	</form>
+	</div>
 </body>
 </html>

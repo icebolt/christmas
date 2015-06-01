@@ -16,7 +16,7 @@ class userModel extends baseModel {
 	public $tableName;
 	public function __construct() {
 		parent::__construct();
-		$this->tableName = 'user_ext';
+		$this->tableName = 'user_log';
 	}
 	
 	public function get($id){
@@ -24,13 +24,16 @@ class userModel extends baseModel {
 		return $this->db->getRow($sql);
 	}
 
+	public function getByUid($params){
+		return $this->fatch($this->tableName, $params);
+	}
 
 	public function add($data){
 		return $this->db->insert($this->tableName,$data);
 	}
 	
 	public function update($data){
-		return $this->db->update($this->tableName,$data,'uid='.$data['uid']);
+		return $this->db->update($this->tableName,$data,'id='.$data['id']);
 	}
 	
 }

@@ -21,4 +21,18 @@ class baseModel {
 	public function query(){
 		return new SlatePF\Database\DbQuery();
 	}
+	
+	public function fatch($tablename,$where=array(),$fields='*'){
+		$sqlHandle = $this->query()->select($fields)->from($tablename);
+		foreach($where as $k=>$row){
+			if(is_array($row)){
+				$sqlHandle->where("`{$k}`{$row['condition']}{$row['value']}");
+			}else{
+				$sqlHandle->where("`{$k}`=\"{$row}\"");
+			}
+		}
+		$sql = $sqlHandle->build();
+		$this->lastsql = $sql;
+		return $this->db->executeS($sql);
+	}
 }

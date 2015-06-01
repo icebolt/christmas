@@ -36,10 +36,6 @@ class UserinfoController extends BaseController {
 		$model = new userModel();
 		$action = $this->pre.'/userinfo/save';
 		
-		if(empty($uid) && empty($id)){
-			return $this->displayError('no uid');
-		}
-		
 		if(empty($appid) || empty($aid)){
 			return $this->displayError('no require params');
 		}
@@ -47,6 +43,9 @@ class UserinfoController extends BaseController {
 		if(!empty($uid) && empty($token)){
 			return $this->displayError('no token');
 		}
+		$this->assign('action',$action);
+		$this->assign('appid',$appid);
+		$this->assign('aid',$aid);
 		if(!empty($uid) && !empty($token)){
 			$post = array('data'=>json_encode(array('uid'=>$uid,'token'=>$token)));
 			$res = $this->getHttpResponse($api, $post);
@@ -55,10 +54,12 @@ class UserinfoController extends BaseController {
 				$data['nickname'] = $res['data']['nickname'];
 				$data['avatar'] = $res['data']['avatar'];
 				$data['token'] = $res['data']['token'];
-				$extInfo = $model->get($res['data']['uid']);
+				$extInfo = $model->getByUid(array('appid'=>$appid,'aid'=>$aid,'uid'=>$res['data']['uid']));
 				if(!empty($extInfo)){
-					$data = array_merge($data,$extInfo);
+					$extInfo['data'] = !empty($extInfo['data'])?json_decode($extInfo['data'],true):array();
+					$data = array_merge($data,$extInfo['data']);
 				}
+				$this->assign('id', $id);
 				$this->assign('user', $data);
 				$this->assign('action',$action);
 				return $this->display('user/info.twig');
@@ -66,11 +67,10 @@ class UserinfoController extends BaseController {
 			return $this->display('user/error.twig');
 		}elseif(!empty ($id)){
 			$user = $model->get($id);
-			$this->assign('user', $data['data']);
-			$this->assign('action',$action);
+			$this->assign('user',json_decode($user['data'],true));
 			return $this->display('user/info.twig');
 		}
-		return $this->display('user/error.twig');
+		return $this->display('user/info.twig');
 	}
 	
 	public function loginAction(){
@@ -92,22 +92,26 @@ class UserinfoController extends BaseController {
 	
 	public function saveAction(){
 		$data = $this->getParams();
-		$data['desc'] .= $data['desc2'];
-		$data['address'] .= $data['address2'];
-		$data['sex'] = intval($data['sex']);
-		$token = $data['token'];
-		unset($data['nickname']);
-		unset($data['desc2']);
-		unset($data['address2']);
-		unset($data['address2']);
+		
 		unset($data['token']);
 		$model = new userModel();
-		$user = $model->get($data['uid']);
+		if(!empty($data['uid'])){
+			$param = array('appid'=>$data['appid'],'activeid'=>$data['aid'],'uid'=>$data['uid']);
+		}elseif(!empty ($data['id'])){
+			$param = array('id'=>$data['id']);
+		}
+		$user = $model->get($param);
+		$updateData['appid'] = intaval($data['appid']);
+		$updateData['activeid'] = intval($data['aid']);
+		$updateData['uid'] = intval($data['uid']);
+		$updateData['type'] = empty($data['uid'])?0:1;
+		$updateData['data'] = json_encode($data,JSON_UNESCAPED_UNICODE);
 		if(empty($user)){
 			$id = $model->add($data);
 		}else{
-			$id = $model->update($data);
+			$updateData['id'] = $user['id'];
+			$id = $model->update($updateData);
 		}
-		$this->redirect($this->pre.'userinfo/form?uid='.$data['uid'].'&token='.$token);
+		$this->redirect($this->pre.'userinfo/form/appid/'.$data['appid'].'/aid/'.$data['aid'].'/id/'.$id);
 	}
 }
