@@ -16,6 +16,9 @@ class PrizeController extends BaseController {
     private $prizeModel;
     private $winPirzeModel;
     private $pirzeLogModel;
+    private $deviceid;
+    private $uid;
+    private $appid;
 
     public function init()
     {
@@ -23,6 +26,9 @@ class PrizeController extends BaseController {
         $this->prizeModel = new prizeModel();
         $this->winPirzeModel = new winPrizeModel();
         $this->pirzeLogModel = new prizeLogModel();
+        $this->deviceid = $_SERVER['X-Slate-DeviceId'];
+        $this->uid = $_SERVER['X-Slate-UserId'];
+        $this->appid = $_SERVER['X-Slate-AppId'];
     }
 
     /**
@@ -72,8 +78,9 @@ class PrizeController extends BaseController {
      * 检查是否能抽奖
      */
     public function checkAction(){
-
-        $win = $this->winPirzeModel->checkUser(true);
+        $this->pirzeLogModel->deviceid = $this->deviceid ;
+        $this->pirzeLogModel->uid = $this->uid;
+        $win = $this->pirzeLogModel->checkRaffler();
         if ($win['num']  > 0  ){ //已经抽中过奖品
             $result = array('error'=>'','errno'=>0,'data'=>0);
         }
@@ -90,27 +97,24 @@ class PrizeController extends BaseController {
     public function winAction(){
         $id = $this->winPrize();
         $log = new prizeLogModel();
-        $deviceid = '';
-        $uid = 0;
         $log->aid = 0;
         $log->deviceid = '';
-        $log->uid = $uid;
+        $log->uid = $this->uid;
         if ($id > 0){
             $winPirzeM = new winPrizeModel();
             $winPirzeM->pid = $id;
-            $winPirzeM->deviceid = $deviceid;
-            $winPirzeM->uid = $uid;
+            $winPirzeM->deviceid = $this->deviceid;
+            $winPirzeM->uid = $this->uid;
             $log->pid = $id;
-        }else{
-            $log->add();
         }
+        $log->add();
+        
         $result = array('error'=>'','errno'=>0,'data'=>'');
         if ($id > 0){
             $this->prizeModel->id = $id;
 	    $prize = $this->prizeModel->get();
             $result['data'] = array('id'=>$prize['id'],'name'=>$prize['name']); 
         }
-
         echo json_encode($result);
         exit();
 

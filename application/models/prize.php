@@ -60,7 +60,7 @@ class prizeModel extends baseModel{
     public function get(){
         $sql = $this->query()->select('*')->from($this->table)->where("id={$this->id}")->build();
         $row = $this->db->getRow($sql);
-	return $row;
+	    return $row;
     }
 
 }

@@ -36,12 +36,6 @@ class prizeLogModel extends baseModel {
      */
     public $pid;
 
-    /**
-     * @var $contact 联系方式
-     */
-
-    public $contact;
-
     public function __construct(){
         parent::__construct();
 
@@ -50,8 +44,25 @@ class prizeLogModel extends baseModel {
         $this->uptime = time();
     }
 
-    public function add(){
+    public function checkRaffle(){
+        $starttime = strtotime(date('Ymd'));
+        $endtime = strtotime(date('Ymd 23:59:39'));
 
+        $where = "deviceid='{$this->deviceid}' AND addtime >= {$starttime} AND addtime <= {$endtime} ";
+        $sql = $this->query()->select('count(*) AS num')->from($this->table)->where($where)->build();
+        $row = $this->db->getRow($sql);
+    }
+
+    public function add(){
+        $data = array(
+            'deviceid'=>$this->deviceid,
+            'uid' => $this->uid,
+            'aid' => $this->aid,
+            'uptime'=> time(),
+            'pid' => $this->pid
+        );
+
+        $this->db->insert($this->table,$data);
     }
 
 
