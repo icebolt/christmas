@@ -66,15 +66,21 @@ class winPrizeModel extends baseModel {
         $row = $this->db->getRow($sql);
     }
 
-    public function checkUser($daily = true){
+    public function checkUserPrize($daily = true){
         $where = "deviceid='{$this->deviceid}'  ";
         if ($daily != false){
             $starttime = strtotime(date('Ymd'));
             $endtime = strtotime(date('Ymd 23:59:39'));
-            $where.=" AND addtime >= {$starttime} AND addtime <= {$endtime} ";
+            $where.=" AND addtime >= {$starttime} AND addtime <= {$endtime} AND received=0 ";
         }
-        $sql = $this->query()->select('count(*) AS num')->from($this->table)->where($where)->build();
-        $row = $this->db->getRow($sql);
+        $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
+        return $this->db->getRow($sql);
+    }
+
+    public function save(){
+        $update = array('contact'=>$this->contact,'received'=>$this->received,'addtime'=>$this->addtime);
+        $where = "pid={$this->pid} AND deviceid='{$this->deviceid}'";
+        $this->db->update($this->table,$update,$where);
     }
     /*
     public function add(){
