@@ -32,6 +32,8 @@ class PrizeController extends BaseController {
 
         header('Content-type: application/json');
         header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Headers: *");
+        
         if (!$this->deviceid){
             echo json_encode(array('error'=>'deny access','errno'=>101,'data'=>''));
             exit();
