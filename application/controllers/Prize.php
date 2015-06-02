@@ -29,7 +29,15 @@ class PrizeController extends BaseController {
         $this->deviceid = $_SERVER['HTTP_X_SLATE_DEVICEID'];
         $this->uid = $_SERVER['HTTP_X_SLATE_USERID'];
         $this->appid = $_SERVER['X-Slate-AppId'];
-    } /** * @return int 抽奖算法
+
+        header('Content-type: application/json');
+        header("Access-Control-Allow-Origin: *");
+        if (!$this->deviceid){
+            echo json_encode(array('error'=>'deny access','errno'=>101,'data'=>''));
+            exit();
+        }
+    }
+    /** * @return int 抽奖算法
      */
     private function winPrize(){
         $prizes = $this->prizeModel->getAll();
