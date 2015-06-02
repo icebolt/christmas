@@ -48,9 +48,9 @@ class prizeLogModel extends baseModel {
         $starttime = strtotime(date('Ymd'));
         $endtime = strtotime(date('Ymd 23:59:39'));
 
-        $where = "deviceid='{$this->deviceid}' AND addtime >= {$starttime} AND addtime <= {$endtime} ";
+        $where = "deviceid='{$this->deviceid}' AND uptime >= {$starttime} AND uptime <= {$endtime} ";
         $sql = $this->query()->select('count(*) AS num')->from($this->table)->where($where)->build();
-        $row = $this->db->getRow($sql);
+        return $this->db->getRow($sql);
     }
 
     public function add(){

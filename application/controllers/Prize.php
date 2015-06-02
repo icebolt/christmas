@@ -26,13 +26,10 @@ class PrizeController extends BaseController {
         $this->prizeModel = new prizeModel();
         $this->winPirzeModel = new winPrizeModel();
         $this->pirzeLogModel = new prizeLogModel();
-        $this->deviceid = $_SERVER['X-Slate-DeviceId'];
-        $this->uid = $_SERVER['X-Slate-UserId'];
+        $this->deviceid = $_SERVER['HTTP_X_SLATE_DEVICEID'];
+        $this->uid = $_SERVER['HTTP_X_SLATE_USERID'];
         $this->appid = $_SERVER['X-Slate-AppId'];
-    }
-
-    /**
-     * @return int 抽奖算法
+    } /** * @return int 抽奖算法
      */
     private function winPrize(){
         $prizes = $this->prizeModel->getAll();
@@ -80,7 +77,7 @@ class PrizeController extends BaseController {
     public function checkAction(){
         $this->pirzeLogModel->deviceid = $this->deviceid ;
         $this->pirzeLogModel->uid = $this->uid;
-        $win = $this->pirzeLogModel->checkRaffler();
+        $win = $this->pirzeLogModel->checkRaffle();
         if ($win['num']  > 0  ){ //已经抽中过奖品
             $result = array('error'=>'','errno'=>0,'data'=>0);
         }
@@ -98,7 +95,7 @@ class PrizeController extends BaseController {
         $id = $this->winPrize();
         $log = new prizeLogModel();
         $log->aid = 0;
-        $log->deviceid = '';
+        $log->deviceid = $this->deviceid;
         $log->uid = $this->uid;
         if ($id > 0){
             $winPirzeM = new winPrizeModel();
