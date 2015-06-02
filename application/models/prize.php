@@ -50,8 +50,8 @@ class prizeModel extends baseModel{
     }
 
     public function getAll(){
-        $sql = $this->query()->select('*')->from($this->table)->where("id={$this->id}")->build();
-        $row = $this->db->getRow($sql);
+        $sql = $this->query()->select('*')->from($this->table)->build();
+        $row = $this->db->executeS($sql);
         return $row;
     }
     /**
@@ -60,6 +60,7 @@ class prizeModel extends baseModel{
     public function get(){
         $sql = $this->query()->select('*')->from($this->table)->where("id={$this->id}")->build();
         $row = $this->db->getRow($sql);
+	return $row;
     }
 
 }

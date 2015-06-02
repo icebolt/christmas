@@ -6,7 +6,7 @@
  * Time: 下午6:42
  */
 
-class winPrizeModel extends SlatePF\Database\Object {
+class winPrizeModel extends baseModel {
 
 
     /**
@@ -67,7 +67,7 @@ class winPrizeModel extends SlatePF\Database\Object {
     }
 
     public function checkUser($daily = true){
-        $where = "deviceid={$this->deviceid}  ";
+        $where = "deviceid='{$this->deviceid}'  ";
         if ($daily != false){
             $starttime = strtotime(date('Ymd'));
             $endtime = strtotime(date('Ymd 23:59:39'));
@@ -76,7 +76,7 @@ class winPrizeModel extends SlatePF\Database\Object {
         $sql = $this->query()->select('count(*) AS num')->from($this->table)->where($where)->build();
         $row = $this->db->getRow($sql);
     }
-
+    /*
     public function add(){
         
     }
@@ -92,5 +92,6 @@ class winPrizeModel extends SlatePF\Database\Object {
     public function delete(){
 
     }
+    */
 //    public function
 }

@@ -12,12 +12,14 @@
  *
  * @author fanzhanao
  */
-class PrizeController extends \SlatePF\Extras\ExtrasController {
+class PrizeController extends BaseController {
     private $prizeModel;
     private $winPirzeModel;
     private $pirzeLogModel;
 
-    public function __construct() {
+    public function init()
+    {
+        parent::init();
         $this->prizeModel = new prizeModel();
         $this->winPirzeModel = new winPrizeModel();
         $this->pirzeLogModel = new prizeLogModel();
@@ -29,18 +31,19 @@ class PrizeController extends \SlatePF\Extras\ExtrasController {
     private function winPrize(){
         $prizes = $this->prizeModel->getAll();
         $prob = array();
+	$probabilitySum = 0;
         foreach ($prizes as $prize){
-            $prob[$prize->id] = $prize->probability;
+            $prob[$prize['id']] = $prize['probability'];
+	    $probabilitySum+=$prize['probability'];
         }
         /**
          * 奖品总几率
          */
-        $probabilitySum = array_sum($prob);
-
+	
         $index = 0;
         $rand = mt_rand(1, 10000);
         if ($rand < $probabilitySum){
-            $index = $this->randomPrize($prizes);
+            $index = $this->randomPrize($prob);
         }
         return $index;
     }
@@ -54,12 +57,12 @@ class PrizeController extends \SlatePF\Extras\ExtrasController {
         $index = null;
         $probabilitySum = array_sum($prizes);
         $rand = mt_rand(1, $probabilitySum);
-        foreach ($prizes as $key => $probability) {
-            if ($rand <= $probability) {
+        foreach ($prizes as $key => $value) {
+            if ($rand <= $value) {
                 $index = $key;
                 break;
             } else {
-                $rand -= $probability;
+                $rand -= $value;
             }
         }
         return $index;
@@ -75,7 +78,7 @@ class PrizeController extends \SlatePF\Extras\ExtrasController {
             $result = array('error'=>'','errno'=>0,'data'=>0);
         }
         else{
-            $result = array('error'=>'','errno'=>0,'data'=>0);
+            $result = array('error'=>'','errno'=>0,'data'=>1);
         }
         echo json_encode($result);
         exit();
@@ -104,7 +107,8 @@ class PrizeController extends \SlatePF\Extras\ExtrasController {
         $result = array('error'=>'','errno'=>0,'data'=>'');
         if ($id > 0){
             $this->prizeModel->id = $id;
-            $result['data'] = $this->prizeModel->get();
+	    $prize = $this->prizeModel->get();
+            $result['data'] = array('id'=>$prize['id'],'name'=>$prize['name']); 
         }
 
         echo json_encode($result);
