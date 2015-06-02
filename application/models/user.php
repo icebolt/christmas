@@ -23,6 +23,23 @@ class userModel extends baseModel {
 		$sql = $this->query()->select('*')->from($this->tableName)->where("id={$id}")->build();
 		return $this->db->getRow($sql);
 	}
+	
+	public function find($param){
+		$res = $this->fatch($this->tableName,$param);
+		return $res[0];
+	}
+	
+	public function getUserBaseInfo($uid){
+		$user = array();
+		$config = Yaf\Application::app()->getConfig();
+		$api = $config->api['user'].'getUserInfo&datatype=2';
+		$api .= "&uids={$uid}";
+		$res = $this->getHttpResponse($api);
+		if(is_array($res['data']['user']) && !empty($res['data']['user'])){
+			$user = $res['data']['user'][0];
+		}
+		return $user;
+	}
 
 	public function getByUid($params){
 		return $this->fatch($this->tableName, $params);
@@ -33,6 +50,7 @@ class userModel extends baseModel {
 	}
 	
 	public function update($data){
+		$data['data'] = $this->db->escape($data['data']);
 		return $this->db->update($this->tableName,$data,'id='.$data['id']);
 	}
 	

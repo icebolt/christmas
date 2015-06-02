@@ -101,9 +101,7 @@ label.bottom{
     </div>
 	<div class="line">
         <label>简介</label>
-        <textarea name="" id="" name="desc" cols="30" rows="2" class="textarea">
-			{{user.desc}}
-		</textarea>
+        <textarea name="desc" cols="30" rows="2" class="textarea">{{user.desc}}</textarea>
     </div>
 	<div class="line">
         <label class="bottom">姓名</label>
@@ -132,9 +130,7 @@ label.bottom{
 	
 	<div class="line">
         <label>地址</label>
-        <textarea name="" id="" name="address" cols="30" rows="2" class="textarea">
-			{{user.address}}
-		</textarea>
+        <textarea name="address" cols="30" rows="2" class="textarea">{{user.address}}</textarea>
     </div>
 	
 	<div class="line">
@@ -147,5 +143,14 @@ label.bottom{
     </div>
 	</form>
 	</div>
+<script type="text/javascript">
+var iSlate = {
+	'setUserId' : function(uid){
+		if(uid > 0 && document.getElementsByName('uid')[0].value === ''){
+			window.location.href = window.location.href+'/uid/'+uid;
+		}
+	}
+};
+</script>
 </body>
 </html>
