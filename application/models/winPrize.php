@@ -1,0 +1,96 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: fanzhanao
+ * Date: 15/6/1
+ * Time: 下午6:42
+ */
+
+class winPrizeModel extends SlatePF\Database\Object {
+
+
+    /**
+     * @var $table
+     */
+    private $table = 'winprize';
+    /**
+     * @var $pid 奖品ID
+     */
+    public  $pid;
+    /**
+     * @var $deviceid 设备ID
+     */
+    public $deviceid;
+    /**
+     * @var $uid 用户UID
+     */
+    public $uid;
+    /**
+     * @var $addtime 中奖时间
+     */
+    public $addtime;
+
+    /**
+     * @var $received 是否领奖
+     */
+    public $received;
+
+    /**
+     * @var $status 是否发送奖品
+     */
+    public $status;
+
+    /**
+     * @var $contact 联系方式
+     */
+
+    public $contact;
+
+    public function __construct(){
+        parent::__construct();
+
+        $this->pid = 0;
+        $this->uid = 0;
+        $this->deviceid = '';
+        $this->addtime = time();
+        $this->received = false;
+        $this->status = 0;
+    }
+
+
+    /**
+     * 查询制定时间的中奖数
+     */
+    public function fetchWinNum($starttime,$endtime){
+        $sql = $this->query()->select('count(*) AS num')->from($this->table)->where("pid={$this->pid} AND addtime >= {$starttime}  AND addtime <= {$endtime}")->build();
+        $row = $this->db->getRow($sql);
+    }
+
+    public function checkUser($daily = true){
+        $where = "deviceid={$this->deviceid}  ";
+        if ($daily != false){
+            $starttime = strtotime(date('Ymd'));
+            $endtime = strtotime(date('Ymd 23:59:39'));
+            $where.=" AND addtime >= {$starttime} AND addtime <= {$endtime} ";
+        }
+        $sql = $this->query()->select('count(*) AS num')->from($this->table)->where($where)->build();
+        $row = $this->db->getRow($sql);
+    }
+
+    public function add(){
+        
+    }
+
+    public function update(){
+
+    }
+
+    public function fetchRow(){
+
+    }
+
+    public function delete(){
+
+    }
+//    public function
+}
