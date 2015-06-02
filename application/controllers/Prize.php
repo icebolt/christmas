@@ -17,8 +17,7 @@ class PrizeController extends \SlatePF\Extras\ExtrasController {
     private $winPirzeModel;
     private $pirzeLogModel;
 
-    public function init() {
-        parent::init();
+    public function __construct() {
         $this->prizeModel = new prizeModel();
         $this->winPirzeModel = new winPrizeModel();
         $this->pirzeLogModel = new prizeLogModel();
