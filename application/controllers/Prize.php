@@ -43,6 +43,7 @@ class PrizeController extends BaseController
         header('Content-type: application/json');
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Headers: X-Slate-DeviceId,X-Slate-UserId,X-Slate-AppId");
+
         $this->deviceid = $this->getParam('deviceid'); //$_SESSION['DeviceId'];// $_SERVER['HTTP_X_SLATE_DEVICEID'];
         $this->uid = $this->getParam('uid'); //$_SESSION['Uid'];// $_SERVER['HTTP_X_SLATE_USERID'];
 
@@ -54,7 +55,7 @@ class PrizeController extends BaseController
         $this->prizeModel = new prizeModel();
         $this->winPirzeModel = new winPrizeModel();
         $this->pirzeLogModel = new prizeLogModel();
-        
+
         $this->interval = array(
             '2'=> array(),
             '3' => array()
@@ -100,7 +101,7 @@ class PrizeController extends BaseController
             $winPirzeM->pid = $id;
             $winPirzeM->deviceid = $this->deviceid;
             $winPirzeM->uid = $this->uid;
-            $winPirzeM->save();
+            $winPirzeM->add();
 
             $log->pid = $id;
         }
@@ -138,6 +139,8 @@ class PrizeController extends BaseController
         } else {
             $result = array('error' => 'parameter error', 'errno' => 102, 'data' => $id);
         }
+        echo json_encode($result);
+        exit;
     }
 
     /**
