@@ -43,6 +43,8 @@ class PrizeController extends BaseController
         header('Content-type: application/json');
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Headers: X-Slate-DeviceId,X-Slate-UserId,X-Slate-AppId");
+        $this->deviceid = $this->getParam('deviceid'); //$_SESSION['DeviceId'];// $_SERVER['HTTP_X_SLATE_DEVICEID'];
+        $this->uid = $this->getParam('uid'); //$_SESSION['Uid'];// $_SERVER['HTTP_X_SLATE_USERID'];
 
         if (!$this->deviceid) {
             echo json_encode(array('error' => 'deny access', 'errno' => 101, 'data' => ''));
@@ -52,9 +54,7 @@ class PrizeController extends BaseController
         $this->prizeModel = new prizeModel();
         $this->winPirzeModel = new winPrizeModel();
         $this->pirzeLogModel = new prizeLogModel();
-        $this->deviceid = $this->getParam('deviceid'); //$_SESSION['DeviceId'];// $_SERVER['HTTP_X_SLATE_DEVICEID'];
-        $this->uid = $this->getParam('uid'); //$_SESSION['Uid'];// $_SERVER['HTTP_X_SLATE_USERID'];
-
+        
         $this->interval = array(
             '2'=> array(),
             '3' => array()
