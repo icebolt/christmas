@@ -235,21 +235,24 @@ class PrizeController extends BaseController
      */
     private function prizeAvalible(){
         $prizes = $this->prizeModel->getAll();
+        $filterPrize = array();
         if (count($prizes) > 0){
-            foreach ($prizes as $key => &$prize){
+            foreach ($prizes as $key => $prize){
                 if (intval($prize['frequency']) > 1){
                     $position = $this->position[$prize['frequency']];
                     $start_time = $this->interval[$prize['frequency']][$position];
                     $end_time = $start_time+86400*$prize['frequency']-1;
                     $this->winPirzeModel->pid = $prize['id'];
                     $num = $this->winPirzeModel->fetchWinNum($start_time,$end_time);
-                    if ($num && $num['num'] >= $prize['num']){//已经抽过了奖品
-                        unset($prizes[$key]);
+                    if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
+                        continue;
+                    }else{
+                        $filterPrize[] = $prize;
                     }
                 }
             }
         }
-        return $prizes;
+        return $filterPrize;
     }
 
 }
