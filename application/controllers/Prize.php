@@ -20,14 +20,25 @@ class PrizeController extends BaseController
     private $uid;
     private $appid;
 
+    /**
+     * @var 活动开始时间
+     */
+    private $startTime = '2015-06-08';
+    /**
+     * @var 活动结束时间
+     */
+    private $endTime = '2015-06-21';
+    /**
+     * @var array 间隔时间段
+     */
+    private $interval = array();
+    /**
+     * 初始化方法
+     */
     public function init()
     {
         parent::init();
-        $this->prizeModel = new prizeModel();
-        $this->winPirzeModel = new winPrizeModel();
-        $this->pirzeLogModel = new prizeLogModel();
-        $this->deviceid = $this->getParam('deviceid'); //$_SESSION['DeviceId'];// $_SERVER['HTTP_X_SLATE_DEVICEID'];
-        $this->uid = $this->getParam('uid'); //$_SESSION['Uid'];// $_SERVER['HTTP_X_SLATE_USERID'];
+
 
         header('Content-type: application/json');
         header("Access-Control-Allow-Origin: *");
@@ -36,6 +47,96 @@ class PrizeController extends BaseController
         if (!$this->deviceid) {
             echo json_encode(array('error' => 'deny access', 'errno' => 101, 'data' => ''));
             exit();
+        }
+
+        $this->prizeModel = new prizeModel();
+        $this->winPirzeModel = new winPrizeModel();
+        $this->pirzeLogModel = new prizeLogModel();
+        $this->deviceid = $this->getParam('deviceid'); //$_SESSION['DeviceId'];// $_SERVER['HTTP_X_SLATE_DEVICEID'];
+        $this->uid = $this->getParam('uid'); //$_SESSION['Uid'];// $_SERVER['HTTP_X_SLATE_USERID'];
+
+        $this->interval = array(
+            '2'=> array(),
+            '3' => array()
+        );
+
+    }
+
+    /**
+     * 检查是否能抽奖
+     */
+    public function checkAction()
+    {
+        $this->pirzeLogModel->deviceid = $this->winPirzeModel->deviceid = $this->deviceid;
+        $this->pirzeLogModel->uid = $this->winPirzeModel->deviceid = $this->uid;
+        $win = $this->pirzeLogModel->checkRaffle();
+
+        if ($win['num'] > 0) { //已经抽中过奖品
+            $result = array('error' => '', 'errno' => 0, 'data' => 0);
+        } else {
+            $result = array('error' => '', 'errno' => 0, 'data' => 1);
+        }
+        //检查是否中奖，但是没有填写资料
+        $prize = $this->winPirzeModel->checkUserPrize();
+        if ($prize['id'] > 0) {
+            $result = array('error' => '', 'errno' => 0, 'data' => $prize['id']);
+        }
+        echo json_encode($result);
+        exit();
+    }
+
+    /**
+     * 抽奖
+     */
+    public function winAction()
+    {
+        $id = $this->winPrize();
+        $log = new prizeLogModel();
+        $log->aid = 0;
+        $log->deviceid = $this->deviceid;
+        $log->uid = $this->uid;
+        if ($id > 0) {
+            $winPirzeM = new winPrizeModel();
+            $winPirzeM->pid = $id;
+            $winPirzeM->deviceid = $this->deviceid;
+            $winPirzeM->uid = $this->uid;
+            $winPirzeM->save();
+
+            $log->pid = $id;
+        }
+        $log->add();
+
+        $result = array('error' => '', 'errno' => 0, 'data' => '');
+        if ($id > 0) {
+            $this->prizeModel->id = $id;
+            $prize = $this->prizeModel->get();
+            $result['data'] = array('id' => $prize['id'], 'name' => $prize['name']);
+        }
+        echo json_encode($result);
+        exit();
+    }
+
+    public function contactAction()
+    {
+        $param = array(
+            'name' => $this->getParam('name'),
+            'phone' => $this->getParam('phone'),
+            'address' => $this->getParam('address')
+        );
+
+        $id = intval($this->getParam('pid'));
+
+        if ($id > 0) {
+            $winPrize = new winPrizeModel();
+            $winPrize->contact = json_encode($param);
+            $winPrize->pid = $id;
+            $winPrize->deviceid = $this->deviceid;
+            $winPrize->received = 1;
+            $winPrize->uid = $this->uid;
+            $winPrize->save();
+            $result = array('error' => '', 'errno' => 0, 'data' => $id);
+        } else {
+            $result = array('error' => 'parameter error', 'errno' => 102, 'data' => $id);
         }
     }
 
@@ -84,80 +185,8 @@ class PrizeController extends BaseController
         return $index;
     }
 
-    /**
-     * 检查是否能抽奖
-     */
-    public function checkAction()
-    {
-        $this->pirzeLogModel->deviceid = $this->winPirzeModel->deviceid = $this->deviceid;
-        $this->pirzeLogModel->uid = $this->winPirzeModel->deviceid = $this->uid;
-        $win = $this->pirzeLogModel->checkRaffle();
+    private function checkPrizeAvalible(){
 
-        if ($win['num'] > 0) { //已经抽中过奖品
-            $result = array('error' => '', 'errno' => 0, 'data' => 0);
-        } else {
-            $result = array('error' => '', 'errno' => 0, 'data' => 1);
-        }
-        //检查是否中奖，但是没有填写资料
-        $prize = $this->winPirzeModel->checkUserPrize();
-        if ($prize['id'] > 0) {
-            $result = array('error' => '', 'errno' => 0, 'data' => $prize['id']);
-        }
-        echo json_encode($result);
-        exit();
-    }
-
-    /**
-     * 抽奖
-     */
-    public function winAction()
-    {
-        $id = $this->winPrize();
-        $log = new prizeLogModel();
-        $log->aid = 0;
-        $log->deviceid = $this->deviceid;
-        $log->uid = $this->uid;
-        if ($id > 0) {
-            $winPirzeM = new winPrizeModel();
-            $winPirzeM->pid = $id;
-            $winPirzeM->deviceid = $this->deviceid;
-            $winPirzeM->uid = $this->uid;
-            $log->pid = $id;
-        }
-        $log->add();
-
-        $result = array('error' => '', 'errno' => 0, 'data' => '');
-        if ($id > 0) {
-            $this->prizeModel->id = $id;
-            $prize = $this->prizeModel->get();
-            $result['data'] = array('id' => $prize['id'], 'name' => $prize['name']);
-        }
-        echo json_encode($result);
-        exit();
-    }
-
-    public function contactAction()
-    {
-        $param = array(
-            'name' => $this->getParam('name'),
-            'phone' => $this->getParam('phone'),
-            'address' => $this->getParam('address')
-        );
-
-        $id = intval($this->getParam('pid'));
-
-        if ($id > 0) {
-            $winPrize = new winPrizeModel();
-            $winPrize->contact = json_encode($param);
-            $winPrize->pid = $id;
-            $winPrize->deviceid = $this->deviceid;
-            $winPrize->received = 1;
-            $winPrize->uid = $this->uid;
-            $winPrize->save();
-            $result = array('error' => '', 'errno' => 0, 'data' => $id);
-        } else {
-            $result = array('error' => 'parameter error', 'errno' => 102, 'data' => $id);
-        }
     }
 
 }

@@ -76,6 +76,18 @@ class winPrizeModel extends baseModel {
         $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
         return $this->db->getRow($sql);
     }
+    public function add(){
+        $data = array(
+            'pid'=>intval($this->pid),
+            'deviceid' => $this->deviceid,
+            'uid' => intval($this->uid),
+            'addtime' => $this->addtime,
+            'received' => 0,
+            'status' => 0,
+            'contact' => $this->contact
+        );
+        return $this->db->insert($this->table,$data);
+    }
 
     public function save(){
         $update = array('contact'=>$this->contact,'received'=>$this->received,'addtime'=>$this->addtime);
