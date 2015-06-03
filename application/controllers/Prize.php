@@ -97,6 +97,13 @@ class PrizeController extends BaseController
      */
     public function winAction()
     {
+        //检查是否有中奖资格
+        $win = $this->pirzeLogModel->checkRaffle();
+        if ($win['num'] > 0) { //已经抽中过奖品
+            $result = array('error' => '', 'errno' => 0, 'data' => '');
+            echo json_encode($result);exit;
+        }
+
         //摇奖
         $id = $this->winPrize();
         $log = new prizeLogModel();
@@ -118,8 +125,9 @@ class PrizeController extends BaseController
 
             $log->pid = $id;
         }
+        //纪录日志
         $log->add();
-
+        //返回结果
         $result = array('error' => '', 'errno' => 0, 'data' => '');
         if ($id > 0) {
             $prize = $this->prizeModel->get();
@@ -129,6 +137,9 @@ class PrizeController extends BaseController
         exit();
     }
 
+    /**
+     * 更新领奖数据
+     */
     public function contactAction()
     {
         $param = array(
@@ -160,7 +171,7 @@ class PrizeController extends BaseController
      */
     private function winPrize()
     {
-        $prizes = $this->checkPrizeAvalible();
+        $prizes = $this->prizeAvalible();
         $prob = array();
         $probabilitySum = 0;
         foreach ($prizes as $prize) {
@@ -201,12 +212,12 @@ class PrizeController extends BaseController
     }
 
     private function initInterval($step){
-        $endtime = strtotime($this->endTime)+86400;
+        $endtime = strtotime($this->endTime);
         $start = $inteval = strtotime($this->startTime);
         $i = 0;
 
-        while ($inteval < $endtime){
-            $this->interval[$step][] = $inteval = $start + $i*3600*24;
+        while ($inteval < ($endtime- $step*86400)){
+            $this->interval[$step][] = $inteval = $start + $i*86400;
             $i+=$step;
         }
         /**
@@ -216,7 +227,7 @@ class PrizeController extends BaseController
 
         foreach ($this->interval[$step] as $key => $value){
             if ($currentTime < $value){
-                $this->position[$step] = $key;
+                $this->position[$step] = $key-1;
                 break;
             }
         }
@@ -225,17 +236,17 @@ class PrizeController extends BaseController
     /**
      * @return array 获取可供中奖的奖品
      */
-    private function checkPrizeAvalible(){
+    private function prizeAvalible(){
         $prizes = $this->prizeModel->getAll();
         if (count($prizes) > 0){
-            foreach ($prizes as $key => $prize){
-                if ($prize['frequency'] > 1){
+            foreach ($prizes as $key => &$prize){
+                if (intval($prize['frequency']) > 1){
                     $position = $this->position[$prize['frequency']];
                     $start_time = $this->interval[$prize['frequency']][$position];
-                    $end_time = $start_time+84600*$prize['frequency']-1;
+                    $end_time = $start_time+86400*$prize['frequency']-1;
                     $this->winPirzeModel->pid = $prize['id'];
                     $num = $this->winPirzeModel->fetchWinNum($start_time,$end_time);
-                    if ($num >= $prize['num']){//已经抽过了奖品
+                    if ($num && $num['num'] >= $prize['num']){//已经抽过了奖品
                         unset($prizes[$key]);
                     }
                 }
