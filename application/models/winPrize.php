@@ -51,7 +51,6 @@ class winPrizeModel extends baseModel {
 
         $this->pid = 0;
         $this->uid = 0;
-        $this->deviceid = '';
         $this->addtime = time();
         $this->received = false;
         $this->status = 0;
@@ -67,7 +66,7 @@ class winPrizeModel extends baseModel {
     }
 
     public function checkUserPrize($daily = true){
-        $where = "deviceid='{$this->deviceid}'  ";
+        $where = "deviceid='{$this->deviceid}' ";
         if ($daily != false){
             $starttime = strtotime(date('Ymd'));
             $endtime = strtotime(date('Ymd 23:59:39'));

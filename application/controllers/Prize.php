@@ -56,14 +56,13 @@ class PrizeController extends BaseController
             echo json_encode(array('error' => 'deny access', 'errno' => 101, 'data' => ''));
             exit();
         }
-//        $this->interval = array(
-//            '2'=> array(1433721600,1433894400,1434067200,1434240000,1434412800,1434585600,1434758400),
-//            '3' => array(1433721600,1433980800,1434240000,1434499200,1434758400)
-//        );
 
         $this->prizeModel = new prizeModel();
         $this->winPirzeModel = new winPrizeModel();
         $this->pirzeLogModel = new prizeLogModel();
+
+        $this->winPirzeModel->deviceid = $this->deviceid;
+        $this->pirzeLogModel->deviceid = $this->deviceid;
 
         $this->initInterval(2);
         $this->initInterval(3);
@@ -74,8 +73,6 @@ class PrizeController extends BaseController
      */
     public function checkAction()
     {
-        $this->pirzeLogModel->deviceid = $this->winPirzeModel->deviceid = $this->deviceid;
-        $this->pirzeLogModel->uid = $this->winPirzeModel->deviceid = $this->uid;
         $win = $this->pirzeLogModel->checkRaffle();
 
         if ($win['num'] > 0) { //已经抽中过奖品
@@ -85,8 +82,8 @@ class PrizeController extends BaseController
         }
         //检查是否中奖，但是没有填写资料
         $prize = $this->winPirzeModel->checkUserPrize();
-        if ($prize['id'] > 0) {
-            $result = array('error' => '', 'errno' => 0, 'data' => $prize['id']);
+        if ($prize['pid'] > 0) {
+            $result = array('error' => '', 'errno' => 0, 'data' => $prize['pid']);
         }
         echo json_encode($result);
         exit();
