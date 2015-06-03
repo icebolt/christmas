@@ -40,6 +40,10 @@ class prizeModel extends baseModel{
     public $total;
 
     /**
+     * @var 剩余数量
+     */
+    public $remain;
+    /**
      * @var $probability  中奖几率
      */
     public $probability;
@@ -50,7 +54,7 @@ class prizeModel extends baseModel{
     }
 
     public function getAll(){
-        $sql = $this->query()->select('*')->from($this->table)->build();
+        $sql = $this->query()->select('*')->from($this->table)->where('remain > 0')->build();
         $row = $this->db->executeS($sql);
         return $row;
     }
@@ -61,6 +65,12 @@ class prizeModel extends baseModel{
         $sql = $this->query()->select('*')->from($this->table)->where("id={$this->id}")->build();
         $row = $this->db->getRow($sql);
 	    return $row;
+    }
+
+    public function decreaseRemain(){
+        $sql = "UPDATE {$this->table} SET remain = remain -1 WHERE id = {$this->id} AND remain > 0 ";
+        $result =  $this->db->query($sql);
+        return $result ? true : false;
     }
 
 }

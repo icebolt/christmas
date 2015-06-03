@@ -90,7 +90,7 @@ class winPrizeModel extends baseModel {
     }
 
     public function save(){
-        $update = array('contact'=>$this->contact,'received'=>$this->received,'addtime'=>$this->addtime);
+        $update = array('contact'=>$this->contact,'received'=>$this->received);
         $where = "pid={$this->pid} AND deviceid='{$this->deviceid}'";
         $this->db->update($this->table,$update,$where);
     }
