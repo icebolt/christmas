@@ -1,5 +1,4 @@
 <?php
-
 /**
  * filname      Prize.php
  * author       fanzhanao
@@ -12,9 +11,8 @@
  *
  * @author fanzhanao
  */
-session_start();
-
-class PrizeController extends BaseController {
+class PrizeController extends BaseController
+{
     private $prizeModel;
     private $winPirzeModel;
     private $pirzeLogModel;
@@ -28,36 +26,38 @@ class PrizeController extends BaseController {
         $this->prizeModel = new prizeModel();
         $this->winPirzeModel = new winPrizeModel();
         $this->pirzeLogModel = new prizeLogModel();
-        $this->deviceid = $_SESSION['DeviceId'];// $_SERVER['HTTP_X_SLATE_DEVICEID'];
-        $this->uid =$_SESSION['Uid'];// $_SERVER['HTTP_X_SLATE_USERID'];
-//        $this->appid = $_SERVER['X-Slate-AppId'];
+        $this->deviceid = $this->getParam('deviceid'); //$_SESSION['DeviceId'];// $_SERVER['HTTP_X_SLATE_DEVICEID'];
+        $this->uid = $this->getParam('uid'); //$_SESSION['Uid'];// $_SERVER['HTTP_X_SLATE_USERID'];
 
         header('Content-type: application/json');
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Headers: X-Slate-DeviceId,X-Slate-UserId,X-Slate-AppId");
 
-        if (!$this->deviceid){
-            echo json_encode(array('error'=>'deny access','errno'=>101,'data'=>''));
+        if (!$this->deviceid) {
+            echo json_encode(array('error' => 'deny access', 'errno' => 101, 'data' => ''));
             exit();
         }
     }
-    /** * @return int 抽奖算法
+
+    /**
+     * @return int 抽奖算法
      */
-    private function winPrize(){
+    private function winPrize()
+    {
         $prizes = $this->prizeModel->getAll();
         $prob = array();
-	$probabilitySum = 0;
-        foreach ($prizes as $prize){
+        $probabilitySum = 0;
+        foreach ($prizes as $prize) {
             $prob[$prize['id']] = $prize['probability'];
-	        $probabilitySum+=$prize['probability'];
+            $probabilitySum += $prize['probability'];
         }
         /**
          * 奖品总几率
          */
-	
+
         $index = 0;
         $rand = mt_rand(1, 10000);
-        if ($rand < $probabilitySum){
+        if ($rand < $probabilitySum) {
             $index = $this->randomPrize($prob);
         }
         return $index;
@@ -68,7 +68,8 @@ class PrizeController extends BaseController {
      * @param $prizes array
      * @return int
      */
-    private function randomPrize($prizes){
+    private function randomPrize($prizes)
+    {
         $index = null;
         $probabilitySum = array_sum($prizes);
         $rand = mt_rand(1, $probabilitySum);
@@ -86,21 +87,21 @@ class PrizeController extends BaseController {
     /**
      * 检查是否能抽奖
      */
-    public function checkAction(){
-        $this->pirzeLogModel->deviceid = $this->winPirzeModel->deviceid = $this->deviceid ;
-        $this->pirzeLogModel->uid  = $this->winPirzeModel->deviceid = $this->uid;
+    public function checkAction()
+    {
+        $this->pirzeLogModel->deviceid = $this->winPirzeModel->deviceid = $this->deviceid;
+        $this->pirzeLogModel->uid = $this->winPirzeModel->deviceid = $this->uid;
         $win = $this->pirzeLogModel->checkRaffle();
 
-        if ($win['num']  > 0  ){ //已经抽中过奖品
-            $result = array('error'=>'','errno'=>0,'data'=>0);
-        }
-        else{
-            $result = array('error'=>'','errno'=>0,'data'=>1);
+        if ($win['num'] > 0) { //已经抽中过奖品
+            $result = array('error' => '', 'errno' => 0, 'data' => 0);
+        } else {
+            $result = array('error' => '', 'errno' => 0, 'data' => 1);
         }
         //检查是否中奖，但是没有填写资料
         $prize = $this->winPirzeModel->checkUserPrize();
-        if ($prize['id'] > 0){
-            $result = array('error'=>'','errno'=>0,'data'=>$prize['id']);
+        if ($prize['id'] > 0) {
+            $result = array('error' => '', 'errno' => 0, 'data' => $prize['id']);
         }
         echo json_encode($result);
         exit();
@@ -109,13 +110,14 @@ class PrizeController extends BaseController {
     /**
      * 抽奖
      */
-    public function winAction(){
+    public function winAction()
+    {
         $id = $this->winPrize();
         $log = new prizeLogModel();
         $log->aid = 0;
         $log->deviceid = $this->deviceid;
         $log->uid = $this->uid;
-        if ($id > 0){
+        if ($id > 0) {
             $winPirzeM = new winPrizeModel();
             $winPirzeM->pid = $id;
             $winPirzeM->deviceid = $this->deviceid;
@@ -123,27 +125,28 @@ class PrizeController extends BaseController {
             $log->pid = $id;
         }
         $log->add();
-        
-        $result = array('error'=>'','errno'=>0,'data'=>'');
-        if ($id > 0){
+
+        $result = array('error' => '', 'errno' => 0, 'data' => '');
+        if ($id > 0) {
             $this->prizeModel->id = $id;
-	        $prize = $this->prizeModel->get();
-            $result['data'] = array('id'=>$prize['id'],'name'=>$prize['name']); 
+            $prize = $this->prizeModel->get();
+            $result['data'] = array('id' => $prize['id'], 'name' => $prize['name']);
         }
         echo json_encode($result);
         exit();
     }
 
-    public function contactAction(){
+    public function contactAction()
+    {
         $param = array(
-            'name'=>$this->getParam('name'),
+            'name' => $this->getParam('name'),
             'phone' => $this->getParam('phone'),
             'address' => $this->getParam('address')
         );
 
         $id = intval($this->getParam('pid'));
 
-        if ($id > 0){
+        if ($id > 0) {
             $winPrize = new winPrizeModel();
             $winPrize->contact = json_encode($param);
             $winPrize->pid = $id;
@@ -151,9 +154,9 @@ class PrizeController extends BaseController {
             $winPrize->received = 1;
             $winPrize->uid = $this->uid;
             $winPrize->save();
-            $result = array('error'=>'','errno'=>0,'data'=>$id);
-        }else{
-            $result = array('error'=>'parameter error','errno'=>102,'data'=>$id);
+            $result = array('error' => '', 'errno' => 0, 'data' => $id);
+        } else {
+            $result = array('error' => 'parameter error', 'errno' => 102, 'data' => $id);
         }
     }
 
