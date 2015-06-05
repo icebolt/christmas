@@ -100,7 +100,9 @@ class UserinfoController extends BaseController {
 		}
 		$data['address'] = addslashes(trim($data['address']));
 		$data['desc'] = addslashes(trim($data['desc']));
-		$user = $model->find($param);
+		if(!empty($param)){
+			$user = $model->find($param);
+		}
 		$updateData['appid'] = intval($data['appid']);
 		$updateData['activeid'] = intval($data['aid']);
 		$updateData['uid'] = intval($data['uid']);
@@ -112,8 +114,12 @@ class UserinfoController extends BaseController {
 			$updateData['id'] = $user['id'];
 			$id = $model->update($updateData);
 		}
-		$row = $model->get($user['id']);
-		if(!empty($id))
-			$this->redirect($this->pre.'userinfo/form/appid/'.$data['appid'].'/aid/'.$data['aid'].'/id/'.$id);
+		if(!empty($id)){
+			$this->assign('msg', '资料提交成功');
+			return $this->display('user/success.twig');
+//			$this->redirect($this->pre.'userinfo/form/appid/'.$data['appid'].'/aid/'.$data['aid'].'/id/'.$id);
+		}
+		$this->assign('msg', '提交失败');
+		return $this->display('user/error.twig');
 	}
 }

@@ -25,6 +25,10 @@ body {
 	margin-top: 20px;
 }
 
+.line:nth-of-type(4),.line:nth-of-type(5) {
+	margin-top: 13px;
+}
+
 label {
 	color: #8c8c8c;
 	vertical-align: top;
@@ -32,7 +36,7 @@ label {
 	padding-right: 10px;
 	padding-top: 5px;
 	display: inline-block;
-	text-align: right;
+	text-align: left;
 }
 
 label.bottom{
@@ -48,13 +52,21 @@ label.bottom{
 }
 
 .btn{
-	
+	color: #fff;
+	font-size: 16px;
+	font-weight:bolder;
+	background-color: #f14822;
+	border: 1px solid #efefef;
+	padding: 10px 30px;
+	border-radius : 6px;
+	cursor:pointer;
+	margin-left: 42%;
 }
 
 .text {
-	width: 78%;
+	width: 70%;
 	border: 0 none;
-	line-height: 30px;
+	line-height: 20px;
 	border-bottom: 1px solid #C9C9C9;
 	outline: none;
 	font-size: 13px;
@@ -65,15 +77,15 @@ label.bottom{
 
 .textarea {
 	font-size: 13px;
-	width: 78%;
+	width: 73%;
 	vertical-align: middle;
 	border: 0 none;
 	overflow: hidden;
 	resize: none;
-	line-height: 28px;
-	background: -webkit-linear-gradient(top, transparent 29px, #C9C9C9 30px);
-	background: linear-gradient(top, transparent 29px, #C9C9C9 30px);
-	background-size: 100% 30px;
+	line-height: 38px;
+	background: -webkit-linear-gradient(top, transparent 39px, #C9C9C9 30px);
+	background: linear-gradient(top, transparent 39px, #C9C9C9 30px);
+	background-size: 100% 40px;
 	outline: none;
 	-webkit-appearance: none;
 	-webkit-tap-highlight-color: rgba(255,255,255,0);
@@ -93,15 +105,7 @@ label.bottom{
         <p style="display:inline-block;">您的会员信息如下</p>
     </div>
 	<div class="line">
-        <img class="photo" src="{{user.avatar|default('https://assets.servedby-buysellads.com/p/manage/asset/id/16148')}}">
-    </div>
-	<div class="line">
-        <label class="bottom">昵称</label>
-        <input type="text" name="nickname" value="{{user.nickname}}" class="text">
-    </div>
-	<div class="line">
-        <label>简介</label>
-        <textarea name="desc" cols="30" rows="2" class="textarea">{{user.desc}}</textarea>
+        <img class="photo" src="{{user.avatar|default('http://s1.cdn.bbwc.cn/avatar/user_default.png')}}">
     </div>
 	<div class="line">
         <label class="bottom">姓名</label>
@@ -111,12 +115,26 @@ label.bottom{
         <label class="bottom">性别</label>
         <input type="text" name="sex" value="{{user.sex}}" class="text">
     </div>
+	{%if  user.uid == 0%}
 	<div class="line">
-        <label class="bottom">手机号</label>
+        <label class="bottom">邮箱</label>
+        <input type="text" name="email" value="{{user.email}}" class="text">
+    </div>
+	{%endif%}
+	<div class="line">
+        <label class="bottom">昵称</label>
+        <input type="text" name="nickname" value="{{user.nickname}}" class="text">
+    </div>
+	<div class="line">
+        <label style="margin-top:20px;">简介</label>
+        <textarea name="desc" cols="30" rows="2" class="textarea">{{user.desc}}</textarea>
+    </div>
+	<div class="line">
+        <label class="bottom">手机</label>
         <input type="text" name="mobile" value="{{user.mobile}}" class="text">
     </div>
 	<div class="line">
-        <label class="bottom">微信号</label>
+        <label class="bottom">微信</label>
         <input type="text" name="wachart" value="{{user.wachart}}" class="text">
     </div>
 	<div class="line">
@@ -129,7 +147,7 @@ label.bottom{
     </div>
 	
 	<div class="line">
-        <label>地址</label>
+        <label style="margin-top:20px;">地址</label>
         <textarea name="address" cols="30" rows="2" class="textarea">{{user.address}}</textarea>
     </div>
 	
@@ -138,7 +156,6 @@ label.bottom{
         <input type="text" name="postcode" value="{{user.postcode}}" class="text">
     </div>
 	<div class="line">
-        <label class="bottom"> </label>
         <input type="submit" class="btn"  value="保存"/>
     </div>
 	</form>
