@@ -44,7 +44,6 @@ class PrizeController extends BaseController
     {
         parent::init();
 
-
         header('Content-type: application/json');
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Headers: X-Slate-DeviceId,X-Slate-UserId,X-Slate-AppId");
@@ -94,6 +93,12 @@ class PrizeController extends BaseController
      */
     public function winAction()
     {
+        //检查是否已经抽中过
+        $_prize = $this->winPirzeModel->checkUserPrize(false);
+        if ($_prize && $_prize['pid'] > 0){
+            $result = array('error' => '', 'errno' => 0, 'data' => '');
+            echo json_encode($result);exit;
+        }
         //检查是否有中奖资格
         $win = $this->pirzeLogModel->checkRaffle();
         if ($win['num'] > 0) { //已经抽中过奖品
