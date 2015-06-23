@@ -139,6 +139,22 @@ class PrizeController extends BaseController
         exit();
     }
 
+    public function listAction(){
+        $list = $this->winPirzeModel->getList();
+        if  (is_array($list) && count($list) > 0){
+            foreach ($list as &$v){
+                $contact = json_decode($v['contact']);
+                $v['name'] = $contact->name;
+                $v['phone'] = $contact->phone;
+                $v['address'] = $contact->address;
+            }
+            echo json_encode($list,JSON_UNESCAPED_UNICODE);
+        }else{
+            echo json_encode(array('error'=>'error!'));
+        }
+        exit();
+    }
+
     /**
      * 更新领奖数据
      */
@@ -153,7 +169,7 @@ class PrizeController extends BaseController
         $id = intval($this->getParam('pid'));
 
         if ($id > 0) {
-            $this->winPirzeModel->contact = json_encode($param);
+            $this->winPirzeModel->contact = json_encode($param,JSON_UNESCAPED_UNICODE);
             $this->winPirzeModel->pid = $id;
             $this->winPirzeModel->deviceid = $this->deviceid;
             $this->winPirzeModel->received = 1;
@@ -254,6 +270,8 @@ class PrizeController extends BaseController
                     }else{
                         $filterPrize[] = $prize;
                     }
+                }else{
+                    $filterPrize[] = $prize;
                 }
             }
         }

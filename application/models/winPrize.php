@@ -89,9 +89,15 @@ class winPrizeModel extends baseModel {
     }
 
     public function save(){
-        $update = array('contact'=>$this->contact,'received'=>$this->received);
+        $update = array('contact'=>$this->db->escape($this->contact),'received'=>$this->received);
         $where = "pid={$this->pid} AND deviceid='{$this->deviceid}'";
         $this->db->update($this->table,$update,$where);
+    }
+
+    public function getList(){
+        $sql = "SELECT a.*,b.name as prizeName FROM `winprize` a  LEFT JOIN  `prize` b ON a.pid = b.id WHERE a.contact !='' ORDER BY a.addtime DESC";
+//        $sql = $this->query()->select('*')->from($this->table)->where(' contact !=\'\'')->build();
+        return $this->db->executeS($sql);
     }
     /*
     public function add(){
