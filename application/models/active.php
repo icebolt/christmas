@@ -11,7 +11,9 @@ class activeModel extends baseModel
     private $table = "active";
     public function getActive($id)
     {
-        $sql = $this->query()->select("*")->from($this->table)->where("id=$id")->build();
+        $time = time();
+        $where = "id = $id and starttime < '{$time}' and endtime > '{$time}' and `status` =0 ";
+        $sql = $this->query()->select("*")->from($this->table)->where($where)->build();
         return $ret = $this->db->executeS($sql);
     }
 

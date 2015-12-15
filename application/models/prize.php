@@ -73,4 +73,31 @@ class prizeModel extends baseModel{
         return $result ? true : false;
     }
 
+    /**
+     * ========================================微信活动方法========================================
+     */
+    /**
+     * @param $active_id
+     * @param int $frequency 为0表示不限制
+     */
+    public function getActiveGoods($active_id, $frequency = 0){
+        $date = date('Y-m-d H:i:s',time());
+        if($frequency == 0){
+            $where = "frequency = 0 and aid ={$active_id}";
+            $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
+            $row = $this->db->executeS($sql);
+            return $row;
+        }else{
+            $where = "frequency = 1 and id ={$active_id} and remain > 0 and start_time <'{$date}' and end_time > '{$date}'";
+            $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
+            $row = $this->db->getRow($sql);
+            return $row;
+        }
+    }
+    public function decRemain($active_id){
+        $sql = "UPDATE {$this->table} SET remain = remain -1 WHERE id = {$active_id} AND remain > 0 ";
+        $result =  $this->db->query($sql);
+        return $result ? true : false;
+    }
+
 }
