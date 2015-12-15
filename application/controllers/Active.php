@@ -205,51 +205,54 @@ class ActiveController extends \SlatePF\Extras\ExtrasController
             if($r){
                 $arr['id'] = $prize['id'];
                 $arr['name'] = $prize['name'];
+                //添加到中奖表（因为是100%中奖）
+                $winprizeModel = new winPrizeModel();
+                $data =[
+                    'pid'=>$arr['id'],
+                    'active_id'=>$this->active_id,
+                    'active_uid'=>$this->uid
+                ];
+                $winprizeModel->addWin($data);
+                //添加到中奖日志表
+                $winprizelogModel = new winprizelogModel();
+                $data = [
+                    'pid' => $arr['id'],
+                    'aid' => $this->active_id,
+                    'uid' => $this->uid
+                ];
+                $winprizelogModel->addWin($data);
+                return $arr;
             }
-            //添加到中奖表（因为是100%中奖）
-            $winprizeModel = new winPrizeModel();
-            $data =[
-                'pid'=>$arr['id'],
-                'active_id'=>$this->active_id,
-                'active_uid'=>$this->uid
-            ];
-            $winprizeModel->addWin($data);
-
-        }else{
-            //普通奖品中抽奖
-            $prize2 = $prizeModel->getActiveGoods($this->active_id);
-            //抽到的数字
-            $rand_num = rand(1,100);  //33
-            //1 3
-            //2 20
-            //3  1
-            //4  77
-            $num = 0;
-            foreach($prize2 as $key =>$val){
-
-                $num += $val['probability'];
-                if($num >= $rand_num){
-                    //恭喜获取这个奖
-                    $arr['id'] = $val['id'];
-                    $arr['name'] = $val['name'];
-                    break;
-                }
-            }
-            //添加到中奖表（因为是100%中奖）
-            $winprizeModel = new winPrizeModel();
-            $data =[
-                'pid'=>$arr['id'],
-                'active_id'=>$this->active_id,
-                'active_uid'=>$this->uid
-            ];
-            $winprizeModel->addWin($data);
         }
+        //普通奖品中抽奖
+        $prize2 = $prizeModel->getActiveGoods($this->active_id);
+        //抽到的数字
+        $rand_num = rand(1, 100);  //33
+        $num = 0;
+        foreach ($prize2 as $key => $val) {
+
+            $num += $val['probability'];
+            if ($num >= $rand_num) {
+                //恭喜获取这个奖
+                $arr['id'] = $val['id'];
+                $arr['name'] = $val['name'];
+                break;
+            }
+        }
+        //添加到中奖表（因为是100%中奖）
+        $winprizeModel = new winPrizeModel();
+        $data = [
+            'pid' => $arr['id'],
+            'active_id' => $this->active_id,
+            'active_uid' => $this->uid
+        ];
+        $winprizeModel->addWin($data);
         //添加到中奖日志表
         $winprizelogModel = new winprizelogModel();
-        $data =[
-            'pid'=>$arr['id'],
-            'aid'=>$this->active_id,
-            'uid'=>$this->uid
+        $data = [
+            'pid' => $arr['id'],
+            'aid' => $this->active_id,
+            'uid' => $this->uid
         ];
         $winprizelogModel->addWin($data);
         return $arr;
