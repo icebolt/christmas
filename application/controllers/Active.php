@@ -198,7 +198,6 @@ class ActiveController extends \SlatePF\Extras\ExtrasController
         $arr = []; //获奖信息
         $prizeModel = new prizeModel();
         $prize = $prizeModel->getActiveGoods($this->active_id, 1);
-
         if($prize){
             //恭喜你获取特殊大奖
             //更新大奖状态

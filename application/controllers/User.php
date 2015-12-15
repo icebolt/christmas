@@ -27,7 +27,7 @@ class UserController extends \SlatePF\Extras\ExtrasController
         $open_id = htmlspecialchars($_POST['open_id']);
         $active_id = intval($_POST['active_id']);
         $type = intval($_POST['type']);
-        $inviter_id = intval($_POST['inviter_id']);
+        $inviter_id = @intval($_POST['inviter_id']);
         if(!isset($active_id) || !isset($open_id) || !isset($type) || !$open_id || !$type || !$active_id){
             $ret = [
                 'error'=> '数据不合法',
@@ -44,7 +44,6 @@ class UserController extends \SlatePF\Extras\ExtrasController
         $userInfo = $this->_isUser();
         if($userInfo){
             //生成token规则
-            var_dump($userInfo);
             //token = md5(uid@open_id@active_id@type@rand_string)
             $token = md5($userInfo['id'].'@'. $userInfo['open_id'].'@'.$userInfo['type'].'@'.$userInfo['rand_string']);
             $uid = $userInfo['id'];
