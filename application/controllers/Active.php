@@ -219,15 +219,20 @@ class ActiveController extends \SlatePF\Extras\ExtrasController
             //普通奖品中抽奖
             $prize2 = $prizeModel->getActiveGoods($this->active_id);
             //抽到的数字
-            $rand_num = rand(1,100);
+            $rand_num = rand(1,100);  //33
+            //1 3
+            //2 20
+            //3  1
+            //4  77
             $num = 0;
             foreach($prize2 as $key =>$val){
 
                 $num += $val['probability'];
-                if($val['probability']>= $rand_num){
+                if($num >= $rand_num){
                     //恭喜获取这个奖
                     $arr['id'] = $val['id'];
                     $arr['name'] = $val['name'];
+                    break;
                 }
             }
             //添加到中奖表（因为是100%中奖）
