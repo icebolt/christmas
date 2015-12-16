@@ -64,9 +64,8 @@ class ActiveController extends BaseController
         if(!$ret){
             //没有活动
             $this->returnJson(104);
-        }else{
-            return true;
         }
+        return true;
     }
 
     /**
