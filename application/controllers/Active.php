@@ -231,6 +231,9 @@ class ActiveController extends BaseController
         $filterPrize = array();
         if (count($prizes) > 0){
             foreach ($prizes as $key => $prize){
+                if($prize['num'] == 0){//表示不限制
+                    $filterPrize[] = $prize;
+                }else{
                     $winprizeModel->pid = $prize['id'];
                     $num = $winprizeModel->fetchWinNum($start_time,$end_time);
                     if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
@@ -238,6 +241,7 @@ class ActiveController extends BaseController
                     }else{
                         $filterPrize[] = $prize;
                     }
+                }
             }
         }
         return $filterPrize;
