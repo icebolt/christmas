@@ -19,6 +19,18 @@ class BaseController extends \SlatePF\Extras\ExtrasController {
 	public $httpRequest;
 	public $curPage;
 	public $pagesize;
+
+	public $ret_msg = [
+		200 => '成功',
+		100 => '数据不完整',
+		101 => '用户不存在',
+		102 => '操作失败',
+		103 => '',
+		104 => '活动不存在或者已经结束',
+
+		201 => '用户已经抽过奖',
+		202 => '需要完善信息'
+	];
 	public function init(){
 		$config = Yaf\Application::app()->getConfig();
 		$this->mailApi = $config->api['mail'];
@@ -98,7 +110,10 @@ class BaseController extends \SlatePF\Extras\ExtrasController {
 		return $this->display('error/error.twig');
 	}
 
-	public function returnJson($data = '', $code = 200, $msg = ''){
+	public function returnJson( $code = 200,$data = '', $msg = ''){
+		if($msg == ''){
+			$msg = $this->ret_msg[$code];
+		}
 		echo json_encode(array('code'=>$code,'data'=>$data, 'msg'=>$msg));
 		exit();
 	}

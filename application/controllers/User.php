@@ -6,7 +6,7 @@
  * Date: 15/12/11
  * Time: 下午3:32
  */
-class UserController extends \SlatePF\Extras\ExtrasController
+class UserController extends BaseController
 {
     private $active_id = 0;
     private $type = 0;
@@ -29,13 +29,7 @@ class UserController extends \SlatePF\Extras\ExtrasController
         $type = intval($_POST['type']);
         $inviter_id = @intval($_POST['inviter_id']);
         if(!isset($active_id) || !isset($open_id) || !isset($type) || !$open_id || !$type || !$active_id){
-            $ret = [
-                'error'=> '数据不合法',
-                'errno' => 100,
-                'data'=>''
-            ];
-            echo json_encode($ret);
-            exit;
+            $this->returnJson(100);
         }
         $this->active_id = $active_id;
         $this->open_id = $open_id;
@@ -60,25 +54,13 @@ class UserController extends \SlatePF\Extras\ExtrasController
                 $token = md5($ret.'@'. $data['open_id'].'@'.$data['type'].'@'.$rand_string);
                 $uid = $ret;
             }
-
         }
         if($token && $uid){
-            $ret = [
-                'data' => ['token'=> $token,'uid'=>$uid],
-                'error'=> '',
-                'errno'=> 0
-
-            ];
+            $data = ['token'=> $token,'uid'=>$uid];
+            $this->returnJson(200, $data);
         }else{
-            $ret = [
-                'data' => '',
-                'error'=> '登录失败',
-                'errno'=> 100
-
-            ];
+            $this->returnJson(102);
         }
-
-        echo json_encode($ret);
     }
 
 

@@ -6,10 +6,11 @@
  * Date: 15/12/10
  * Time: 上午11:28
  */
-class ActiveController extends \SlatePF\Extras\ExtrasController
+class ActiveController extends BaseController
 {
     private $uid = 0;
     private $active_id = 0;
+
     /**
      * 初始化方法
      */
@@ -25,23 +26,11 @@ class ActiveController extends \SlatePF\Extras\ExtrasController
         $uid = intval($_POST['uid']);
         $active_id = intval($_POST['active_id']);
         if(!isset($active_id) || !isset($token) || !isset($uid) || !$token || !$uid || !$active_id){
-            $ret = [
-              'error'=> '数据不合法',
-                'errno' => 100,
-                'data'=>''
-            ];
-            echo json_encode($ret);
-            exit;
+            $this->returnJson(100);
         }
         //判断用户是否存在
         if(!$this->CheckUser($uid, $token)){
-            $ret = [
-                'error'=> '用户不存在',
-                'errno' => 101,
-                'data'=>''
-            ];
-            echo json_encode($ret);
-            exit;
+            $this->returnJson(101);
         }
         //判断活动是否在有效期
         $this->_activeValid($active_id);
@@ -74,13 +63,7 @@ class ActiveController extends \SlatePF\Extras\ExtrasController
         $ret = $activeModel->getActive($active_id);
         if(!$ret){
             //没有活动
-            $ret = [
-                'error'=> '活动不存在或者已经结束',
-                'errno' => 104,
-                'data'=>''
-            ];
-            echo json_encode($ret);
-            exit;
+            $this->returnJson(104);
         }else{
             return true;
         }
@@ -108,20 +91,10 @@ class ActiveController extends \SlatePF\Extras\ExtrasController
         $activeUserModel = new activeUserModel();
         $ret = $activeUserModel->editInfo($this->uid,json_encode($data));
         if ($ret) {
-        $info = [
-            'error' => 'success',
-            'errno' => 0,
-            'data' => ''
-        ];
+            $this->returnJson(200);
         }else{
-            $info = [
-                'error' => '失败',
-                'errno' => 100,
-                'data' => ''
-            ];
+            $this->returnJson(102);
         }
-        echo json_encode($info);
-        exit;
     }
 
     /**
@@ -142,13 +115,7 @@ class ActiveController extends \SlatePF\Extras\ExtrasController
     {
         $activeUserModel = new activeUserModel();
         $ret_list = $activeUserModel->getInviter($this->active_id, $this->uid);
-        $ret = [
-            'error'=> '',
-            'errno' => 0,
-            'data'=> $ret_list
-        ];
-        echo json_encode($ret);
-        exit;
+        $this->returnJson(200,$ret_list);
     }
 
     /**
@@ -158,26 +125,11 @@ class ActiveController extends \SlatePF\Extras\ExtrasController
     {
         //判断是否可以抽奖
         if(!$this->check()){
-            $ret = [
-                'error'=> '已经抽过奖',
-                'errno' => 0,
-                'data'=> ''
-            ];
-            echo json_encode($ret);
-            exit;
+            $this->returnJson(201);
         }
         //开始抽奖
         $prize = $this->_rule();
-        $ret = [
-            'error'=> '',
-            'errno' => 0,
-            'data'=> $prize
-        ];
-        echo json_encode($ret);
-        exit;
-
-
-
+        $this->returnJson(200, $prize);
     }
 
     /**
@@ -274,12 +226,18 @@ class ActiveController extends \SlatePF\Extras\ExtrasController
 
     }
 
-
     /**
      * 检查是否能抽奖
      */
     private function check()
     {
+        //是否完善信息
+        $activeUserModel = new activeUserModel();
+        $info = $activeUserModel->getUserInfo($this->uid);
+        if(empty($info['content'])){
+            $this->returnJson(202);
+        }
+        //是否抽过奖
         $winprizeModel = new winprizeModel();
         $num = $winprizeModel->checkIsWin($this->active_id, $this->uid);
         if ($num['num'] == 0) {
