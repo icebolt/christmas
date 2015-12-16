@@ -280,6 +280,19 @@ class ActiveController extends \SlatePF\Extras\ExtrasController
      */
     private function check()
     {
+        //是否完善信息
+        $activeUserModel = new activeUserModel();
+        $info = $activeUserModel->getUserInfo($this->uid);
+        if(empty($info['content'])){
+            $ret = [
+                'error'=> '需要完善信息',
+                'errno' => 105,
+                'data'=> ''
+            ];
+            echo json_encode($ret);
+            exit;
+        }
+        //是否抽过奖
         $winprizeModel = new winprizeModel();
         $num = $winprizeModel->checkIsWin($this->active_id, $this->uid);
         if ($num['num'] == 0) {
