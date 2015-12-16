@@ -8,7 +8,10 @@
  * Date         2014-3-19 18:33:48
  */
 define('APPLICATION_PATH', dirname(__FILE__).'/../');
-
+if($_GET['debug'] =1){
+    ini_set('display_errors',1);
+    error_reporting(E_ALL);
+}
 //ini_set('yaf.library', '/home/share/jinxin/yafLibrary');
 if(!isset($_POST['raw']) && !empty($HTTP_RAW_POST_DATA)){
     $_POST['raw'] = $HTTP_RAW_POST_DATA;

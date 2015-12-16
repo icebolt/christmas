@@ -97,4 +97,9 @@ class BaseController extends \SlatePF\Extras\ExtrasController {
 		$this->assign('msg',$msg);
 		return $this->display('error/error.twig');
 	}
+
+	public function returnJson($data = '', $code = 200, $msg = ''){
+		echo json_encode(array('code'=>$code,'data'=>$data, 'msg'=>$msg));
+		exit();
+	}
 }
