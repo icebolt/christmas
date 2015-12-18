@@ -32,7 +32,7 @@ $arr[3] = 'images/gift/an/'.rand_num().'.png';
 $arr[4] = 'images/gift/an/'.rand_num().'.png';
 if($res['data']['id'] == 0){
     $arr[$showGiftID] = 'images/3/21.png';
-    $arr[5] = "images/card/card.jpg";
+    $arr[5] = "images/3/11.png";
 }else{
     $arr[$showGiftID] = "http://".$host.$res['data']['img_url'];
     $img_url = str_replace('ming','datu',$res['data']['img_url']);
