@@ -24,6 +24,25 @@ if($content == 1){
     }
 }
 $showGiftID>0?$showGiftID:1;
+//显示中间图片位置
+$arr =[];
+$arr[1] = 'images/gift/an/'.rand_num().'.png'; ///Users/admin/www/active/active/Christmas/images/gift/an/2.png
+$arr[2] = 'images/gift/an/'.rand_num().'.png';
+$arr[3] = 'images/gift/an/'.rand_num().'.png';
+$arr[4] = 'images/gift/an/'.rand_num().'.png';
+if($res['data']['id'] == 0){
+    $arr[$showGiftID] = 'images/3/21.png';
+    $arr[5] = "images/card/card.jpg";
+}else{
+    $arr[$showGiftID] = "http://".$host.$res['data']['img_url'];
+    $img_url = str_replace('ming','datu',$res['data']['img_url']);
+    $arr[5] = "http://".$host.$img_url;
+}
+
+function rand_num(){
+    return rand(2,26);
+}
+
 ?>
 <DOCTYPE HTML>
 <html><head>
@@ -123,13 +142,13 @@ $showGiftID>0?$showGiftID:1;
                 <img class="snow" src="images/1/2.png">
                 <img class="snow" src="images/1/3.png">
                 </div>
-            <img src="images/3/22.png" id="img1" style=" position:absolute;left:10px; top:400px;" width="188" height="188" onClick="javascript:showTag(1)">
-            <img src="images/3/24.png" id="img2" style=" position:absolute;left:150px; top:200px;" width="188" height="188" onClick="javascript:showTag(2)">
-            <img src="images/3/21.png" id="img3" style=" position:absolute;left:330px; top:420px;" width="188" height="188" onClick="javascript:showTag(3)">
-            <img src="images/3/22.png" id="img4" style=" position:absolute;left:540px; top:260px;" width="188" height="188" onClick="javascript:showTag(4)">
+            <img src="<?=$arr[1];?>" id="img1" style=" position:absolute;left:10px; top:400px;" width="188" height="188" onClick="javascript:showTag(1)">
+            <img src="<?=$arr[2];?>" id="img2" style=" position:absolute;left:150px; top:200px;" width="188" height="188" onClick="javascript:showTag(2)">
+            <img src="<?=$arr[3];?>" id="img3" style=" position:absolute;left:330px; top:420px;" width="188" height="188" onClick="javascript:showTag(3)">
+            <img src="<?=$arr[4];?>" id="img4" style=" position:absolute;left:540px; top:260px;" width="188" height="188" onClick="javascript:showTag(4)">
             <div class="giftfont">恭喜你获得<?=$name;?></div>
             <div class="tagPanel">
-            	<img class="coverdesc" id="img5" src="images/3/11.png">
+            	<img class="coverdesc" id="img5" src="<?=$arr[5];?>">
                 <div id="shareBtn" onClick="javascript:showShareTag()"></div>
                 <div id="closeshareBtn" onClick="javascript:hideTag()"></div>
             </div>

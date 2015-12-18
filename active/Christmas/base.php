@@ -12,6 +12,9 @@ header("Content-Type: text/html; charset=UTF-8");
 $appid = "";
 $appsercet = "";
 $host = $_SERVER['HTTP_HOST'];
+if(strpos($host,"bbwc")){
+    $host =$host."/active";
+}
 $active_id = 2;
 $type = "1";
 
@@ -39,13 +42,19 @@ if (!$_SESSION['uid']) {
     $state = rand(10000, 99999);
     $_SESSION['active']['state'] = $state;
 //    $url = "https://open.weixin.qq.com/connect/qrconnect?appid=$appid&redirect_uri=$redirect_uri&response_type=code&scope=snsapi_login&state=$state";
-    $openid = "eroihghjhghjhiadffe";//.time();
-    $url = "http://yaf.active.test.com/public/index.php/index/user/test?open_id=$openid&type=1&active_id=2";
+    $openid = $_GET['open_id'];//"eroihghjhghjhiadffe";//.time();
+    if(empty($openid)){
+        echo "请登录";
+        exit;
+    }
+    $url = "http://".$host."/public/index.php/index/user/test?open_id=$openid&type=1&active_id=2";
     header("location: $url");
     exit;
 }
 $uid = $_SESSION['uid'];
 $token = $_SESSION['token'];
+var_dump($_SESSION);
+
 $info = $_SESSION['content'];
 $content = 0;  //是否填写基本信息
 if ($info) {

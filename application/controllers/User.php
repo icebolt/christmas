@@ -13,9 +13,12 @@ class UserController extends BaseController
     private $open_id = 0;
     private $inviter_id = 0;
     private $activeUserModel = '';
+    private $host_url = '';
     public function init()
     {
         parent::init();
+        $config = Yaf\Application::app()->getConfig();
+        $this->host_url = $config->host['url'];
         $this->activeUserModel = new activeUserModel();
     }
 
@@ -48,7 +51,7 @@ class UserController extends BaseController
         $this->inviter_id = $inviter_id;
         $this->active_id = $active_id;
         if($this->login()){
-            $url = "http://".$_SERVER['HTTP_HOST'] ."/active/Christmas/index.php";
+            $url = $this->host_url ."active/Christmas/index.php";
             header("location: $url");
         }
     }
@@ -59,7 +62,7 @@ class UserController extends BaseController
         $this->inviter_id = @$_GET['inviter_id'];
         $this->active_id = $_GET['active_id'];
         if($this->login()){
-            $url = "http://".$_SERVER['HTTP_HOST'] ."/active/Christmas/index.php";
+            $url = $this->host_url ."active/Christmas/index.php";
             header("location: $url");
         }
     }

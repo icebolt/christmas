@@ -3,6 +3,7 @@ include_once("base.php");
 $ret = winlist();
 if($ret['code']==200){
     $info = $ret['data'];
+    var_dump($info);
 }
 ?>
 <DOCTYPE HTML>
@@ -41,7 +42,7 @@ if($ret['code']==200){
         <div class="content">
         	<div class="indexdiv">
             	<img id="showFlashImgBg" src="images/2/1.jpg">
-                <div class="indexfont">恭喜<?=$data['nickname']?>获得<?=$data['prizeName']?></div>
+                <div class="indexfont">恭喜<?=$info['nickname']?>获得<?=$info['prizeName']?></div>
                 <div style="width:190px; height:130px; position:absolute;top:0px; left:550px;" onClick="javascript:showGiftList()"></div>
                 <div class="indexFlash">
                 <img src="images/2/2.jpg" style="display:none;">

@@ -155,6 +155,7 @@ class ActiveController extends BaseController
             if($r){
                 $arr['id'] = $prize['id'];
                 $arr['name'] = $prize['name'];
+                $arr['img_url'] = $prize['img_url'];
                 //添加到中奖表（因为是100%中奖）
 
                 $data =[
@@ -187,7 +188,7 @@ class ActiveController extends BaseController
             //     | 01 || 3 || 1% |
             //      | 02 ||10 || 1.5% |
             //      | 03 ||12 || 2% |
-            $win_number = 10000 * 0.615; //450
+            $win_number = 10000 * 0.015; //450
             if ($rand_num <= $win_number) {
                 //我中奖了
 
@@ -197,6 +198,7 @@ class ActiveController extends BaseController
                 if ($r) {
                     $arr['id'] = $prize2[$id]['id'];
                     $arr['name'] = $prize2[$id]['name'];
+                    $arr['img_url'] = $prize2[$id]['img_url'];
                     $data = [
                         'pid' => $arr['id'],
                         'active_id' => $this->active_id,
