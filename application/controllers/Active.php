@@ -17,11 +17,6 @@ class ActiveController extends BaseController
     public function init()
     {
 
-        //验证用户是否合法
-//        if(!$this->is_weixin()){
-//            echo "请使用微信浏览器打开";
-//            exit;
-//        }
         $token = htmlspecialchars($_POST['token']);
         $uid = intval($_POST['uid']);
         $active_id = intval($_POST['active_id']);
@@ -36,8 +31,6 @@ class ActiveController extends BaseController
         $this->_activeValid($active_id);
         $this->uid = $uid;
         $this->active_id = $active_id;
-
-
     }
 
     /**
@@ -145,11 +138,10 @@ class ActiveController extends BaseController
 //      | 01 || 3 || 1% |
 //      | 02 ||10 || 1.5% |
 //      | 03 ||12 || 2% |
-//      | 04 || 999999999 || 95.5% |
 //      如果角色A抽中的物品，剩余数量为0，则显示用户中四等奖
 //
 //      特等大奖
-//      开放时间：2015/12/24 13:14
+//      开放时间：2015/12/25 00:00:00
 
         $arr = []; //获奖信息
         $prizeModel = new prizeModel();
@@ -187,30 +179,47 @@ class ActiveController extends BaseController
          */
         //1 提取当天奖品 1，2，3 奖品
         $prize2 = $this->prizeAvalible();
-        //抽到的数字
-        $rand_num = rand(1, 10000);  //33
-        $num = 0;
-        foreach ($prize2 as $key => $val) {
-            $num += $val['probability'];
-            if ($num >= $rand_num) {
-                //恭喜获取这个奖
-                $arr['id'] = $val['id'];
-                $arr['name'] = $val['name'];
-                break;
+        $count = count($prize2);
+        if($count>1){
+            //抽到的数字
+            $rand_num = rand(1, 10000);  //33
+            //中奖概率
+            //     | 01 || 3 || 1% |
+            //      | 02 ||10 || 1.5% |
+            //      | 03 ||12 || 2% |
+            $win_number = 10000 * 0.615; //450
+            if ($rand_num <= $win_number) {
+                //我中奖了
+
+
+                $id = rand(0, $count - 1); //中奖ID
+                $r = $prizeModel->decRemain($prize2[$id]['id']);
+                if ($r) {
+                    $arr['id'] = $prize2[$id]['id'];
+                    $arr['name'] = $prize2[$id]['name'];
+                    $data = [
+                        'pid' => $arr['id'],
+                        'active_id' => $this->active_id,
+                        'active_uid' => $this->uid
+                    ];
+                    $winprizeModel->addWin($data);
+                    //添加到中奖日志表
+                    $data = [
+                        'pid' => $arr['id'],
+                        'aid' => $this->active_id,
+                        'uid' => $this->uid
+                    ];
+                    $winprizelogModel->addWin($data);
+                    return $arr;
+                }
+
             }
         }
-        //添加到中奖表（因为是100%中奖）
-        $winprizeModel = new winPrizeModel();
-        $data = [
-            'pid' => $arr['id'],
-            'active_id' => $this->active_id,
-            'active_uid' => $this->uid
-        ];
-        $winprizeModel->addWin($data);
+        $arr = ['id'=> 0 , 'name'=>'iWeekly贺卡一张'];
         //添加到中奖日志表
         $winprizelogModel = new winprizelogModel();
         $data = [
-            'pid' => $arr['id'],
+            'pid' => 0,
             'aid' => $this->active_id,
             'uid' => $this->uid
         ];
@@ -222,28 +231,33 @@ class ActiveController extends BaseController
      * @return array 获取可供中奖的奖品
      */
     private function prizeAvalible(){
-        $start_time = date('Y-m-d',time())." 00:00:00";
-        $end_time = date('Y-m-d',time())." 23:59:59";
+        $start_time = "2015-12-21 00:00:00";
+        $end_time = "2015-12-31 23:59:59";
         $prizeModel = new prizeModel();
         $winprizeModel = new winPrizeModel();
         $prizes = $prizeModel->getActiveGoods($this->active_id);
         $filterPrize = array();
         if (count($prizes) > 0){
             foreach ($prizes as $key => $prize){
-                if($prize['num'] == 0){//表示不限制
-                    $filterPrize[] = $prize;
+                $winprizeModel->pid = $prize['id'];
+                $num = $winprizeModel->fetchWinNum($start_time,$end_time);
+                if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
+                    continue;
                 }else{
-                    $winprizeModel->pid = $prize['id'];
-                    $num = $winprizeModel->fetchWinNum($start_time,$end_time);
-                    if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
-                        continue;
-                    }else{
-                        $filterPrize[] = $prize;
-                    }
+                    $filterPrize[] = $prize;
                 }
             }
         }
         return $filterPrize;
+    }
+
+    public function checkUserAction(){
+        $ret = $this->check();
+        if($ret){
+            $this->returnJson(200);
+        }else{
+            $this->returnJson(201);
+        }
     }
     /**
      * 检查是否能抽奖
@@ -270,5 +284,17 @@ class ActiveController extends BaseController
             }
         }
         return false;
+    }
+
+    /**
+     * 获取最新获奖
+     */
+    public function WinlistAction()
+    {
+        $winprizeModel = new winPrizeModel();
+        $winprize = $winprizeModel->getList();
+        $count = count($winprize);
+        $num = rand(0,$count-1);
+        $this->returnJson(200, $winprize[$num]);
     }
 }

@@ -95,7 +95,8 @@ class winPrizeModel extends baseModel {
     }
 
     public function getList(){
-        $sql = "SELECT a.*,b.name as prizeName FROM `winprize` a  LEFT JOIN  `prize` b ON a.pid = b.id WHERE a.contact !='' ORDER BY a.addtime DESC";
+        $sql = "SELECT a.pid,a.active_id,a.active_uid as auid,b.name as prizeName,c.nickname as nickname FROM `winprize` a  LEFT JOIN  `prize` b ON a.pid = b.id LEFT JOIN `active_user` c ON a.active_uid = c.id ORDER BY a.addtime DESC LIMIT 3
+";
 //        $sql = $this->query()->select('*')->from($this->table)->where(' contact !=\'\'')->build();
         return $this->db->executeS($sql);
     }

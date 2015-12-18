@@ -12,6 +12,7 @@
  *
  * @author jinxin
  */
+session_start();
 class BaseController extends \SlatePF\Extras\ExtrasController {
 	public $mailApi;
 	protected $mailAuth;

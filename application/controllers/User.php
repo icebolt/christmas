@@ -13,38 +13,75 @@ class UserController extends BaseController
     private $open_id = 0;
     private $inviter_id = 0;
     private $activeUserModel = '';
-
     public function init()
     {
+        parent::init();
         $this->activeUserModel = new activeUserModel();
+    }
+
+    public function callbackAction()
+    {
+
+        $state = htmlspecialchars($_GET['state']);
+        if(!$state ==$_SESSION['active']['state']){
+            echo "不要攻击我，我会报警的！";
+            exit;
+        }
+        $active_id = intval($_GET['active_id']);
+        $type = intval($_GET['type']);
+        $inviter_id = @intval($_GET['inviter_id']);
+
+        if(!isset($active_id) || !isset($type) || !$type || !$active_id){
+            $this->returnJson(100);
+        }
+        $ret = $this->_getToken();
+        if(!isset($ret['access_token'])){
+            $this->returnJson(100);
+        }
+        //token 去获取用户昵称
+        $userInfo = $this->_getUserInfo($ret['access_token'],$ret['openid']);
+        if(!isset($userInfo['nickname'])){
+            $this->returnJson(100);
+        }
+        $this->open_id = $ret['openid'];
+        $this->type = $type;
+        $this->inviter_id = $inviter_id;
+        $this->active_id = $active_id;
+        if($this->login()){
+            $url = "http://".$_SERVER['HTTP_HOST'] ."/active/Christmas/index.php";
+            header("location: $url");
+        }
+    }
+
+    public function testAction(){
+        $this->open_id = $_GET['open_id'];
+        $this->type = $_GET['type'];
+        $this->inviter_id = @$_GET['inviter_id'];
+        $this->active_id = $_GET['active_id'];
+        if($this->login()){
+            $url = "http://".$_SERVER['HTTP_HOST'] ."/active/Christmas/index.php";
+            header("location: $url");
+        }
     }
     /**
      * 登陆/注册
      */
-    public function loginAction()
+    public function login()
     {
-        //openid
-        $open_id = htmlspecialchars($_POST['open_id']);
-        $active_id = intval($_POST['active_id']);
-        $type = intval($_POST['type']);
-        $inviter_id = @intval($_POST['inviter_id']);
-        if(!isset($active_id) || !isset($open_id) || !isset($type) || !$open_id || !$type || !$active_id){
-            $this->returnJson(100);
-        }
-        $this->active_id = $active_id;
-        $this->open_id = $open_id;
-        $this->type = $type;
         //判断用户是否已经存在
         $userInfo = $this->_isUser();
+        var_dump($userInfo);
         if($userInfo){
             //生成token规则
             //token = md5(uid@open_id@active_id@type@rand_string)
             $token = md5($userInfo['id'].'@'. $userInfo['open_id'].'@'.$userInfo['type'].'@'.$userInfo['rand_string']);
             $uid = $userInfo['id'];
+            $_SESSION['content'] = $userInfo['content'];
         }else{
+            $_SESSION['ff'] = 'dd';
             //注册
             $data = [];
-            $data['inviter_id'] = $inviter_id ? $inviter_id:$this->inviter_id;
+            $data['inviter_id'] = $this->inviter_id ? $this->inviter_id : 0;
             $data['active_id'] = $this->active_id;
             $data['open_id'] = $this->open_id;
             $data['type'] = $this->type;
@@ -56,10 +93,13 @@ class UserController extends BaseController
             }
         }
         if($token && $uid){
-            $data = ['token'=> $token,'uid'=>$uid];
-            $this->returnJson(200, $data);
+            $_SESSION['uid'] = $uid;
+            $_SESSION['token'] = $token;
+
+
+            return true;
         }else{
-            $this->returnJson(102);
+            return false;
         }
     }
 
@@ -72,6 +112,31 @@ class UserController extends BaseController
     }
     private function _regUser($data){
         return $user = $this->activeUserModel->addUser($data);
+    }
+
+    private function _getToken(){
+        $config = Yaf\Application::app()->getConfig();
+        $appid = $config->weixin["appid"];
+        $secret = $config->weixin["appsecret"];
+        $code = htmlspecialchars($_GET['code']);
+        $url ="https://api.weixin.qq.com/sns/oauth2/access_token?appid=$appid&secret=$secret&code=$code&grant_type=authorization_code";
+        return $ret = $this->getHttpResponse($url);
+    }
+    /**
+     * 获取用户信息
+     * @param $access_token
+     * @param $openid
+     * @return array
+     */
+    private function _getUserInfo($access_token, $openid){
+        $url = "https://api.weixin.qq.com/sns/auth?access_token=$access_token&openid=$openid";
+        $ret = $this->getHttpResponse($url);
+        return $ret;
+    }
+
+    public function logoutAction(){
+        session_unset();
+        session_destroy();
     }
 
 
