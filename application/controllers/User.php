@@ -56,6 +56,9 @@ class UserController extends BaseController
         }
     }
 
+    /**
+     * test
+     */
     public function testAction(){
         $this->open_id = $_GET['open_id'];
         $this->type = $_GET['type'];
@@ -66,6 +69,8 @@ class UserController extends BaseController
             header("location: $url");
         }
     }
+
+
     /**
      * 登陆/注册
      */
@@ -73,15 +78,13 @@ class UserController extends BaseController
     {
         //判断用户是否已经存在
         $userInfo = $this->_isUser();
-        var_dump($userInfo);
         if($userInfo){
             //生成token规则
             //token = md5(uid@open_id@active_id@type@rand_string)
             $token = md5($userInfo['id'].'@'. $userInfo['open_id'].'@'.$userInfo['type'].'@'.$userInfo['rand_string']);
             $uid = $userInfo['id'];
-            $_SESSION['content'] = $userInfo['content'];
+            $content = $userInfo['content'];
         }else{
-            $_SESSION['ff'] = 'dd';
             //注册
             $data = [];
             $data['inviter_id'] = $this->inviter_id ? $this->inviter_id : 0;
@@ -93,11 +96,13 @@ class UserController extends BaseController
                 $rand_string = $this->activeUserModel->getRandNum();
                 $token = md5($ret.'@'. $data['open_id'].'@'.$data['type'].'@'.$rand_string);
                 $uid = $ret;
+                $content ='';
             }
         }
         if($token && $uid){
             $_SESSION['uid'] = $uid;
             $_SESSION['token'] = $token;
+            $_SESSION['content'] = $content;
 
 
             return true;

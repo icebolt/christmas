@@ -1,5 +1,18 @@
 <?php
 include_once("base.php");
+//获取好友
+$firends = friends();
+if($firends['code'] ==200){
+    $info = $firends['data'];
+
+}
+$firend_arr = ['','','','','',''];
+$firend_name = ['','','','','',''];
+foreach($info as $k =>$v){
+    $n =$k+1;
+    $firend_arr[$k] = 'images/4/head'.$n.'.jpg';
+    $firend_name[$k] = $v['nickname'];
+}
 ?>
 <DOCTYPE HTML>
 <html><head>
@@ -99,18 +112,18 @@ include_once("base.php");
                 <img class="snow" src="images/1/2.png">
                 <img class="snow" src="images/1/3.png">
                 </div>
-                <img src="images/4/head1.jpg" style=" position:absolute;left:89px; top:530px;">
-                <img src="images/4/head2.jpg" style=" position:absolute;left:294px; top:530px;">
-                <img src="images/4/head3.jpg" style=" position:absolute;left:499px; top:530px;">
-                <img src="images/4/head4.jpg" style=" position:absolute;left:89px; top:758px;">
-                <img src="images/4/head5.jpg" style=" position:absolute;left:294px; top:758px;">
-                <img src="images/4/head6.jpg" style=" position:absolute;left:499px; top:758px;">
-                <div style=" position:absolute;left:89px; top:700px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;">我我也不知道我的大的我也不知道</div>
-                <div style=" position:absolute;left:294px; top:700px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;">我我也不知道我的大的我也不知道</div>
-                <div style=" position:absolute;left:499px; top:700px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;">我我也不知道我的大的我也不知道</div>
-                <div style=" position:absolute;left:89px; top:928px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;">我我也不知道我的大的我也不知道</div>
-                <div style=" position:absolute;left:294px; top:928px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;">我我道我的大的我也不知道</div>
-                <div style=" position:absolute;left:499px; top:928px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;">==道我的大的我也不知道</div>
+                <img src="<?=$firend_arr[0];?>" style=" position:absolute;left:89px; top:530px;">
+                <img src="<?=$firend_arr[1];?>" style=" position:absolute;left:294px; top:530px;">
+                <img src="<?=$firend_arr[2];?>" style=" position:absolute;left:499px; top:530px;">
+                <img src="<?=$firend_arr[3];?>" style=" position:absolute;left:89px; top:758px;">
+                <img src="<?=$firend_arr[4];?>" style=" position:absolute;left:294px; top:758px;">
+                <img src="<?=$firend_arr[5];?>" style=" position:absolute;left:499px; top:758px;">
+                <div style=" position:absolute;left:89px; top:700px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;"><?=$firend_name[0];?></div>
+                <div style=" position:absolute;left:294px; top:700px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;"><?=$firend_name[1];?></div>
+                <div style=" position:absolute;left:499px; top:700px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;"><?=$firend_name[2];?></div>
+                <div style=" position:absolute;left:89px; top:928px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;"><?=$firend_name[3];?></div>
+                <div style=" position:absolute;left:294px; top:928px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;"><?=$firend_name[4];?></div>
+                <div style=" position:absolute;left:499px; top:928px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;"><?=$firend_name[5];?></div>
                 <img src="images/4/3.png" style=" position:absolute;left:80px; top:1000px;" onClick="javascript:showShareTag()">
                 <img src="images/4/4.png" style=" position:absolute;left:410px; top:1000px;" onClick="javascript:goPage2(2)">
                 <img src="images/4/5.png" style=" position:absolute;left:410px; top:1000px;display:none;">

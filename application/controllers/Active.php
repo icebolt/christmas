@@ -83,12 +83,22 @@ class ActiveController extends BaseController
         $activeUserModel = new activeUserModel();
         $ret = $activeUserModel->editInfo($this->uid,json_encode($data));
         if ($ret) {
+            $_SESSION['content'] = json_encode($data);
             $this->returnJson(200);
         }else{
             $this->returnJson(102);
         }
     }
 
+    public function getUserInfoAction(){
+        $activeUserModel = new activeUserModel();
+        $ret = $activeUserModel->getUserInfo($this->uid);
+        if ($ret) {
+            $this->returnJson(200,$ret);
+        }else{
+            $this->returnJson(102);
+        }
+    }
     /**
      * 是否微信打开
      * @return bool
@@ -273,8 +283,8 @@ class ActiveController extends BaseController
             $this->returnJson(202);
         }
         //是否抽过奖
-        $winprizeModel = new winprizeModel();
-        $num = $winprizeModel->checkIsWin($this->active_id, $this->uid);
+        $winprizelogModel = new winprizelogModel();
+        $num = $winprizelogModel->checkIsWin($this->active_id, $this->uid);
         if ($num['num'] == 0) {
             return true;
         } elseif ($num['num'] == 1) {

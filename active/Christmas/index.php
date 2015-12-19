@@ -3,7 +3,6 @@ include_once("base.php");
 $ret = winlist();
 if($ret['code']==200){
     $info = $ret['data'];
-    var_dump($info);
 }
 ?>
 <DOCTYPE HTML>

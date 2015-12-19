@@ -21,6 +21,10 @@ if($content == 1){
             }
             $name = $res['data']['name'];
         }
+    }else{
+        echo "<script>alert('请先完善信息');</script>";
+        $url = "http://".$host .'/active/Christmas/index.php';
+        header('location:'.$url);
     }
 }
 $showGiftID>0?$showGiftID:1;

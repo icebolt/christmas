@@ -7,7 +7,6 @@
  */
 session_start();
 header("Content-Type: text/html; charset=UTF-8");
-
 //config
 $appid = "";
 $appsercet = "";
@@ -53,17 +52,26 @@ if (!$_SESSION['uid']) {
 }
 $uid = $_SESSION['uid'];
 $token = $_SESSION['token'];
-var_dump($_SESSION);
 
-$info = $_SESSION['content'];
+$info = getUserInfo();
 $content = 0;  //是否填写基本信息
-if ($info) {
+if ($info['data']['content']) {
     $content = 1;
 }
 $isWin = checkUser();
 $foo = strpos($_SERVER['REQUEST_URI'],'mygift.php');
 if($isWin['code'] ==201 && $foo===false){
     header("location:mygift.php");
+}
+function getUserInfo(){
+    global $uid, $token, $active_id, $host;
+    $url = 'http://' . $host . '/public/index.php/index/active/getuserinfo';
+    $post_data = array();
+    $post_data['uid'] = $uid;
+    $post_data['token'] = $token;
+    $post_data['active_id'] = $active_id;
+    $res = request_post($url, $post_data);
+    return $res = json_decode($res, 1);
 }
 //获取中奖信息，显示出来
 //
@@ -88,7 +96,7 @@ function winlist(){
 function checkUser()
 {
     global $uid, $token, $active_id, $host;
-    $url = 'http://' . $host . '/public/index.php/index/active/win';
+    $url = 'http://' . $host . '/public/index.php/index/active/checkuser';
     $post_data = array();
     $post_data['uid'] = $uid;
     $post_data['token'] = $token;
@@ -134,7 +142,20 @@ function win()
     $res = request_post($url, $post_data);
     return $res = json_decode($res, 1);
 }
-
+/**
+ * 抽奖
+ */
+function friends()
+{
+    global $uid, $token, $active_id, $host;
+    $url = 'http://' . $host . '/public/index.php/index/active/inviter';
+    $post_data = array();
+    $post_data['uid'] = $uid;
+    $post_data['token'] = $token;
+    $post_data['active_id'] = $active_id;
+    $res = request_post($url, $post_data);
+    return $res = json_decode($res, 1);
+}
 
 //=======================================================
 /**
