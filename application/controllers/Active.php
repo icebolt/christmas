@@ -307,6 +307,16 @@ class ActiveController extends BaseController
         $winprize = $winprizeModel->getList();
         $count = count($winprize);
         $num = rand(0,$count-1);
-        $this->returnJson(200, $winprize[$num]);
+        $activeUserModel = new activeUserModel();
+        $nickname = $activeUserModel->getUserInfo($winprize[$num]['active_uid']);
+        $prizeModel = new prizeModel();
+        $prizeModel->id = $winprize[$num]['pid'];
+        $prizeName = $prizeModel->get();
+        $arr = [
+            'nickname' => $nickname['nickname'],
+            'prizeName'=> $prizeName['name']
+        ];
+
+        $this->returnJson(200, $arr);
     }
 }

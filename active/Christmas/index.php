@@ -41,7 +41,7 @@ if($ret['code']==200){
         <div class="content">
         	<div class="indexdiv">
             	<img id="showFlashImgBg" src="images/2/1.jpg">
-                <div class="indexfont">恭喜<?=$info['nickname']?>获得<?=$info['prizeName']?></div>
+                <div class="indexfont"><?=$info['nickname']?>获得<?=$info['prizeName']?></div>
                 <div style="width:190px; height:130px; position:absolute;top:0px; left:550px;" onClick="javascript:showGiftList()"></div>
                 <div class="indexFlash">
                 <img src="images/2/2.jpg" style="display:none;">
