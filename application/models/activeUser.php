@@ -86,7 +86,7 @@ class activeUserModel extends baseModel
      */
     public function getInviter($aid,$uid){
         $where = "inviter_id = $uid and active_id = $aid";
-        $sql = $this->query()->select("id,content")->from($this->table)->where($where)->limit(6)->build();
+        $sql = $this->query()->select("id,nickname,content")->from($this->table)->where($where)->limit(6)->build();
         return $ret = $this->db->executeS($sql);
     }
 }
