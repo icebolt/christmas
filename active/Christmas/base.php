@@ -112,6 +112,7 @@ function checkUser()
     $post_data['token'] = $token;
     $post_data['active_id'] = $active_id;
     $res = request_post($url, $post_data);
+    var_dump($res);
     return $res = json_decode($res, 1);
 }
 

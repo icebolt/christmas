@@ -28,7 +28,6 @@ if($content == 1){
     }
 }
 $showGiftID>0?$showGiftID:1;
-var_dump($name);
 if(!isset($_SESSION['inviter_id'])){
     $_SESSION['inviter_id'] = isset($_GET['uid'])?$_GET['uid']:0;
 }
