@@ -20,9 +20,7 @@ $type = "1";
 $redirect_uri = "http://" . $host . "/public/index.php/index/user/callback?type=$type&active_id=$active_id";
 //判断是否微信浏览器
 //验证用户是否合法
-if(false){
-    is_weixin();
-}
+is_weixin();
 /**
  * 是否微信打开
  * @return bool
