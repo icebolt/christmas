@@ -64,7 +64,7 @@ if($ret['code']==200){
               	</div>
                 <div class="infoPanel">
                     <img class="" src="images/3/1.png">
-                    <form name="form1" action="gift.php?giftid=1" method="post">
+                    <form name="form1" action="gift.php?uid=<?=$uid;?>&giftid=1" method="post">
                     <input id="nametxt" name="nametxt" type="text" />
                     <input id="mobiletxt" name="mobiletxt" type="text" />
                     <input id="wechattxt" name="wechattxt" type="text" />
@@ -92,5 +92,6 @@ if($ret['code']==200){
     </div>
 </div>
 <input type="hidden" id="user_content" value="<?=$content;?>">
+<input type="hidden" id="uid" value="<?=$_SESSION['uid'];?>">
 </body> 
 </html> 

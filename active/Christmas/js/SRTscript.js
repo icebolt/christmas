@@ -196,7 +196,8 @@ var goPage=function(){
 	
 }
 var goPage2=function(id){
-	window.location.href="gift.php?giftid="+encodeURI(id);
+	var uid = $("#uid").val();
+	window.location.href="gift.php?giftid="+encodeURI(id)+"&uid="+uid;
 }
 
 ///显示中奖信息

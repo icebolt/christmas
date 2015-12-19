@@ -64,6 +64,7 @@ class UserController extends BaseController
         $this->type = $_GET['type'];
         $this->inviter_id = @$_GET['inviter_id'];
         $this->active_id = $_GET['active_id'];
+
         if($this->login()){
             $url = $this->host_url ."active/Christmas/index.php";
             header("location: $url");

@@ -28,6 +28,10 @@ if($content == 1){
     }
 }
 $showGiftID>0?$showGiftID:1;
+
+if(!isset($_SESSION['inviter_id'])){
+    $_SESSION['inviter_id'] = isset($_GET['uid'])?$_GET['uid']:0;
+}
 //显示中间图片位置
 $arr =[];
 $arr[1] = 'images/gift/an/'.rand_num().'.png'; ///Users/admin/www/active/active/Christmas/images/gift/an/2.png
@@ -164,5 +168,9 @@ function rand_num(){
     </div>
 </div>
 <input type="hidden" id="giftid" value="<?=$showGiftID;?>">
+<script type="text/javascript">
+    var url= "/active/active/Christmas/index.php?uid=<?=$uid;?>";
+    history.pushState({},document.title,"/active/active/Christmas/index.php");
+</script>
 </body> 
-</html> 
+</html>

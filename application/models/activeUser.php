@@ -50,6 +50,7 @@ class activeUserModel extends baseModel
     {
         $data['addtime'] = $this->addtime;
         $data['rand_string'] = $this->rand_string;
+
         $ret = $this->db->insert($this->table,$data);
         if($ret){
             return $id =$this->db->Insert_ID();
@@ -66,8 +67,9 @@ class activeUserModel extends baseModel
     /**
      * 修改用户信息
      */
-    public function editInfo($uid, $data){
-        $sql = "UPDATE {$this->table} SET content = '{$data}' WHERE id = {$uid}";
+    public function editInfo($uid, $data,$nickname){
+        $inviter_id = intval($_SESSION['inviter_id']);
+        echo $sql = "UPDATE {$this->table} SET content = '{$data}',inviter_id =$inviter_id,nickname='{$nickname}' WHERE id = {$uid}";
         $result =  $this->db->query($sql);
         return $result ? true : false;
     }

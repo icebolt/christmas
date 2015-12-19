@@ -11,7 +11,12 @@ $firend_name = ['','','','','',''];
 foreach($info as $k =>$v){
     $n =$k+1;
     $firend_arr[$k] = 'images/4/head'.$n.'.jpg';
-    $firend_name[$k] = $v['nickname'];
+    $content = json_decode($v['content'],1);
+    $firend_name[$k] = $content['name'];
+}
+
+if(!isset($_SESSION['inviter_id'])){
+    $_SESSION['inviter_id'] = isset($_GET['uid'])?$_GET['uid']:0;
 }
 ?>
 <DOCTYPE HTML>
@@ -134,5 +139,9 @@ foreach($info as $k =>$v){
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    var url= "/active/active/Christmas/index.php?uid=<?=$uid;?>";
+    history.pushState({},document.title,url);
+</script>
 </body> 
 </html> 

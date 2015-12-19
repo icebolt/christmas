@@ -81,7 +81,7 @@ class ActiveController extends BaseController
             'address' => $address
         ];
         $activeUserModel = new activeUserModel();
-        $ret = $activeUserModel->editInfo($this->uid,json_encode($data));
+        $ret = $activeUserModel->editInfo($this->uid,json_encode($data,JSON_UNESCAPED_UNICODE),$name);
         if ($ret) {
             $_SESSION['content'] = json_encode($data);
             $this->returnJson(200);
