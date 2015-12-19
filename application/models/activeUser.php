@@ -69,7 +69,7 @@ class activeUserModel extends baseModel
      */
     public function editInfo($uid, $data,$nickname){
         $inviter_id = intval($_SESSION['inviter_id']);
-        echo $sql = "UPDATE {$this->table} SET content = '{$data}',inviter_id =$inviter_id,nickname='{$nickname}' WHERE id = {$uid}";
+        $sql = "UPDATE {$this->table} SET content = '{$data}',inviter_id =$inviter_id,nickname='{$nickname}' WHERE id = {$uid}";
         $result =  $this->db->query($sql);
         return $result ? true : false;
     }

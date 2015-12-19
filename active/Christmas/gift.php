@@ -15,7 +15,8 @@ if($content == 1){
         $showGiftID = intval($_POST['showGiftID']);
         if ($res['code'] == 200) {
             //执行抽奖
-            $res = win();
+            //file_put_contents('/tmp/active.log',var_export($res,1)."\r\n",FILE_APPEND);
+	    $res = win();
             if($res['code']!=200){
                 header("location:mygift.php");
             }
@@ -169,7 +170,7 @@ function rand_num(){
 <input type="hidden" id="giftid" value="<?=$showGiftID;?>">
 <script type="text/javascript">
     var url= "/active/active/Christmas/index.php?uid=<?=$uid;?>";
-    history.pushState({},document.title,"/active/active/Christmas/index.php");
+    history.pushState({},document.title,url);
 </script>
 </body> 
 </html>

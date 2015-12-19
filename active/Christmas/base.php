@@ -7,6 +7,7 @@
  */
 session_start();
 header("Content-Type: text/html; charset=UTF-8");
+//var_dump($_SESSION);
 //config
 $appid = "";
 $appsercet = "";
@@ -112,7 +113,6 @@ function checkUser()
     $post_data['token'] = $token;
     $post_data['active_id'] = $active_id;
     $res = request_post($url, $post_data);
-    var_dump($res);
     return $res = json_decode($res, 1);
 }
 
@@ -197,7 +197,9 @@ function request_post($url = '', $post_data = array())
     curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
     $data = curl_exec($ch);//运行curl
     curl_close($ch);
-
+    //var_dump($url);
+    //var_dump($data);
+    file_put_contents('/tmp/active.log',"接口：".$postUrl."==数据：".var_export($data,1)."\r\n",FILE_APPEND);
     return $data;
 }
 

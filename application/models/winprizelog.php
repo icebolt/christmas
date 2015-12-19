@@ -22,7 +22,7 @@ class winprizelogModel extends  baseModel
     public function checkIsWin($active_id, $uid)
     {
         $where = "uid =$uid and aid = $active_id";
-        echo $sql = $this->query()->select("count(*) as num")->from($this->table)->where($where)->build();
+        $sql = $this->query()->select("count(*) as num")->from($this->table)->where($where)->build();
         return $ret = $this->db->getRow($sql);
     }
     /**

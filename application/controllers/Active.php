@@ -81,8 +81,8 @@ class ActiveController extends BaseController
             'address' => $address
         ];
         $activeUserModel = new activeUserModel();
-        $ret = $activeUserModel->editInfo($this->uid,json_encode($data,JSON_UNESCAPED_UNICODE),$name);
-        if ($ret) {
+	$ret = $activeUserModel->editInfo($this->uid,json_encode($data,JSON_UNESCAPED_UNICODE),$name);
+	if ($ret) {
             $_SESSION['content'] = json_encode($data);
             $this->returnJson(200);
         }else{
@@ -279,7 +279,8 @@ class ActiveController extends BaseController
         //是否完善信息
         $activeUserModel = new activeUserModel();
         $info = $activeUserModel->getUserInfo($this->uid);
-        if(empty($info['content'])){
+        //var_dump($info);
+	if(empty($info['content'])){
             $this->returnJson(202);
         }
         //是否抽过奖
