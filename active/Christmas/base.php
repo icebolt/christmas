@@ -36,6 +36,12 @@ function is_weixin()
 }
 if(!$_SESSION['inviter_id']){
     $_SESSION['inviter_id'] = isset($_GET['uid'])?$_GET['uid']:0;
+}else{
+    $inviter_id = $_SESSION['inviter_id'];
+}
+
+if(!$inviter_id){
+    $inviter_id = isset($_GET['uid'])?$_GET['uid']:0;
 }
 
 //是否存在session 不存在跳转到微信授权页面
