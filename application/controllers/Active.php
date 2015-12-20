@@ -74,6 +74,7 @@ class ActiveController extends BaseController
         $weixin = htmlspecialchars($_POST['weixin']);
         $name = htmlspecialchars($_POST['name']);
         $address = htmlspecialchars($_POST['address']);
+        $inviter_id = $_POST['inviter_id'];
         $data = [
             'phone' => $phone,
             'weixin' => $weixin,
@@ -81,7 +82,7 @@ class ActiveController extends BaseController
             'address' => $address
         ];
         $activeUserModel = new activeUserModel();
-	$ret = $activeUserModel->editInfo($this->uid,json_encode($data,JSON_UNESCAPED_UNICODE),$name);
+	$ret = $activeUserModel->editInfo($this->uid,json_encode($data,JSON_UNESCAPED_UNICODE),$name,$inviter_id);
 	if ($ret) {
             $_SESSION['content'] = json_encode($data);
             $this->returnJson(200);
