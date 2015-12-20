@@ -30,7 +30,8 @@ class BaseController extends \SlatePF\Extras\ExtrasController {
 		104 => '活动不存在或者已经结束',
 
 		201 => '用户已经抽过奖',
-		202 => '需要完善信息'
+		202 => '需要完善信息',
+		203 => '用户可以抽第二次奖'
 	];
 	public function init(){
 		$config = Yaf\Application::app()->getConfig();

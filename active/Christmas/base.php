@@ -206,7 +206,7 @@ function request_post($url = '', $post_data = array())
     curl_close($ch);
     //var_dump($url);
     //var_dump($data);
-    file_put_contents('/tmp/active.log',"接口：".$postUrl."==数据：".var_export($post_data,1)."\r\n",FILE_APPEND);
+    file_put_contents('/tmp/active.log',"接口：".$postUrl."==数据：".var_export($post_data,1)."返回数据：".var_export($data,1)."\r\n",FILE_APPEND);
     return $data;
 }
 

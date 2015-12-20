@@ -1,3 +1,10 @@
+<?php
+include("base.php");
+$check = checkUser();
+if($check['code']==203){
+header("location:mygift.php");
+}
+?>
 <DOCTYPE HTML> 
 <html><head>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'/> 
@@ -103,10 +110,9 @@
                     <img class="snow" src="images/card/snow2.png">
                     <img class="snow" src="images/card/snow3.png">
                 </div>
-                <img src="images/card/cardbtn.png" style=" position:absolute;left:175px; top:1040px;" onClick="javascript:showShareTag()">
-                <div class="ShareTagPanel">
-            		<img class="" src="images/card/tanchuang.png" onClick="javascript:hideShareTag()">
-            	</div>
+		<a href="index.php">
+                <img src="images/card/cardbtn.png" style=" position:absolute;left:175px; top:1040px;">
+		</a>
             </div>
         </div>
     </div>

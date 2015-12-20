@@ -94,8 +94,8 @@ class winPrizeModel extends baseModel {
         $this->db->update($this->table,$update,$where);
     }
 
-    public function getList(){
-        $sql = "SELECT * FROM `winprize`  ORDER BY addtime DESC LIMIT 3";
+    public function getList($active_id){
+        $sql = "SELECT * FROM `winprize` where active_id={$active_id}  ORDER BY addtime DESC LIMIT 3";
         return $this->db->executeS($sql);
     }
     /*

@@ -266,11 +266,13 @@ class ActiveController extends BaseController
 
     public function checkUserAction(){
         $ret = $this->check();
-        if($ret){
+        if($ret == 1){
             $this->returnJson(200);
+        }elseif($ret ==2){
+            $this->returnJson(203);
         }else{
-            $this->returnJson(201);
-        }
+	    $this->returnJson(201);
+	}
     }
     /**
      * 检查是否能抽奖
@@ -288,13 +290,13 @@ class ActiveController extends BaseController
         $winprizelogModel = new winprizelogModel();
         $num = $winprizelogModel->checkIsWin($this->active_id, $this->uid);
         if ($num['num'] == 0) {
-            return true;
+            return 1;
         } elseif ($num['num'] == 1) {
             //查询好友是否满足6人
             $activeUserModel = new activeUserModel();
             $ret_list = $activeUserModel->getInviter($this->active_id, $this->uid);
             if (count($ret_list) == 6) {
-                return true;
+                return 2;
             }
         }
         return false;
@@ -306,11 +308,12 @@ class ActiveController extends BaseController
     public function WinlistAction()
     {
         $winprizeModel = new winPrizeModel();
-        $winprize = $winprizeModel->getList();
+        $winprize = $winprizeModel->getList($this->active_id);
         $count = count($winprize);
         $num = rand(0,$count-1);
         $activeUserModel = new activeUserModel();
         $nickname = $activeUserModel->getUserInfo($winprize[$num]['active_uid']);
+file_put_contents('/tmp/active.log',"返回数据：".var_export($nickname,1)."\r\n",FILE_APPEND);
         $prizeModel = new prizeModel();
         $prizeModel->id = $winprize[$num]['pid'];
         $prizeName = $prizeModel->get();
