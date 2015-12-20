@@ -26,12 +26,12 @@ if(!isset($_SESSION['inviter_id'])){
 <link href='style.css' rel='stylesheet'/>
 <script src="js/jquery-1.8.3.min.js"></script>
 <script src="js/SRTscript.js"></script>
-<title>圣诞抽奖</title>
+<title>iWeekly圣诞感恩大礼</title>
 </head>
 <script>
 	var get_ticket = 'http://user.test.bbwc.cn/weixin/getSign',
-            title = 'iWeekly2015圣诞回馈',
-            desc = 'iWeekly2015圣诞回馈',
+            title = '一盒甄选， 分享暖冬，iWeekly想要这个冬天捂热你',
+            desc = 'iWeekly圣诞感恩大礼',
             link = 'http://mobile.iweeklyapp.com/articles/xmas2015/index.html',
             imgUrl='http://mobile.iweeklyapp.com/articles/xmas2015/images/icon.jpg';
 	$(document).ready(function () {

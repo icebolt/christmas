@@ -14,12 +14,16 @@ var parameter={
 	minDistance:50,//最小距离判定
 	flashid:0,
 	flashid2:0,
+	flashid3:0,
 	timer:null,
 	timer2:null,
+	timer3:null,
 	item:null,
 	item2:null,
+	item3:null,
 	flag:true,
 	flag2:null,
+	flag3:null,
 };
 
 ///DOM创建完成时
@@ -242,6 +246,28 @@ function getUrlParam(name) {
 	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
 	var r = window.location.search.substr(1).match(reg);  //匹配目标参数
 	if (r != null) return unescape(r[2]); return null; //返回参数值
+}
+
+var showFlash3=function(){
+	
+	var swiper = $(".cardgifdiv");
+	parameter.item3 = swiper.find("img");
+	flash3();
+	parameter.timer3 = setInterval(flash3,400);
+}
+
+var flash3=function(){
+	var controller = parameter.item3.eq(parameter.flashid3);
+	parameter.item3.hide();
+	controller.show();
+	parameter.flashid3++;
+	if(parameter.flashid3 == $(".cardgifdiv img").length){
+      parameter.flag3 = false;
+      parameter.flashid3 = $(".cardgifdiv img").length-1;
+	  clearInterval(parameter.timer3);
+    }else if(parameter.flashid3 == 0){
+      parameter.flag3 = true;
+    }
 }
 
 

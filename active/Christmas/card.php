@@ -9,8 +9,8 @@
 </head>
 <script>
 	var get_ticket = 'http://user.test.bbwc.cn/weixin/getSign',
-            title = 'iWeekly2015圣诞回馈',
-            desc = 'iWeekly2015圣诞回馈',
+            title = '一盒甄选， 分享暖冬，iWeekly想要这个冬天捂热你',
+            desc = 'iWeekly圣诞感恩大礼',
             link = 'http://mobile.iweeklyapp.com/articles/xmas2015/index.html',
             imgUrl='http://mobile.iweeklyapp.com/articles/xmas2015/images/icon.jpg';
 	$(document).ready(function () {
@@ -64,7 +64,7 @@
 	
 	
 </script>
-<body onLoad="htmlLoaded()">
+<body onLoad="showFlash3()">
 <div class="container">
     <div class="scale">
         <div class="spinner">
@@ -90,7 +90,19 @@
         
         <div class="content">
             <div class="myGiftdiv">
-            	<img src="images/card/bg.jpg" style="display:">
+            	<div class="cardgifdiv">
+                    <img src="images/card/cardgif1.jpg" style="display:">
+                    <img src="images/card/cardgif2.jpg" style="display:">
+                    <img src="images/card/cardgif3.jpg" style="display:">
+                    <img src="images/card/cardgif4.jpg" style="display:">
+                    <img src="images/card/cardgif5.jpg" style="display:">
+                    <img src="images/card/cardgif6.jpg" style="display:">
+                </div>
+                <div class="snowdiv">
+                    <img class="snow" src="images/card/snow1.png">
+                    <img class="snow" src="images/card/snow2.png">
+                    <img class="snow" src="images/card/snow3.png">
+                </div>
                 <img src="images/card/cardbtn.png" style=" position:absolute;left:175px; top:1040px;" onClick="javascript:showShareTag()">
                 <div class="ShareTagPanel">
             		<img class="" src="images/card/tanchuang.png" onClick="javascript:hideShareTag()">

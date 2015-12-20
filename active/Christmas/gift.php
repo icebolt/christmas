@@ -60,7 +60,7 @@ function rand_num(){
 <script src="js/jquery-1.8.3.min.js"></script>
 <script src="js/SRTscript.js"></script>
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-<title>圣诞抽奖</title>
+<title>iWeekly圣诞感恩大礼</title>
 </head>
 <script>
 	var get_ticket = 'http://user.test.bbwc.cn/weixin/getSign',

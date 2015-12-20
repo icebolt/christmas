@@ -12,7 +12,7 @@ if($ret['code']==200){
 <link href='style.css' rel='stylesheet'/>
 <script src="js/jquery-1.8.3.min.js"></script>
 <script src="js/SRTscript.js"></script>
-<title>圣诞抽奖</title>
+<title>iWeekly圣诞感恩大礼</title>
 </head>
 <body onLoad="htmlLoaded()">
 <div class="container">
