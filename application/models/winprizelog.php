@@ -10,7 +10,8 @@ class winprizelogModel extends  baseModel
 {
     private $table = "winprizelog";
     private $addtime = 0;
-    public function init(){
+    public function __construct(){
+        parent::__construct();
         $this->addtime = date('Y-m-d H:i:s');
     }
     /**
