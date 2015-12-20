@@ -17,7 +17,6 @@ if(strpos($host,"bbwc")){
 }
 $active_id = 2;
 $type = "1";
-
 $redirect_uri = "http://" . $host . "/public/index.php/index/user/callback?type=$type&active_id=$active_id";
 //判断是否微信浏览器
 //验证用户是否合法
@@ -39,36 +38,27 @@ if(!$_SESSION['inviter_id']){
 }else{
     $inviter_id = $_SESSION['inviter_id'];
 }
-
 if(!$inviter_id){
     $inviter_id = isset($_GET['uid'])?$_GET['uid']:0;
 }
 //是否存在session 不存在跳转到微信授权页面
 if (!$_SESSION['uid']) {
     $state = rand(10000, 99999);
-    $_SESSION['active']['state'] = $state;
 
 //    $url = "https://open.weixin.qq.com/connect/qrconnect?appid=$appid&redirect_uri=$redirect_uri&response_type=code&scope=snsapi_login&state=$state";
     $openid = $_GET['open_id'];//"eroihghjhghjhiadffe";//.time();
 
-    $openid = setcookie('opend_id');
-    if($openid){
+    if(!$openid){
         $openid = time().$state;
         setcookie ("opend_id", $openid, time()+86400*7);
     }
-    //设置7天
-//    if(empty($openid)){
-//        echo "请登录";
-//        exit;
-//    }
+    $_SESSION['active']['state'] = $openid;
     $url = "http://".$host."/public/index.php/index/user/test?open_id=$openid&type=1&active_id=2";
     header("location: $url");
     exit;
 }
-
 $uid = $_SESSION['uid'];
 $token = $_SESSION['token'];
-
 $info = getUserInfo();
 $content = 0;  //是否填写基本信息
 if ($info['data']['content']) {
@@ -120,7 +110,6 @@ function checkUser()
     $res = request_post($url, $post_data);
     return $res = json_decode($res, 1);
 }
-
 //调用接口
 
 function addinfo()
@@ -175,7 +164,6 @@ function friends()
     $res = request_post($url, $post_data);
     return $res = json_decode($res, 1);
 }
-
 //=======================================================
 /**
  * 模拟post进行url请求
@@ -209,4 +197,3 @@ function request_post($url = '', $post_data = array())
     file_put_contents('/tmp/active.log',"接口：".$postUrl."==数据：".var_export($post_data,1)."返回数据：".var_export($data,1)."\r\n",FILE_APPEND);
     return $data;
 }
-
