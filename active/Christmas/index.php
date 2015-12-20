@@ -4,6 +4,11 @@ $ret = winlist();
 if($ret['code']==200){
     $info = $ret['data'];
 }
+$check = checkUser();
+$twowin = 0;
+if($check['code']==203){
+ $twowin = 1;
+}
 ?>
 <DOCTYPE HTML>
 <html><head>
@@ -15,6 +20,7 @@ if($ret['code']==200){
 <title>一盒甄选， 分享暖冬，iWeekly想要这个冬天捂热你</title>
 </head>
 <body onLoad="htmlLoaded()">
+<input type="hidden" id="twowin" value="<?=$twowin;?>" />
 <div class="container">
     <div class="scale">
         <div class="spinner">
@@ -94,5 +100,11 @@ if($ret['code']==200){
 </div>
 <input type="hidden" id="user_content" value="<?=$content;?>">
 <input type="hidden" id="uid" value="<?=$_SESSION['uid'];?>">
+<script type="text/javascript">
+	var twowin = $("#twowin").val();
+	if(twowin==1){
+		coverClick();
+	}
+</script>
 </body> 
 </html> 

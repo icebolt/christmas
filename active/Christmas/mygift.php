@@ -130,7 +130,7 @@ if(!isset($_SESSION['inviter_id'])){
                 <div style=" position:absolute;left:294px; top:928px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;"><?=$firend_name[4];?></div>
                 <div style=" position:absolute;left:499px; top:928px; width:165px; height:30px; color:#FFF; font-size:18px; text-align:center;"><?=$firend_name[5];?></div>
                 <img src="images/4/3.png" style=" position:absolute;left:80px; top:1000px;" onClick="javascript:showShareTag()">
-                <img src="images/4/4.png" style=" position:absolute;left:410px; top:1000px;" onClick="javascript:goPage2(2)">
+                <img src="images/4/4.png" style=" position:absolute;left:410px; top:1000px;" onClick="javascript:goPage3()">
                 <img src="images/4/5.png" style=" position:absolute;left:410px; top:1000px;display:none;">
                 <div class="ShareTagPanel">
             		<img class="" src="images/3/26.png" onClick="javascript:hideShareTag()">
@@ -140,7 +140,10 @@ if(!isset($_SESSION['inviter_id'])){
     </div>
 </div>
 <script type="text/javascript">
-    var url= "/active/active/Christmas/index.php?uid=<?=$uid;?>";
+	function goPage3(){
+		window.location.href="index.php";
+	}
+    var url= "/active/active/Christmas/card.php?uid=<?=$uid;?>";
     history.pushState({},document.title,url);
 </script>
 </body> 

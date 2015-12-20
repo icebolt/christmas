@@ -169,7 +169,7 @@ function rand_num(){
 </div>
 <input type="hidden" id="giftid" value="<?=$showGiftID;?>">
 <script type="text/javascript">
-    var url= "/active/active/Christmas/index.php?uid=<?=$uid;?>";
+    var url= "/active/active/Christmas/card.php?uid=<?=$uid;?>";
     history.pushState({},document.title,url);
 </script>
 </body> 
