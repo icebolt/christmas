@@ -43,7 +43,6 @@ if(!$_SESSION['inviter_id']){
 if(!$inviter_id){
     $inviter_id = isset($_GET['uid'])?$_GET['uid']:0;
 }
-
 //是否存在session 不存在跳转到微信授权页面
 if (!$_SESSION['uid']) {
     $state = rand(10000, 99999);
@@ -132,6 +131,7 @@ function addinfo()
     $weixin = htmlspecialchars($_POST['wechattxt']);
     $address = htmlspecialchars($_POST['addresstxt']);
 
+
     $url = 'http://' . $host . '/public/index.php/index/active/addinfo';
     $post_data = array();
     $post_data['name'] = $name;
@@ -206,8 +206,7 @@ function request_post($url = '', $post_data = array())
     curl_close($ch);
     //var_dump($url);
     //var_dump($data);
-    file_put_contents('/tmp/active.log',"接口：".$postUrl."==数据：".var_export($data,1)."\r\n",FILE_APPEND);
+    file_put_contents('/tmp/active.log',"接口：".$postUrl."==数据：".var_export($post_data,1)."\r\n",FILE_APPEND);
     return $data;
 }
-
 
