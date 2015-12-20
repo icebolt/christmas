@@ -70,6 +70,7 @@ if($ret['code']==200){
                     <input id="wechattxt" name="wechattxt" type="text" />
                     <input id="addresstxt" name="addresstxt" type="text"/>
                     <input id="showGiftID" name="showGiftID" type="hidden" value="1"/>
+                    <input id="inviter_id" name="inviter_id" type="hidden" value="<?=$inviter_id?>">
                     </form>
                     <div id="submitinfo" onClick="javascript:goPage()"></div>
                     <div id="infoClose" onClick="javascript:hideInfoList()"></div>
