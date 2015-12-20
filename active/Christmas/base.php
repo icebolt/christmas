@@ -126,7 +126,7 @@ function checkUser()
 
 function addinfo()
 {
-    global $uid, $token, $active_id, $host;
+    global $uid, $token, $active_id, $host, $inviter_id;
     $name = htmlspecialchars($_POST['nametxt']);
     $phone = htmlspecialchars($_POST['mobiletxt']);
     $weixin = htmlspecialchars($_POST['wechattxt']);
@@ -141,6 +141,7 @@ function addinfo()
     $post_data['uid'] = $uid;
     $post_data['token'] = $token;
     $post_data['active_id'] = $active_id;
+    $post_data['inviter_id'] = $inviter_id;
 
     $res = request_post($url, $post_data);
     return $res = json_decode($res, 1);
