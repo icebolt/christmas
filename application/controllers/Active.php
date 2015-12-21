@@ -270,9 +270,11 @@ class ActiveController extends BaseController
             $this->returnJson(200);
         }elseif($ret ==2){
             $this->returnJson(203);
+        }elseif($ret ==3){
+            $this->returnJson(204);            
         }else{
-	    $this->returnJson(201);
-	}
+	       $this->returnJson(201);
+        }
     }
     /**
      * 检查是否能抽奖
@@ -283,7 +285,7 @@ class ActiveController extends BaseController
         $activeUserModel = new activeUserModel();
         $info = $activeUserModel->getUserInfo($this->uid);
         //var_dump($info);
-	if(empty($info['content'])){
+	    if(empty($info['content'])){
             $this->returnJson(202);
         }
         //是否抽过奖
@@ -298,6 +300,8 @@ class ActiveController extends BaseController
             if (count($ret_list) == 6) {
                 return 2;
             }
+        }elseif ($num['num'] == 2) {
+            return 3;
         }
         return false;
     }
