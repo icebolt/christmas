@@ -404,7 +404,7 @@ class ActiveController extends BaseController
     {
         $activeModel = new activeModel();
         $ret = $activeModel->getActive($this->active_id);
-        $extra_data=json_decode($ret["extra"],true);
+        $extra_data=json_decode($ret[0]["extra"],true);
         if($extra_data["require_addinfo"]!==false){
             //是否完善信息
             $activeUserModel = new activeUserModel();
