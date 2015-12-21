@@ -60,6 +60,9 @@ class ActiveController extends BaseController
         if(!$this->CheckUser($uid, $token)){
             $this->returnJson(101);
         }
+        if (!$this->deviceid){
+            $this->deviceid = $token;
+        }
         //判断活动是否在有效期
         $this->_activeValid($active_id);
         $this->uid = $uid;
