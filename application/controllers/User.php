@@ -66,7 +66,8 @@ class UserController extends BaseController
         $this->active_id = $_GET['active_id'];
 
         if($this->login()){
-            $url = $this->host_url ."active/Christmas/card.php";
+            //$url = $this->host_url ."active/Christmas/card.php";
+            $url = $_SERVER['HTTP_REFERER'];
             header("location: $url");
         }
     }
@@ -104,8 +105,6 @@ class UserController extends BaseController
             $_SESSION['uid'] = $uid;
             $_SESSION['token'] = $token;
             $_SESSION['content'] = $content;
-
-
             return true;
         }else{
             return false;

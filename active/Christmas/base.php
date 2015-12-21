@@ -45,7 +45,7 @@ if(!$inviter_id){
 if (!$_SESSION['uid']) {
     $state = rand(10000, 99999);
 
-//    $url = "https://open.weixin.qq.com/connect/qrconnect?appid=$appid&redirect_uri=$redirect_uri&response_type=code&scope=snsapi_login&state=$state";
+//  $url = "https://open.weixin.qq.com/connect/qrconnect?appid=$appid&redirect_uri=$redirect_uri&response_type=code&scope=snsapi_login&state=$state";
     $openid = $_GET['open_id'];//"eroihghjhghjhiadffe";//.time();
 
     if(!$openid){
