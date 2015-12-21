@@ -1,7 +1,6 @@
 <?php
 
 /**
-
  * filname      index.php
  * author       jinxin
  * Description  Description of index
@@ -18,6 +17,7 @@ if(!isset($_POST['raw']) && !empty($HTTP_RAW_POST_DATA)){
 }elseif(!isset($_POST['raw']) && isset ($_POST['data']) && !empty ($_POST['data'])){
     $_POST['raw'] = $_POST['data'];
 }
-header( 'Cache-Control: no-store, no-cache, must-revalidate' );
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header("Access-Control-Allow-Origin: *");
 $application = new Yaf\Application( APPLICATION_PATH . "/conf/application.ini");
 $application->bootstrap()->run();
