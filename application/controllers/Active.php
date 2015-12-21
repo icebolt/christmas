@@ -10,12 +10,45 @@ class ActiveController extends BaseController
 {
     private $uid = 0;
     private $active_id = 0;
+    private $prizeModel;
+    private $winPirzeModel;
+    private $pirzeLogModel;
+    private $deviceid;
+    private $appid;
 
+    /**
+     * @var 活动开始时间
+     */
+    private $startTime = '2015-06-03';
+    /**
+     * @var 活动结束时间
+     */
+    private $endTime = '2015-06-21';
+    /**
+     * @var array 间隔时间段
+     */
+    private $interval = array();
+    /**
+     * @var array  当天的所处的时间段
+     */
+    private $position = array();
     /**
      * 初始化方法
      */
     public function init()
     {
+        $this->deviceid = $this->getParam('deviceid'); //$_SESSION['DeviceId'];// $_SERVER['HTTP_X_SLATE_DEVICEID'];
+        $this->uid = $this->getParam('uid'); //$_SESSION['Uid'];// $_SERVER['HTTP_X_SLATE_USERID'];
+
+        $this->prizeModel = new prizeModel();
+        $this->winPirzeModel = new winPrizeModel();
+        $this->pirzeLogModel = new prizeLogModel();
+
+        $this->winPirzeModel->deviceid = $this->deviceid;
+        $this->pirzeLogModel->deviceid = $this->deviceid;
+
+        $this->initInterval(2);
+        $this->initInterval(3);
 
         $token = htmlspecialchars($_POST['token']);
         $uid = intval($_POST['uid']);
@@ -135,6 +168,87 @@ class ActiveController extends BaseController
         $this->returnJson(200, $prize);
     }
 
+    private function winPrize()
+    {
+        //检查是否已经抽中过
+//        $_prize = $this->winPirzeModel->checkUserPrize(false);
+//        if ($_prize && $_prize['pid'] > 0){
+//            $result = array('error' => '', 'errno' => 0, 'data' => '');
+//            echo json_encode($result);exit;
+//        }
+//        //检查是否有中奖资格
+//        $win = $this->pirzeLogModel->checkRaffle();
+//        if ($win['num'] > 0) { //已经抽中过奖品
+//            $result = array('error' => '', 'errno' => 0, 'data' => '');
+//            echo json_encode($result);exit;
+//        }
+        $prizes = $this->prizeAvalible();
+        $prob = array();
+        $probabilitySum = 0;
+        foreach ($prizes as $prize) {
+            $prob[$prize['id']] = $prize['probability'];
+            $probabilitySum += $prize['probability'];
+        }
+        /**
+         * 奖品总几率
+         */
+
+        $id = 0;
+        $rand = mt_rand(1, 10000);
+        if ($rand < $probabilitySum) {
+            $id = $this->randomPrize($prob);
+        }
+        $log = new prizeLogModel();
+        $log->aid = 0;
+        $log->deviceid = $this->deviceid;
+        $log->uid = $this->uid;
+        if ($id > 0) {
+            $winPirzeM = new winPrizeModel();
+            $this->prizeModel->id = $id;
+            $winPirzeM->pid = $id;
+            $winPirzeM->deviceid = $this->deviceid;
+            $winPirzeM->uid = $this->uid;
+            //添加奖品
+            $winPirzeM->add();
+            /**
+             * 减少剩余奖品数量
+             */
+            $this->prizeModel->decreaseRemain();
+
+            $log->pid = $id;
+        }
+        //纪录日志
+        $log->add();
+        //返回结果
+        $result = array('error' => '', 'errno' => 0, 'data' => '');
+        if ($id > 0) {
+            $prize = $this->prizeModel->get();
+            $this->returnJson(200,array('id' => $prize['id'], 'name' => $prize['name']));
+        }
+        return;
+    }
+
+    /**
+     * @desc 随即获取奖品
+     * @param $prizes array
+     * @return int
+     */
+    private function randomPrize($prizes)
+    {
+        $index = null;
+        $probabilitySum = array_sum($prizes);
+        $rand = mt_rand(1, $probabilitySum);
+        foreach ($prizes as $key => $value) {
+            if ($rand <= $value) {
+                $index = $key;
+                break;
+            } else {
+                $rand -= $value;
+            }
+        }
+        return $index;
+    }
+
     /**
      * 规则
      */
@@ -192,42 +306,43 @@ class ActiveController extends BaseController
         //1 提取当天奖品 1，2，3 奖品
         $prize2 = $this->prizeAvalible();
         $count = count($prize2);
-        if($count>1){
-            //抽到的数字
-            $rand_num = rand(1, 10000);  //33
-            //中奖概率
-            //     | 01 || 3 || 1% |
-            //      | 02 ||10 || 1.5% |
-            //      | 03 ||12 || 2% |
-            $win_number = 10000 * 0.015; //450
-            if ($rand_num <= $win_number) {
-                //我中奖了
-
-
-                $id = rand(0, $count - 1); //中奖ID
-                $r = $prizeModel->decRemain($prize2[$id]['id']);
-                if ($r) {
-                    $arr['id'] = $prize2[$id]['id'];
-                    $arr['name'] = $prize2[$id]['name'];
-                    $arr['img_url'] = $prize2[$id]['img_url'];
-                    $data = [
-                        'pid' => $arr['id'],
-                        'active_id' => $this->active_id,
-                        'active_uid' => $this->uid
-                    ];
-                    $winprizeModel->addWin($data);
-                    //添加到中奖日志表
-                    $data = [
-                        'pid' => $arr['id'],
-                        'aid' => $this->active_id,
-                        'uid' => $this->uid
-                    ];
-                    $winprizelogModel->addWin($data);
-                    return $arr;
-                }
-
-            }
-        }
+        $this->winPrize();
+//        if($count>1){
+//            //抽到的数字
+//            $rand_num = rand(1, 10000);  //33
+//            //中奖概率
+//            //     | 01 || 3 || 1% |
+//            //      | 02 ||10 || 1.5% |
+//            //      | 03 ||12 || 2% |
+//            $win_number = 10000 * 0.015; //450
+//            if ($rand_num <= $win_number) {
+//                //我中奖了
+//
+//
+//                $id = rand(0, $count - 1); //中奖ID
+//                $r = $prizeModel->decRemain($prize2[$id]['id']);
+//                if ($r) {
+//                    $arr['id'] = $prize2[$id]['id'];
+//                    $arr['name'] = $prize2[$id]['name'];
+//                    $arr['img_url'] = $prize2[$id]['img_url'];
+//                    $data = [
+//                        'pid' => $arr['id'],
+//                        'active_id' => $this->active_id,
+//                        'active_uid' => $this->uid
+//                    ];
+//                    $winprizeModel->addWin($data);
+//                    //添加到中奖日志表
+//                    $data = [
+//                        'pid' => $arr['id'],
+//                        'aid' => $this->active_id,
+//                        'uid' => $this->uid
+//                    ];
+//                    $winprizelogModel->addWin($data);
+//                    return $arr;
+//                }
+//
+//            }
+//        }
         $arr = ['id'=> 0 , 'name'=>'iWeekly贺卡一张'];
         //添加到中奖日志表
         $winprizelogModel = new winprizelogModel();
