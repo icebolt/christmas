@@ -404,8 +404,8 @@ class ActiveController extends BaseController
     {
         $activeModel = new activeModel();
         $ret = $activeModel->getActive($this->active_id);
-
-        //if($ret["require_addinfo"]!===false){
+        $extra_data=json_decode($ret["extra"],true);
+        if($extra_data["require_addinfo"]!===false){
             //是否完善信息
             $activeUserModel = new activeUserModel();
             $info = $activeUserModel->getUserInfo($this->uid);
@@ -413,7 +413,7 @@ class ActiveController extends BaseController
     	    if(empty($info['content'])){
                 $this->returnJson(202);
             }
-        //}
+        }
 
         //是否抽过奖
         $winprizelogModel = new winprizelogModel();
