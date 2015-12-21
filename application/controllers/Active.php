@@ -189,8 +189,8 @@ class ActiveController extends BaseController
 	$prob = array();
         $probabilitySum = 0;
         foreach ($prizes as $prize) {
-            $prob[$prize['id']] = $prize['probability']*100;
-            $probabilitySum += $prize['probability']*100;
+            $prob[$prize['id']] = $prize['probability'];
+            $probabilitySum += $prize['probability'];
         }
         /**
          * 奖品总几率
