@@ -63,7 +63,7 @@ function rand_num(){
 <title>一盒甄选， 分享暖冬，iWeekly想要这个冬天捂热你</title>
 </head>
 <script>
-	var get_ticket = 'http://user.test.bbwc.cn/weixin/getSign',
+	var get_ticket = 'http://user.bbwc.cn/weixin/getSign',
             title = 'iWeekly2015圣诞回馈',
             desc = 'iWeekly2015圣诞回馈',
             link = 'http://mobile.iweeklyapp.com/articles/xmas2015/index.html',

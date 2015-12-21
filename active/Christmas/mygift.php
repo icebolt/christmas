@@ -30,7 +30,7 @@ if(!isset($_SESSION['inviter_id'])){
 <title>一盒甄选， 分享暖冬，iWeekly想要这个冬天捂热你</title>
 </head>
 <script>
-	var get_ticket = 'http://user.test.bbwc.cn/weixin/getSign',
+	var get_ticket = 'http://user.bbwc.cn/weixin/getSign',
             title = '一盒甄选， 分享暖冬，iWeekly想要这个冬天捂热你',
             desc = 'iWeekly圣诞感恩大礼',
             link = 'http://mobile.iweeklyapp.com/articles/xmas2015/index.html',
