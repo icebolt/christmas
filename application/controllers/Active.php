@@ -281,13 +281,19 @@ class ActiveController extends BaseController
      */
     private function check()
     {
-        //是否完善信息
-        $activeUserModel = new activeUserModel();
-        $info = $activeUserModel->getUserInfo($this->uid);
-        //var_dump($info);
-	    if(empty($info['content'])){
-            $this->returnJson(202);
+        $activeModel = new activeModel();
+        $ret = $activeModel->getActive($this->active_id);
+
+        if($ret["require_addinfo"]){
+            //是否完善信息
+            $activeUserModel = new activeUserModel();
+            $info = $activeUserModel->getUserInfo($this->uid);
+            //var_dump($info);
+    	    if(empty($info['content'])){
+                $this->returnJson(202);
+            }
         }
+
         //是否抽过奖
         $winprizelogModel = new winprizelogModel();
         $num = $winprizelogModel->checkIsWin($this->active_id, $this->uid);
