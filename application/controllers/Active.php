@@ -209,6 +209,8 @@ class ActiveController extends BaseController
             $winPirzeM->pid = $id;
             $winPirzeM->deviceid = $this->deviceid;
             $winPirzeM->uid = $this->uid;
+            $winPirzeM->active_id = $this->active_id;
+            $winPirzeM->active_uid = $this->uid;            
             //添加奖品
             $winPirzeM->add();
             /**
