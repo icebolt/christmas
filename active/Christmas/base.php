@@ -53,7 +53,12 @@ if (!$_SESSION['uid']) {
         setcookie ("opend_id", $openid, time()+86400*7);
     }
     $_SESSION['active']['state'] = $openid;
-    $url = "http://".$host."/public/index.php/index/user/test?open_id=$openid&type=1&active_id=2";
+    if($_SERVER['SCRIPT_NAME']=="active/active/Christmas/card.php"){
+        $referer="card";
+    }else{
+        $referer="index";
+    }
+    $url = "http://".$host."/public/index.php/index/user/test?open_id=$openid&type=1&active_id=2&referer=$referer";
     header("location: $url");
     exit;
 }

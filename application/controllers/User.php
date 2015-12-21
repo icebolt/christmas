@@ -64,10 +64,10 @@ class UserController extends BaseController
         $this->type = $_GET['type'];
         $this->inviter_id = @$_GET['inviter_id'];
         $this->active_id = $_GET['active_id'];
+        $this->referer = !empty($_GET['referer'])?$_GET['referer']:"index";
 
         if($this->login()){
-            //$url = $this->host_url ."active/Christmas/card.php";
-            $url = $_SERVER['HTTP_REFERER'];
+            $url = $this->host_url ."active/Christmas/".$this->referer.".php";
             header("location: $url");
         }
     }
