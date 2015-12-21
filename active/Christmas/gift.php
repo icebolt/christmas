@@ -107,7 +107,7 @@ function rand_num(){
         });
     });
     wx.error(function (res) {
-        alert(res.errMsg);
+//        alert(res.errMsg);
     });
 //	$(document).ready(function () {
 //        $.getJSON(get_ticket, {url: encodeURIComponent(location.href.split('#')[0])}, function (data) {
