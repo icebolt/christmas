@@ -62,7 +62,7 @@ header("location:mygift.php");
         });
     });
     wx.error(function (res) {
-        alert(res.errMsg);
+//        alert(res.errMsg);
     });
 </script>
 <body onLoad="showFlash3()">
