@@ -120,9 +120,11 @@ header("location:mygift.php");
                     <img class="snow" src="images/card/snow2.png">
                     <img class="snow" src="images/card/snow3.png">
                 </div>
+        <?php if($check['code']==204){ ?>
 		<a href="index.php">
                 <img src="images/card/cardbtn.png" style=" position:absolute;left:175px; top:1040px;">
 		</a>
+        <?php } ?>
             </div>
         </div>
     </div>
