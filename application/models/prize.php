@@ -88,7 +88,7 @@ class prizeModel extends baseModel{
             $row = $this->db->executeS($sql);
             return $row;
         }else{
-            $where = "once = 1 and aid ={$active_id} and remain > 0 and start_time <'{$date}'";
+            $where = "once = 1 and aid ={$active_id} and remain > 0 and start_time <'{$start_time}'";
             $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
             $row = $this->db->getRow($sql);
             return $row;
