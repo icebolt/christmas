@@ -22,10 +22,10 @@ header("location:mygift.php");
 	var get_ticket = 'http://user.bbwc.cn/weixin/getSign',
             title = '一盒甄选， 分享暖冬，iWeekly想要这个冬天捂热你',
             desc = 'iWeekly圣诞感恩大礼',
-            link = 'http://mobile.iweeklyapp.com/articles/xmas2015/index.html',
+            link = 'http://weixin.bbwc.cn/active/active/Christmas/card.php',
             imgUrl='http://mobile.iweeklyapp.com/articles/xmas2015/images/icon.jpg';
     wx.config({
-        debug: true,
+        debug: false,
         appId: '<?php echo $signPackage["appId"];?>',
         timestamp: <?php echo $signPackage["timestamp"];?>,
         nonceStr: '<?php echo $signPackage["nonceStr"];?>',
@@ -64,22 +64,6 @@ header("location:mygift.php");
     wx.error(function (res) {
         alert(res.errMsg);
     });
-//	$(document).ready(function () {
-//        $.getJSON(get_ticket, {url: encodeURIComponent(location.href.split('#')[0])}, function (data) {
-//            wx.config({
-//                debug: false,
-//                appId: data.data.appId,
-//                nonceStr: data.data.nonceStr,
-//                timestamp: data.data.timestamp,
-//                signature: data.data.signature,
-//                jsApiList: ['onMenuShareAppMessage', 'onMenuShareTimeline', 'onMenuShareQQ', 'onMenuShareWeibo']
-//            });
-//
-//
-//        });
-//})
-	
-	
 </script>
 <body onLoad="showFlash3()">
 <div class="container">
@@ -120,11 +104,11 @@ header("location:mygift.php");
                     <img class="snow" src="images/card/snow2.png">
                     <img class="snow" src="images/card/snow3.png">
                 </div>
-        <?php if($check['code']==204){ ?>
+        	<?php if($check['code']!=204){ ?>
 		<a href="index.php">
-                <img src="images/card/cardbtn.png" style=" position:absolute;left:175px; top:1040px;">
+		<img src="images/card/cardbtn.png" style=" position:absolute;left:175px; top:1040px;">
 		</a>
-        <?php } ?>
+        	<?php } ?>
             </div>
         </div>
     </div>

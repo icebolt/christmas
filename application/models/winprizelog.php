@@ -9,11 +9,6 @@
 class winprizelogModel extends  baseModel
 {
     private $table = "winprizelog";
-    private $addtime = 0;
-    public function __construct(){
-        parent::__construct();
-        $this->addtime = date('Y-m-d H:i:s');
-    }
     /**
      * 查看是否已经中奖
      * @param $active_id
@@ -32,7 +27,6 @@ class winprizelogModel extends  baseModel
      * @return mixed
      */
     public function addWin($data){
-        $data['addtime'] = $this->addtime;
         return $this->db->insert($this->table,$data);
     }
 

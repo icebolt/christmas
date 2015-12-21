@@ -69,10 +69,10 @@ function rand_num(){
 	var get_ticket = 'http://user.bbwc.cn/weixin/getSign',
             title = 'iWeekly2015圣诞回馈',
             desc = 'iWeekly2015圣诞回馈',
-            link = 'http://mobile.iweeklyapp.com/articles/xmas2015/index.html',
+            link = 'http://weixin.bbwc.cn/active/active/Christmas/card.php',
             imgUrl='http://mobile.iweeklyapp.com/articles/xmas2015/images/icon.jpg';
     wx.config({
-        debug: true,
+        debug: false,
         appId: '<?php echo $signPackage["appId"];?>',
         timestamp: <?php echo $signPackage["timestamp"];?>,
         nonceStr: '<?php echo $signPackage["nonceStr"];?>',

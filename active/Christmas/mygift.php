@@ -36,10 +36,10 @@ if(!isset($_SESSION['inviter_id'])){
 	var get_ticket = 'http://user.bbwc.cn/weixin/getSign',
             title = '一盒甄选， 分享暖冬，iWeekly想要这个冬天捂热你',
             desc = 'iWeekly圣诞感恩大礼',
-            link = 'http://mobile.iweeklyapp.com/articles/xmas2015/index.html',
+            link = url= "/active/active/Christmas/card.php?uid=<?=$uid;?>",
             imgUrl='http://mobile.iweeklyapp.com/articles/xmas2015/images/icon.jpg';
     wx.config({
-        debug: true,
+        debug: false,
         appId: '<?php echo $signPackage["appId"];?>',
         timestamp: <?php echo $signPackage["timestamp"];?>,
         nonceStr: '<?php echo $signPackage["nonceStr"];?>',
