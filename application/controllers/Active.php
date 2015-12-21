@@ -229,7 +229,7 @@ class ActiveController extends BaseController
         $result = array('error' => '', 'errno' => 0, 'data' => '');
         if ($id > 0) {
             $prize = $this->prizeModel->get();
-            $this->returnJson(200,array('id' => $prize['id'], 'name' => $prize['name']));
+            $this->returnJson(200,array('id' => $prize['id'], 'name' => $prize['name'],'img_url' => $prize['img_url']));
         }
         return;
     }
@@ -313,6 +313,7 @@ class ActiveController extends BaseController
         $prize2 = $this->prizeAvalible();
         $count = count($prize2);
         $this->winPrize();
+
 //        if($count>1){
 //            //抽到的数字
 //            $rand_num = rand(1, 10000);  //33
