@@ -186,11 +186,11 @@ class ActiveController extends BaseController
 //            echo json_encode($result);exit;
 //        }
         $prizes = $this->prizeAvalible();
-        $prob = array();
+	$prob = array();
         $probabilitySum = 0;
         foreach ($prizes as $prize) {
-            $prob[$prize['id']] = $prize['probability'];
-            $probabilitySum += $prize['probability'];
+            $prob[$prize['id']] = $prize['probability']*100;
+            $probabilitySum += $prize['probability']*100;
         }
         /**
          * 奖品总几率
