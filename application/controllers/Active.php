@@ -110,7 +110,7 @@ class ActiveController extends BaseController
         $weixin = htmlspecialchars($_POST['weixin']);
         $name = htmlspecialchars($_POST['name']);
         $address = htmlspecialchars($_POST['address']);
-        $inviter_id = $_POST['inviter_id'];
+        $inviter_id = intval($_POST['inviter_id']);
         $data = [
             'phone' => $phone,
             'weixin' => $weixin,
