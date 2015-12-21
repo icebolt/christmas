@@ -1,5 +1,8 @@
 <?php
 include_once("base.php");
+require_once "jssdk.php";
+$jssdk = new JSSDK("wx9a57805496ad6b31", "844324226591d05016ed255c231eed76");
+$signPackage = $jssdk->GetSignPackage();
 //获取好友
 $firends = friends();
 if($firends['code'] ==200){
@@ -35,55 +38,93 @@ if(!isset($_SESSION['inviter_id'])){
             desc = 'iWeekly圣诞感恩大礼',
             link = 'http://mobile.iweeklyapp.com/articles/xmas2015/index.html',
             imgUrl='http://mobile.iweeklyapp.com/articles/xmas2015/images/icon.jpg';
-	$(document).ready(function () {
-        $.getJSON(get_ticket, {url: encodeURIComponent(location.href.split('#')[0])}, function (data) {
-            wx.config({
-                debug: false,
-                appId: data.data.appId,
-                nonceStr: data.data.nonceStr,
-                timestamp: data.data.timestamp,
-                signature: data.data.signature,
-                jsApiList: ['onMenuShareAppMessage', 'onMenuShareTimeline', 'onMenuShareQQ', 'onMenuShareWeibo']
-            });
-
-            wx.ready(function () {
-
-        
-
-                wx.onMenuShareAppMessage({
-                    title: title,
-                    desc: desc,
-                    link: link,
-                    imgUrl: imgUrl
-                });
-
-
-                wx.onMenuShareTimeline({
-                    title: title,
-                    link: link,
-                    imgUrl: imgUrl
-                });
-
-                wx.onMenuShareQQ({
-                    title: title,
-                    desc: desc,
-                    link: link,
-                    imgUrl: imgUrl
-                });
-
-                wx.onMenuShareWeibo({
-                    title: title,
-                    desc: desc,
-                    link: link,
-                    imgUrl: imgUrl
-                });
-            });
-            wx.error(function (res) {
-                 //alert(res.errMsg);
-            });
+    wx.config({
+        debug: true,
+        appId: '<?php echo $signPackage["appId"];?>',
+        timestamp: <?php echo $signPackage["timestamp"];?>,
+        nonceStr: '<?php echo $signPackage["nonceStr"];?>',
+        signature: '<?php echo $signPackage["signature"];?>',
+        jsApiList: ['onMenuShareAppMessage', 'onMenuShareTimeline', 'onMenuShareQQ', 'onMenuShareWeibo']
+    });
+    wx.ready(function () {
+        wx.onMenuShareAppMessage({
+            title: title,
+            desc: desc,
+            link: link,
+            imgUrl: imgUrl
         });
-})
-	
+        wx.onMenuShareTimeline({
+            title: title,
+            link: link,
+            imgUrl: imgUrl
+        });
+
+        wx.onMenuShareQQ({
+            title: title,
+            desc: desc,
+            link: link,
+            imgUrl: imgUrl
+        });
+
+        wx.onMenuShareWeibo({
+            title: title,
+            desc: desc,
+            link: link,
+            imgUrl: imgUrl
+        });
+    });
+    wx.error(function (res) {
+        alert(res.errMsg);
+    });
+//	$(document).ready(function () {
+//        $.getJSON(get_ticket, {url: encodeURIComponent(location.href.split('#')[0])}, function (data) {
+//            wx.config({
+//                debug: false,
+//                appId: data.data.appId,
+//                nonceStr: data.data.nonceStr,
+//                timestamp: data.data.timestamp,
+//                signature: data.data.signature,
+//                jsApiList: ['onMenuShareAppMessage', 'onMenuShareTimeline', 'onMenuShareQQ', 'onMenuShareWeibo']
+//            });
+//
+//            wx.ready(function () {
+//
+//
+//
+//                wx.onMenuShareAppMessage({
+//                    title: title,
+//                    desc: desc,
+//                    link: link,
+//                    imgUrl: imgUrl
+//                });
+//
+//
+//                wx.onMenuShareTimeline({
+//                    title: title,
+//                    link: link,
+//                    imgUrl: imgUrl
+//                });
+//
+//                wx.onMenuShareQQ({
+//                    title: title,
+//                    desc: desc,
+//                    link: link,
+//                    imgUrl: imgUrl
+//                });
+//
+//                wx.onMenuShareWeibo({
+//                    title: title,
+//                    desc: desc,
+//                    link: link,
+//                    imgUrl: imgUrl
+//                });
+//            });
+//            wx.error(function (res) {
+//                 //alert(res.errMsg);
+//            });
+//        });
+//})
+//
 	
 </script>
 <body onLoad="htmlLoaded()">
