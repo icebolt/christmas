@@ -66,17 +66,18 @@ class UserController extends BaseController
         $this->active_id = $_GET['active_id'];
         $this->referer = !empty($_GET['referer'])?$_GET['referer']:"index";
 
-        if($this->login()){
+        $result=$this->_login();
+        if($result!==false){
+            $_SESSION['uid'] = $result["uid"];
+            $_SESSION['token'] = $result["token"];
+            $_SESSION['content'] = $result["content"];
             $url = $this->host_url ."active/Christmas/".$this->referer.".php";
             header("location: $url");
         }
     }
 
 
-    /**
-     * 登陆/注册
-     */
-    public function login()
+    private function _login()
     {
         //判断用户是否已经存在
         $userInfo = $this->_isUser();
@@ -102,15 +103,30 @@ class UserController extends BaseController
             }
         }
         if($token && $uid){
-            $_SESSION['uid'] = $uid;
-            $_SESSION['token'] = $token;
-            $_SESSION['content'] = $content;
-            return true;
+            $userArr['uid'] = $uid;
+            $userArr['token'] = $token;
+            $userArr['content'] = $content;
+            return $userArr;
         }else{
             return false;
         }
     }
 
+    public function checkAction(){
+        $this->open_id = $_GET['open_id'];
+        $this->type = $_GET['type'];
+        $this->inviter_id = @$_GET['inviter_id'];
+        $this->active_id = $_GET['active_id'];
+        $result=$this->_login();
+        if($result!==false){
+            $result['content'] = json_decode($result["content"],true);
+            echo json_encode($result);
+        }else{
+            $result["error"]["errorno"]=100;
+            $result["error"]["errormessage"]="系统错误";
+            echo json_encode($result);
+        }
+    }
 
 
     private function _isUser()
