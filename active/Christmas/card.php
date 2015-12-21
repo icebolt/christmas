@@ -127,5 +127,14 @@ header("location:mygift.php");
         </div>
     </div>
 </div>
+<script>
+var _hmt = _hmt || [];
+(function() {
+var hm = document.createElement("script");
+hm.src = "//hm.baidu.com/hm.js?8ce969f75367b959a425732378a6333f";
+var s = document.getElementsByTagName("script")[0]; 
+s.parentNode.insertBefore(hm, s);
+})();
+</script>
 </body> 
 </html> 

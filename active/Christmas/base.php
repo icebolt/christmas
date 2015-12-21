@@ -74,6 +74,12 @@ $foo = strpos($_SERVER['REQUEST_URI'],'mygift.php');
 if($isWin['code'] ==201 && $foo===false){
     header("location:mygift.php");
 }
+
+$foo = strpos($_SERVER['REQUEST_URI'],'card.php');
+if($isWin['code'] ==204 && $foo===false){
+    header("location:card.php");
+}
+
 function getUserInfo(){
     global $uid, $token, $active_id, $host;
     $url = 'http://' . $host . '/public/index.php/index/active/getuserinfo';
