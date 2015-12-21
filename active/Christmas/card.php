@@ -11,6 +11,7 @@ header("location:mygift.php");
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href='style.css' rel='stylesheet'/>
 <script src="js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script src="js/SRTscript.js"></script>
 <title>一盒甄选， 分享暖冬，iWeekly想要这个冬天捂热你</title>
 </head>
