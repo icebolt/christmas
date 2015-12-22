@@ -23,7 +23,7 @@ class ActiveController extends BaseController
     /**
      * @var 活动结束时间
      */
-    private $endTime = '2015-12-21';
+    private $endTime = '2015-12-31';
     /**
      * @var array 间隔时间段
      */
