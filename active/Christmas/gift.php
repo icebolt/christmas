@@ -69,7 +69,7 @@ function rand_num(){
 	var get_ticket = 'http://user.bbwc.cn/weixin/getSign',
             title = 'iWeekly2015圣诞回馈',
             desc = 'iWeekly2015圣诞回馈',
-            link = 'http://weixin.bbwc.cn/active/active/Christmas/card.php',
+            link = "/active/active/Christmas/card.php?uid=<?=$uid;?>",
             imgUrl='http://mobile.iweeklyapp.com/articles/xmas2015/images/icon.jpg';
     wx.config({
         debug: false,

@@ -83,7 +83,7 @@ class prizeModel extends baseModel{
     public function getActiveGoods($active_id, $frequency = 0){
         $date = date('Y-m-d H:i:s',time());
         if($frequency == 0){
-            $where = "frequency = 0 and aid ={$active_id}";
+            $where = "frequency = 0 and aid ={$active_id} and remain > 0";
             $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
             $row = $this->db->executeS($sql);
             return $row;
