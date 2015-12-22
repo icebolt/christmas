@@ -368,7 +368,7 @@ class ActiveController extends BaseController
         $filterPrize = array();
         if (count($prizes) > 0){
             foreach ($prizes as $key => $prize){
-                if (intval($prize['frequency']) > 1){
+                if (intval($prize['frequency']) >= 1){
                     $position = $this->position[$prize['frequency']];
                     $start_time = $this->interval[$prize['frequency']][$position];
                     $end_time = $start_time+86400*$prize['frequency']-1;
