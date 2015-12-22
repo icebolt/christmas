@@ -81,14 +81,14 @@ class prizeModel extends baseModel{
      * @param int $frequency 为0表示不限制
      */
     public function getActiveGoods($active_id, $frequency = 0){
-        $date = date('Y-m-d H:i:s',time());
+        $start_time = date('Y-m-d H:i:s',time());
         if($frequency == 0){
-            $where = "frequency = 0 and aid ={$active_id} and remain > 0";
+            $where = "once = 0 and aid ={$active_id} and remain > 0";
             $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
             $row = $this->db->executeS($sql);
             return $row;
         }else{
-            $where = "frequency = 1 and aid ={$active_id} and remain > 0 and start_time <'{$date}'";
+            $where = "once = 1 and aid ={$active_id} and remain > 0 and start_time <'{$start_time}'";
             $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
             $row = $this->db->getRow($sql);
             return $row;

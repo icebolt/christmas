@@ -110,7 +110,7 @@ class ActiveController extends BaseController
         $weixin = htmlspecialchars($_POST['weixin']);
         $name = htmlspecialchars($_POST['name']);
         $address = htmlspecialchars($_POST['address']);
-        $inviter_id = $_POST['inviter_id'];
+        $inviter_id = intval($_POST['inviter_id']);
         $data = [
             'phone' => $phone,
             'weixin' => $weixin,
@@ -186,7 +186,7 @@ class ActiveController extends BaseController
 //            echo json_encode($result);exit;
 //        }
         $prizes = $this->prizeAvalible();
-        $prob = array();
+	$prob = array();
         $probabilitySum = 0;
         foreach ($prizes as $prize) {
             $prob[$prize['id']] = $prize['probability'];
@@ -209,6 +209,8 @@ class ActiveController extends BaseController
             $winPirzeM->pid = $id;
             $winPirzeM->deviceid = $this->deviceid;
             $winPirzeM->uid = $this->uid;
+            $winPirzeM->active_id = $this->active_id;
+            $winPirzeM->active_uid = $this->uid;            
             //添加奖品
             $winPirzeM->add();
             /**
@@ -229,7 +231,7 @@ class ActiveController extends BaseController
         $result = array('error' => '', 'errno' => 0, 'data' => '');
         if ($id > 0) {
             $prize = $this->prizeModel->get();
-            $this->returnJson(200,array('id' => $prize['id'], 'name' => $prize['name']));
+            $this->returnJson(200,array('id' => $prize['id'], 'name' => $prize['name'],'img_url' => $prize['img_url']));
         }
         return;
     }
@@ -313,6 +315,7 @@ class ActiveController extends BaseController
         $prize2 = $this->prizeAvalible();
         $count = count($prize2);
         $this->winPrize();
+
 //        if($count>1){
 //            //抽到的数字
 //            $rand_num = rand(1, 10000);  //33
@@ -404,7 +407,7 @@ class ActiveController extends BaseController
     {
         $activeModel = new activeModel();
         $ret = $activeModel->getActive($this->active_id);
-        $extra_data=json_decode($ret["extra"],true);
+        $extra_data=json_decode($ret[0]["extra"],true);
         if($extra_data["require_addinfo"]!==false){
             //是否完善信息
             $activeUserModel = new activeUserModel();

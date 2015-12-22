@@ -83,7 +83,9 @@ class winPrizeModel extends baseModel {
             'addtime' => $this->addtime,
             'received' => 0,
             'status' => 0,
-            'contact' => $this->contact
+            'contact' => $this->contact,
+	    'active_id'=>$this->active_id,
+	    'active_uid'=>$this->active_uid
         );
         return $this->db->insert($this->table,$data);
     }

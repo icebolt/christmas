@@ -159,8 +159,8 @@ class UserController extends BaseController
     }
 
     public function logoutAction(){
-        session_unset();
-        session_destroy();
+        //session_unset();
+        //session_destroy();
     }
 
 
