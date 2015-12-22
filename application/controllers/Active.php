@@ -43,10 +43,6 @@ class ActiveController extends BaseController
         $this->prizeModel = new prizeModel();
         $this->winPirzeModel = new winPrizeModel();
         $this->pirzeLogModel = new prizeLogModel();
-
-        $this->winPirzeModel->deviceid = $this->deviceid;
-        $this->pirzeLogModel->deviceid = $this->deviceid;
-
 //        $this->initInterval(2);
 //        $this->initInterval(3);
 
@@ -63,6 +59,8 @@ class ActiveController extends BaseController
         if (!$this->deviceid){
             $this->deviceid = $token;
         }
+        $this->winPirzeModel->deviceid = $this->deviceid;
+        $this->pirzeLogModel->deviceid = $this->deviceid;
         //判断活动是否在有效期
         $this->_activeValid($active_id);
         $this->uid = $uid;
@@ -186,7 +184,7 @@ class ActiveController extends BaseController
 //            echo json_encode($result);exit;
 //        }
         $prizes = $this->prizeAvalible();
-	$prob = array();
+	    $prob = array();
         $probabilitySum = 0;
         foreach ($prizes as $prize) {
             $prob[$prize['id']] = $prize['probability'];
@@ -210,13 +208,14 @@ class ActiveController extends BaseController
             $winPirzeM->deviceid = $this->deviceid;
             $winPirzeM->uid = $this->uid;
             $winPirzeM->active_id = $this->active_id;
-            $winPirzeM->active_uid = $this->uid;            
-            //添加奖品
-            $winPirzeM->add();
+            $winPirzeM->active_uid = $this->uid;
             /**
              * 减少剩余奖品数量
              */
             $this->prizeModel->decreaseRemain();
+            //添加奖品
+            $winPirzeM->add();
+            //记录日志
             $data = array(
                 'pid' => $id,
                 'aid' => $this->active_id,
