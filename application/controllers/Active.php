@@ -19,11 +19,11 @@ class ActiveController extends BaseController
     /**
      * @var 活动开始时间
      */
-    private $startTime = '2015-06-03';
+    private $startTime = '2015-12-21';
     /**
      * @var 活动结束时间
      */
-    private $endTime = '2015-06-21';
+    private $endTime = '2015-12-21';
     /**
      * @var array 间隔时间段
      */
@@ -43,7 +43,7 @@ class ActiveController extends BaseController
         $this->prizeModel = new prizeModel();
         $this->winPirzeModel = new winPrizeModel();
         $this->pirzeLogModel = new prizeLogModel();
-//        $this->initInterval(2);
+        $this->initInterval(1);
 //        $this->initInterval(3);
 
         $token = htmlspecialchars($_POST['token']);
@@ -267,9 +267,9 @@ class ActiveController extends BaseController
 //    ||物品ID||获得物品的概率||
 //    普通奖项：每天可以中奖的物品
 //      物品ID  剩余数量  中奖概率
-//      | 01 || 3 || 1% |
-//      | 02 ||10 || 1.5% |
-//      | 03 ||12 || 2% |
+//      | 01 || 3 || 1% | 11
+//      | 02 ||10 || 1.5% | 6
+//      | 03 ||12 || 2% | 14
 //      如果角色A抽中的物品，剩余数量为0，则显示用户中四等奖
 //
 //      特等大奖
@@ -363,22 +363,22 @@ class ActiveController extends BaseController
         return $arr;
     }
 
-    /**
-     * @return array 获取可供中奖的奖品
-     */
     private function prizeAvalible(){
-        $start_time = "2015-12-21 00:00:00";
-        $end_time = "2015-12-31 23:59:59";
-        $prizeModel = new prizeModel();
-        $winprizeModel = new winPrizeModel();
-        $prizes = $prizeModel->getActiveGoods($this->active_id);
+        $prizes = $this->prizeModel->getAll();
         $filterPrize = array();
         if (count($prizes) > 0){
             foreach ($prizes as $key => $prize){
-                $winprizeModel->pid = $prize['id'];
-                $num = $winprizeModel->fetchWinNum($start_time,$end_time);
-                if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
-                    continue;
+                if (intval($prize['frequency']) > 1){
+                    $position = $this->position[$prize['frequency']];
+                    $start_time = $this->interval[$prize['frequency']][$position];
+                    $end_time = $start_time+86400*$prize['frequency']-1;
+                    $this->winPirzeModel->pid = $prize['id'];
+                    $num = $this->winPirzeModel->fetchWinNum($start_time,$end_time);
+                    if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
+                        continue;
+                    }else{
+                        $filterPrize[] = $prize;
+                    }
                 }else{
                     $filterPrize[] = $prize;
                 }
@@ -386,6 +386,52 @@ class ActiveController extends BaseController
         }
         return $filterPrize;
     }
+
+    private function initInterval($step){
+        $endtime = strtotime($this->endTime);
+        $start = $inteval = strtotime($this->startTime);
+        $i = 0;
+
+        while ($inteval < ($endtime- $step*86400)){
+            $this->interval[$step][] = $inteval = $start + $i*86400;
+            $i+=$step;
+        }
+        /**
+         * 当天时间
+         */
+        $currentTime = strtotime(date('Y-m-d'));
+
+        foreach ($this->interval[$step] as $key => $value){
+            if ($currentTime < $value){
+                $this->position[$step] = $key-1;
+                break;
+            }
+        }
+    }
+
+    /**
+     * @return array 获取可供中奖的奖品
+     */
+//    private function prizeAvalible(){
+//        $start_time = "2015-12-21 00:00:00";
+//        $end_time = "2015-12-31 23:59:59";
+//        $prizeModel = new prizeModel();
+//        $winprizeModel = new winPrizeModel();
+//        $prizes = $prizeModel->getActiveGoods($this->active_id);
+//        $filterPrize = array();
+//        if (count($prizes) > 0){
+//            foreach ($prizes as $key => $prize){
+//                $winprizeModel->pid = $prize['id'];
+//                $num = $winprizeModel->fetchWinNum($start_time,$end_time);
+//                if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
+//                    continue;
+//                }else{
+//                    $filterPrize[] = $prize;
+//                }
+//            }
+//        }
+//        return $filterPrize;
+//    }
 
     public function checkUserAction(){
         $ret = $this->check();
