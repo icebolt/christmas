@@ -10,8 +10,14 @@ class PrizeruleController extends BaseController
 {
     //活动ID
     private $active_id = 0;
-    private $startTime = "2015-12-13";
-    private $endTime = "2016-02-20";
+    private $token = "";
+//    private $endTime = "0";
+    /**
+     * 活动信息
+     * @var array
+     */
+    private $activeInfo = [];
+    private $userInfo = [];
     /**
      * @var array 间隔时间段
      */
@@ -20,26 +26,94 @@ class PrizeruleController extends BaseController
      * @var array  当天的所处的时间段
      */
     private $position = array();
-    public function indexAction()
+
+    public function init()
     {
-        echo 123;
+        parent::init();
+        $uid = I('uid',2,'intval');
+        $active_id = I('active_id',2, 'intval');
+        $token = I('token');
+        if(!$uid || !$active_id || !$token){
+            $this->returnJson(100);
+        }
+        $this->uid = $uid;
+        $this->active_id = $active_id;
+        $this->token = $token;
+        //获取活动信息
+        $this->getActiveInfo();
+        //判断用户是否存在
+        $this->CheckUser();
+
     }
 
+    /**
+     * 首页入口
+     */
+    public function indexAction()
+    {
+        echo "接口正常！";
+    }
+
+    /**
+     * 判断是否用户合法
+     */
+    private function CheckUser()
+    {
+        $userModel = new activeUserModel();
+        $userInfo = $userModel->getUserInfo($this->uid);
+        $local_token = md5($userInfo['id'].'@'. $userInfo['open_id'].'@'.$userInfo['type'].'@'.$userInfo['rand_string']);
+        if($local_token != $this->token){
+            $this->returnJson(101);
+        }
+        $this->userInfo = $userInfo;
+    }
+
+    /**
+     * 获取活动信息
+     */
+    private function getActiveInfo()
+    {
+        $activeModel = new activeModel();
+        $activeInfo = $activeModel->getActive($this->active_id);
+        if($activeInfo){
+            $this->activeInfo = $activeInfo;
+        }else{
+            $this->returnJson(104);
+        }
+    }
     /**
      * 用户抽奖
      */
     public function winAction()
     {
+        //检查用户资料是否完善
+        $this->_checkInfo();
+        //检查用户抽奖次数
+        $num = $this->_checkWinNum();
+        if($num > 0){
+           //大于0次的去判断其他规则
+           //好友大于等于6可以抽奖
+            if($num == 1){
+                $this->_inviterNum();
+            }else{
+                $this->returnJson(205);
+            }
+        }
         //开始抽奖
         $prize = $this->_rule();
         $this->returnJson(200, $prize);
     }
 
-    public function init()
+    /**
+     * 计算好友数量
+     */
+    private function _inviterNum()
     {
-        parent::init();
-        $this->uid = 2;
-        $this->active_id = 2;
+        $activeUserModel = new activeUserModel();
+        $num = $activeUserModel->getInviter($this->active_id, $this->uid);
+        if($num['num'] < 6){
+            $this->returnJson(204);
+        }
     }
 
     /**
@@ -99,18 +173,17 @@ class PrizeruleController extends BaseController
                 }
             }
         }
-
         //下面属于没中奖信息
         $arr = [
             'id' => 0,
             'name'=> '没有中奖'
         ];
         $this->returnJson(200, $arr);
-
-
-
     }
 
+    /**
+     * 测试方法
+     */
     public function TestAction()
     {
         $this->initInterval(2);
@@ -119,48 +192,23 @@ class PrizeruleController extends BaseController
         echo "position=>";
         var_dump($this->position);
     }
-    /**
-     * @return array 获取可供中奖的奖品
-     */
-    private function prizeAvalible(){
-        $prizes = $this->prizeModel->getAll();
-        $filterPrize = array();
-        if (count($prizes) > 0){
-            foreach ($prizes as $key => $prize){
-                if (intval($prize['frequency']) > 1){
-                    $position = $this->position[$prize['frequency']];
-                    $start_time = $this->interval[$prize['frequency']][$position];
-                    $end_time = $start_time+86400*$prize['frequency']-1;
-                    $this->winPirzeModel->pid = $prize['id'];
-                    $num = $this->winPirzeModel->fetchWinNum($start_time,$end_time);
-                    if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
-                        continue;
-                    }else{
-                        $filterPrize[] = $prize;
-                    }
-                }else{
-                    $filterPrize[] = $prize;
-                }
-            }
-        }
-        return $filterPrize;
-    }
-    private function initInterval($step){
-        $endtime = strtotime($this->endTime);
-        $start = $inteval = strtotime($this->startTime);
-        $i = 0;
 
+    /**
+     * 抽奖频次计算
+     * @param $step
+     */
+    private function initInterval($step){
+        $endtime = strtotime($this->activeInfo['starttime']);
+        $start = $inteval = strtotime($this->activeInfo['endtime']);
+        $i = 0;
         while ($inteval < ($endtime- $step*86400)){
             $this->interval[$step][] = date('Y-m-d',$inteval = $start + $i*86400);
             $i+=$step;
-            var_dump($i);
         }
-        echo "step:";
-        var_dump($step);
         /**
          * 当天时间
          */
-        $currentTime = date('Y-m-d');
+        $currentTime = date('Y-m-d H:i:s');
 
         foreach ($this->interval[$step] as $key => $value){
             if ($currentTime < $value){
@@ -170,6 +218,12 @@ class PrizeruleController extends BaseController
         }
     }
 
+    /**
+     * 是否抽中奖
+     * @param $levelInfo 奖池
+     * @param $rand_num  抽奖号码
+     * @return array
+     */
     private function _isWin($levelInfo, $rand_num){
         $num = 0;
         $winInfo = [];
@@ -192,24 +246,25 @@ class PrizeruleController extends BaseController
         $prizeList = $prizeModel->getList($this->active_id, $level_id);
         return $prizeList;
     }
+    
     /**
      * 获取奖品等级信息
-     * @param int $type 0 =>抽奖等级 1 =>秒杀奖等级
+     * @param int $type  0 =>抽奖等级 1 =>秒杀奖等级
+     * @return array
      */
     private function _getLevelInfo($type = 0){
         $prizeLevelModel = new prizeLevelModel();
+        $winprizeModel = new winPrizeModel();
         $prizes = $prizeLevelModel->getList($this->active_id, $type);
         $filterPrize = array();
         if (count($prizes) > 0){
             foreach ($prizes as $key => $prize){
                 if (intval($prize['frequency']) > 0){
+                    $this->initInterval($prize['frequency']);
                     $position = $this->position[$prize['frequency']];
                     $start_time = $this->interval[$prize['frequency']][$position];
                     $end_time = $start_time+86400*$prize['frequency']-1;
-                    $this->winPirzeModel->pid = $prize['id'];
-                    echo "startTime:".date('Y-m-d');
-                    echo "endTime:".date("Y-m-d");
-                    $num = $this->winPirzeModel->fetchWinNum($start_time,$end_time);
+                    $num = $winprizeModel->fetchWinNum($this->active_id, $prize['id'], $start_time,$end_time);
                     if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
                         continue;
                     }else{
@@ -221,44 +276,34 @@ class PrizeruleController extends BaseController
             }
         }
         return $filterPrize;
-        return $info;
     }
 
-
     /**
-     * 检查是否能抽奖
+     * 检查是否完善信息
      */
-    private function check()
+    private function _checkInfo()
     {
-        $activeModel = new activeModel();
-        $ret = $activeModel->getActive($this->active_id);
+        $ret = $this->activeInfo;
         $extra_data=json_decode($ret[0]["extra"],true);
         if($extra_data["require_addinfo"]!==false){
             //是否完善信息
-            $activeUserModel = new activeUserModel();
-            $info = $activeUserModel->getUserInfo($this->uid);
-            //var_dump($info);
+            $info = $this->userInfo;
             if(empty($info['content'])){
                 $this->returnJson(202);
             }
         }
+    }
 
+    /**
+     * 查询抽奖次数
+     * @return mixed
+     */
+    private function _checkWinNum()
+    {
         //是否抽过奖
         $winprizelogModel = new winprizelogModel();
-        $num = $winprizelogModel->checkIsWin($this->active_id, $this->uid);
-        if ($num['num'] == 0) {
-            return 1;
-        } elseif ($num['num'] == 1) {
-            //查询好友是否满足6人
-            $activeUserModel = new activeUserModel();
-            $ret_list = $activeUserModel->getInviter($this->active_id, $this->uid);
-            if (count($ret_list) == 6) {
-                return 2;
-            }
-        }elseif ($num['num'] == 2) {
-            return 3;
-        }
-        return false;
+        $num = $winprizelogModel->checkWinNum($this->active_id, $this->uid);
+        return $num;
     }
 
 }

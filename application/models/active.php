@@ -14,7 +14,7 @@ class activeModel extends baseModel
         $time = time();
         $where = "id = $id and starttime < '{$time}' and endtime > '{$time}' and `status` =0 ";
         $sql = $this->query()->select("*")->from($this->table)->where($where)->build();
-        return $ret = $this->db->executeS($sql);
+        return $ret = $this->db->getRow($sql);
     }
 
 }
