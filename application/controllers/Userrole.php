@@ -108,6 +108,8 @@ class UserroleController extends BaseController
     {
         $code = $this->opend_id;
         $retArr = $this->_getToken($code);
+        $this->opend_id = $retArr['openid'];
+
 
         //判断用户是否已经存在
         $userInfo = $this->_isUser();
@@ -118,8 +120,14 @@ class UserroleController extends BaseController
             $uid = $userInfo['id'];
             $content = $userInfo['content'];
         }else{
+            $weixinInfo = $this->_getUserInfo($retArr['access_token'],$retArr['openid']);
+
+            $data = [
+                'content'=>json_encode($weixinInfo, JSON_UNESCAPED_UNICODE),
+                'nickname'=>$weixinInfo['nickname']
+            ];
             //注册
-            $ret = $this->_regUser();
+            $ret = $this->_regUser($data);
             if($ret){
                 $rand_string = $this->activeUserModel->getRandNum();
                 $token = md5($ret.'@'. $this->open_id.'@'.$this->type.'@'.$rand_string);
@@ -168,13 +176,20 @@ class UserroleController extends BaseController
      * 注册用户
      * @return mixed
      */
-    private function _regUser(){
+    private function _regUser($addinfo = []){
         $activeUserModel = new activeUserModel();
         $data = [];
         $data['inviter_id'] = $this->inviter_id;;
         $data['active_id'] = $this->active_id;
         $data['open_id'] = $this->open_id;
         $data['type'] = $this->type;
+        if($data){
+            //微信昵称等信息
+            foreach($addinfo as $k => $v){
+                $data[$k] = $v;
+            }
+
+        }
         return $user = $activeUserModel->addUser($data);
     }
 

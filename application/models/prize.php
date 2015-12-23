@@ -58,20 +58,20 @@ class prizeModel extends baseModel{
         $row = $this->db->executeS($sql);
         return $row;
     }
-//    /**
-//     * 获取单条数据
-//     */
-//    public function get(){
-//        $sql = $this->query()->select('*')->from($this->table)->where("id={$this->id}")->build();
-//        $row = $this->db->getRow($sql);
-//	    return $row;
-//    }
-//
-//    public function decreaseRemain(){
-//        $sql = "UPDATE {$this->table} SET remain = remain -1 WHERE id = {$this->id} AND remain > 0 ";
-//        $result =  $this->db->query($sql);
-//        return $result ? true : false;
-//    }
+    /**
+     * 获取单条数据
+     */
+    public function get(){
+        $sql = $this->query()->select('*')->from($this->table)->where("id={$this->id}")->build();
+        $row = $this->db->getRow($sql);
+	    return $row;
+    }
+
+    public function decreaseRemain(){
+        $sql = "UPDATE {$this->table} SET remain = remain -1 WHERE id = {$this->id} AND remain > 0 ";
+        $result =  $this->db->query($sql);
+        return $result ? true : false;
+    }
 
     /**
      * ========================================微信活动方法========================================
@@ -80,25 +80,25 @@ class prizeModel extends baseModel{
      * @param $active_id
      * @param int $frequency 为0表示不限制
      */
-//    public function getActiveGoods($active_id, $frequency = 0){
-//        $start_time = date('Y-m-d H:i:s',time());
-//        if($frequency == 0){
-//            $where = "once = 0 and aid ={$active_id} and remain > 0";
-//            $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
-//            $row = $this->db->executeS($sql);
-//            return $row;
-//        }else{
-//            $where = "once = 1 and aid ={$active_id} and remain > 0 and start_time <'{$start_time}'";
-//            $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
-//            $row = $this->db->getRow($sql);
-//            return $row;
-//        }
-//    }
-//    public function decRemain($active_id){
-//        $sql = "UPDATE {$this->table} SET remain = remain -1 WHERE id = {$active_id} AND remain > 0 ";
-//        $result =  $this->db->query($sql);
-//        return $result ? true : false;
-//    }
+    public function getActiveGoods($active_id, $frequency = 0){
+        $start_time = date('Y-m-d H:i:s',time());
+        if($frequency == 0){
+            $where = "once = 0 and aid ={$active_id} and remain > 0";
+            $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
+            $row = $this->db->executeS($sql);
+            return $row;
+        }else{
+            $where = "once = 1 and aid ={$active_id} and remain > 0 and start_time <'{$start_time}'";
+            $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
+            $row = $this->db->getRow($sql);
+            return $row;
+        }
+    }
+    public function decRemain($active_id){
+        $sql = "UPDATE {$this->table} SET remain = remain -1 WHERE id = {$active_id} AND remain > 0 ";
+        $result =  $this->db->query($sql);
+        return $result ? true : false;
+    }
     /**
      * 获取奖品列表
      */
