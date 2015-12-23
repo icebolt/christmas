@@ -60,10 +60,22 @@ class UserController extends BaseController
      * test
      */
     public function testAction(){
-        $this->open_id = $_GET['open_id'];
-        $this->type = $_GET['type'];
-        $this->inviter_id = @$_GET['inviter_id'];
-        $this->active_id = $_GET['active_id'];
+        $open_id = htmlspecialchars($_GET['open_id']);
+        $type = intval($_GET['type']);
+        $active_id = intval($_GET['active_id']);
+        $inviter_id = $_GET['inviter_id']?intval($_GET['inviter_id']):0;
+        if(!isset($open_id) || !isset($type) || !isset($active_id) || !$active_id || !$type || !$open_id){
+            $this->returnJson(100);
+        }
+        $this->open_id = $open_id;
+        $this->type = $type;
+        $this->inviter_id = $inviter_id;
+        $this->active_id = $active_id;
+
+//        $this->open_id = $_GET['open_id'];
+//        $this->type = $_GET['type'];
+//        $this->inviter_id = @$_GET['inviter_id'];
+//        $this->active_id = $_GET['active_id'];
         $this->referer = !empty($_GET['referer'])?$_GET['referer']:"index";
 
         $result=$this->_login();
@@ -113,10 +125,18 @@ class UserController extends BaseController
     }
 
     public function checkAction(){
-        $this->open_id = $_GET['open_id'];
-        $this->type = $_GET['type'];
-        $this->inviter_id = @$_GET['inviter_id'];
-        $this->active_id = $_GET['active_id'];
+        $open_id = htmlspecialchars($_GET['open_id']);
+        $type = intval($_GET['type']);
+        $active_id = intval($_GET['active_id']);
+        $inviter_id = $_GET['inviter_id']?intval($_GET['inviter_id']):0;
+        if(!isset($open_id) || !isset($type) || !isset($active_id) || !$active_id || !$type || !$open_id){
+            $this->returnJson(100);
+        }
+        $this->open_id = $open_id;
+        $this->type = $type;
+        $this->inviter_id = $inviter_id;
+        $this->active_id = $active_id;
+
         $result=$this->_login();
         if($result!==false){
             $result['content'] = json_decode($result["content"],true);
