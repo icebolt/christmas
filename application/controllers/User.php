@@ -3,18 +3,28 @@
 /**
  * Created by PhpStorm.
  * User: admin
- * Date: 15/12/23
- * Time: 下午3:21
+ * Date: 15/12/11
+ * Time: 下午3:32
  */
 class UserController extends BaseController
 {
+    private $active_id = 0;
+    private $type = 0;
+    private $open_id = 0;
+    private $inviter_id = 0;
+    private $activeUserModel = '';
+    private $host_url = '';
     public function init()
     {
         parent::init();
+        $config = Yaf\Application::app()->getConfig();
+        $this->host_url = $config->host['url'];
+        $this->activeUserModel = new activeUserModel();
     }
 
-    public function loginAction()
+    public function callbackAction()
     {
+
         $state = htmlspecialchars($_GET['state']);
         if(!$state ==$_SESSION['active']['state']){
             echo "不要攻击我，我会报警的！";
