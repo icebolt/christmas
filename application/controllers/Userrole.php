@@ -6,7 +6,7 @@
  * Date: 15/12/23
  * Time: 下午3:21
  */
-class UserController extends BaseController
+class UserroleController extends BaseController
 {
     public function init()
     {

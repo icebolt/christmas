@@ -42,6 +42,7 @@ class BaseController extends \SlatePF\Extras\ExtrasController {
 		$this->pagesize = 20;
 		$this->httpRequest = new \GuzzleHttp\Client();
 		$this->api = $config->api;
+		file_put_contents('/tmp/public_active.log',"接口：".$_SERVER['HTTP_REFERER']."==数据Post：".var_export($_POST,1)."==数据get：".var_export($_GET,1)."\r\n",FILE_APPEND);
 	}
 	
 	/**
@@ -118,7 +119,9 @@ class BaseController extends \SlatePF\Extras\ExtrasController {
 		if($msg == ''){
 			$msg = $this->ret_msg[$code];
 		}
-		echo json_encode(array('code'=>$code,'data'=>$data, 'msg'=>$msg));
+		$ret = array('code'=>$code,'data'=>$data, 'msg'=>$msg);
+		file_put_contents('/tmp/public_active.log',"接口返回数据：".var_export($ret,1)."\r\n",FILE_APPEND);
+		echo json_encode($ret);
 		exit();
 	}
 
