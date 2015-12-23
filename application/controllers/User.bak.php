@@ -3,18 +3,28 @@
 /**
  * Created by PhpStorm.
  * User: admin
- * Date: 15/12/23
- * Time: 下午3:21
+ * Date: 15/12/11
+ * Time: 下午3:32
  */
-class UserController extends BaseController
+class User1Controller extends BaseController
 {
+    private $active_id = 0;
+    private $type = 0;
+    private $open_id = 0;
+    private $inviter_id = 0;
+    private $activeUserModel = '';
+    private $host_url = '';
     public function init()
     {
         parent::init();
+        $config = Yaf\Application::app()->getConfig();
+        $this->host_url = $config->host['url'];
+        $this->activeUserModel = new activeUserModel();
     }
 
-    public function loginAction()
+    public function callbackAction()
     {
+
         $state = htmlspecialchars($_GET['state']);
         if(!$state ==$_SESSION['active']['state']){
             echo "不要攻击我，我会报警的！";
@@ -50,22 +60,10 @@ class UserController extends BaseController
      * test
      */
     public function testAction(){
-        $open_id = htmlspecialchars($_GET['open_id']);
-        $type = intval($_GET['type']);
-        $active_id = intval($_GET['active_id']);
-        $inviter_id = $_GET['inviter_id']?intval($_GET['inviter_id']):0;
-        if(!isset($open_id) || !isset($type) || !isset($active_id) || !$active_id || !$type || !$open_id){
-            $this->returnJson(100);
-        }
-        $this->open_id = $open_id;
-        $this->type = $type;
-        $this->inviter_id = $inviter_id;
-        $this->active_id = $active_id;
-
-//        $this->open_id = $_GET['open_id'];
-//        $this->type = $_GET['type'];
-//        $this->inviter_id = @$_GET['inviter_id'];
-//        $this->active_id = $_GET['active_id'];
+        $this->open_id = $_GET['open_id'];
+        $this->type = $_GET['type'];
+        $this->inviter_id = @$_GET['inviter_id'];
+        $this->active_id = $_GET['active_id'];
         $this->referer = !empty($_GET['referer'])?$_GET['referer']:"index";
 
         $result=$this->_login();
@@ -115,18 +113,10 @@ class UserController extends BaseController
     }
 
     public function checkAction(){
-        $open_id = htmlspecialchars($_GET['open_id']);
-        $type = intval($_GET['type']);
-        $active_id = intval($_GET['active_id']);
-        $inviter_id = $_GET['inviter_id']?intval($_GET['inviter_id']):0;
-        if(!isset($open_id) || !isset($type) || !isset($active_id) || !$active_id || !$type || !$open_id){
-            $this->returnJson(100);
-        }
-        $this->open_id = $open_id;
-        $this->type = $type;
-        $this->inviter_id = $inviter_id;
-        $this->active_id = $active_id;
-
+        $this->open_id = $_GET['open_id'];
+        $this->type = $_GET['type'];
+        $this->inviter_id = @$_GET['inviter_id'];
+        $this->active_id = $_GET['active_id'];
         $result=$this->_login();
         if($result!==false){
             $result['content'] = json_decode($result["content"],true);
@@ -169,8 +159,8 @@ class UserController extends BaseController
     }
 
     public function logoutAction(){
-        session_unset();
-        session_destroy();
+        //session_unset();
+        //session_destroy();
     }
 
 

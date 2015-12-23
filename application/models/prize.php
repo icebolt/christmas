@@ -99,5 +99,16 @@ class prizeModel extends baseModel{
         $result =  $this->db->query($sql);
         return $result ? true : false;
     }
+    /**
+     * 获取奖品列表
+     */
+    public function getList($active_id, $level_id)
+    {
+        $start_time = date('Y-m-d H:i:s',time());
+        $where = "level_id = $level_id and aid ={$active_id} and remain > 0 and start_time <'{$start_time}'";
+        $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
+        $row = $this->db->executeS($sql);
+        return $row;
+    }
 
 }

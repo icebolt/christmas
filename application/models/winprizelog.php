@@ -15,7 +15,7 @@ class winprizelogModel extends  baseModel
      * @param $uid
      * @return mixed
      */
-    public function checkIsWin($active_id, $uid)
+    public function checkWinNum($active_id, $uid)
     {
         $where = "uid =$uid and aid = $active_id";
         $sql = $this->query()->select("count(*) as num")->from($this->table)->where($where)->build();
