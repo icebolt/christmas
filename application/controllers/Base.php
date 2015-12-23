@@ -31,7 +31,9 @@ class BaseController extends \SlatePF\Extras\ExtrasController {
 
 		201 => '用户已经抽过奖',
 		202 => '需要完善信息',
-		203 => '用户可以抽第二次奖'
+		203 => '用户可以抽第二次奖',
+		204 => '用户需要邀请更多好友才能再次抽奖',
+		205 => '用户二次抽奖已经完成'
 	];
 	public function init(){
 		$config = Yaf\Application::app()->getConfig();
