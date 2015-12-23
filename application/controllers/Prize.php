@@ -48,9 +48,10 @@ class PrizeController extends BaseController
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Headers: X-Slate-DeviceId,X-Slate-UserId,X-Slate-AppId");
 
-        $this->deviceid = $this->getParam('deviceid'); //$_SESSION['DeviceId'];// $_SERVER['HTTP_X_SLATE_DEVICEID'];
-        $this->uid = $this->getParam('uid'); //$_SESSION['Uid'];// $_SERVER['HTTP_X_SLATE_USERID'];
-
+//        $this->deviceid = $this->getParam('deviceid'); //$_SESSION['DeviceId'];// $_SERVER['HTTP_X_SLATE_DEVICEID'];
+//        $this->uid = $this->getParam('uid'); //$_SESSION['Uid'];// $_SERVER['HTTP_X_SLATE_USERID'];
+        $this->deviceid = 123;
+        $this->uid = 1;
         if (!$this->deviceid) {
             echo json_encode(array('error' => 'deny access', 'errno' => 101, 'data' => ''));
             exit();
@@ -58,7 +59,7 @@ class PrizeController extends BaseController
 
         $this->prizeModel = new prizeModel();
         $this->winPirzeModel = new winPrizeModel();
-        $this->pirzeLogModel = new prizeLogModel();
+        $this->pirzeLogModel = new winprizeLogModel();
 
         $this->winPirzeModel->deviceid = $this->deviceid;
         $this->pirzeLogModel->deviceid = $this->deviceid;
@@ -100,11 +101,11 @@ class PrizeController extends BaseController
             echo json_encode($result);exit;
         }
         //检查是否有中奖资格
-        $win = $this->pirzeLogModel->checkRaffle();
-        if ($win['num'] > 0) { //已经抽中过奖品
-            $result = array('error' => '', 'errno' => 0, 'data' => '');
-            echo json_encode($result);exit;
-        }
+//        $win = $this->pirzeLogModel->checkRaffle();
+//        if ($win['num'] > 0) { //已经抽中过奖品
+//            $result = array('error' => '', 'errno' => 0, 'data' => '');
+//            echo json_encode($result);exit;
+//        }
 
         //摇奖
         $id = $this->winPrize();
@@ -256,14 +257,17 @@ class PrizeController extends BaseController
      */
     private function prizeAvalible(){
         $prizes = $this->prizeModel->getAll();
+        var_dump($prizes);
         $filterPrize = array();
         if (count($prizes) > 0){
             foreach ($prizes as $key => $prize){
-                if (intval($prize['frequency']) > 1){
+                if (intval($prize['frequency']) > 0){
                     $position = $this->position[$prize['frequency']];
                     $start_time = $this->interval[$prize['frequency']][$position];
                     $end_time = $start_time+86400*$prize['frequency']-1;
                     $this->winPirzeModel->pid = $prize['id'];
+                    echo "startTime:".date('Y-m-d');
+                    echo "endTime:".date("Y-m-d");
                     $num = $this->winPirzeModel->fetchWinNum($start_time,$end_time);
                     if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
                         continue;
