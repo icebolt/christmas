@@ -198,7 +198,29 @@ class PrizeruleController extends BaseController
      */
     private function _getLevelInfo($type = 0){
         $prizeLevelModel = new prizeLevelModel();
-        $info = $prizeLevelModel->getList($this->active_id, $type);
+        $prizes = $prizeLevelModel->getList($this->active_id, $type);
+        $filterPrize = array();
+        if (count($prizes) > 0){
+            foreach ($prizes as $key => $prize){
+                if (intval($prize['frequency']) > 0){
+                    $position = $this->position[$prize['frequency']];
+                    $start_time = $this->interval[$prize['frequency']][$position];
+                    $end_time = $start_time+86400*$prize['frequency']-1;
+                    $this->winPirzeModel->pid = $prize['id'];
+                    echo "startTime:".date('Y-m-d');
+                    echo "endTime:".date("Y-m-d");
+                    $num = $this->winPirzeModel->fetchWinNum($start_time,$end_time);
+                    if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
+                        continue;
+                    }else{
+                        $filterPrize[] = $prize;
+                    }
+                }else{
+                    $filterPrize[] = $prize;
+                }
+            }
+        }
+        return $filterPrize;
         return $info;
     }
 
