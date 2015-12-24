@@ -21,8 +21,8 @@ function login(){
     $post_data['open_id'] = $code;
     $post_data['active_id'] = $active_id;
     $post_data['type'] = $type;
-    $res = request_post($login_url, $post_data);
-    return $res = json_decode($res, 1);
+//    $res = request_post($login_url, $post_data);
+//    return $res = json_decode($res, 1);
 }
 /**
  * 模拟post进行url请求
@@ -51,8 +51,8 @@ function request_post($url = '', $post_data = array())
     curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
     $data = curl_exec($ch);//运行curl
     curl_close($ch);
-    //var_dump($url);
-    //var_dump($data);
+    var_dump($url);
+    var_dump($data);
     file_put_contents('/tmp/newactive.log',"接口：".$postUrl."==数据：".var_export($post_data,1)."返回数据：".var_export($data,1)."\r\n",FILE_APPEND);
     return $data;
 }
