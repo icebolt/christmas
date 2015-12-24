@@ -6,7 +6,7 @@
  * Date: 15/12/23
  * Time: 下午3:21
  */
-class UserroleController extends BaseController
+class UserruleController extends BaseController
 {
     /**
      * 活动ID
@@ -18,12 +18,17 @@ class UserroleController extends BaseController
      * opend_id
      * 微信唯一ID等
      */
-    private $opend_id = '';
+    private $open_id = '';
     /**
      * 邀请人ID
      * @var int
      */
     private $inviter_id = 0;
+    /**
+     * 登录类型 0 html5,1微信，2新浪，3QQ'
+     * @var int
+     */
+    private $type = 0;
     /**
      * 用户MODEL
      */
@@ -40,15 +45,18 @@ class UserroleController extends BaseController
         $this->active_id = $active_id;
         $this->type = $type;
     }
-
+    public function indexAction()
+    {
+        echo 123;
+    }
     public function loginAction()
     {
         $opend_id = I('opend_id');
-        $this->inviter_id = I('uid', 0, 'intval');
+        $this->inviter_id = I('inviter_id', 0, 'intval');
         if(!$opend_id){
             $this->returnJson(100);
         }
-        $this->opend_id = $opend_id;
+        $this->open_id = $opend_id;
         switch($this->type){
             case 0:
                 $this->_webLogin();
@@ -177,7 +185,6 @@ class UserroleController extends BaseController
      * @return mixed
      */
     private function _regUser($addinfo = []){
-        $activeUserModel = new activeUserModel();
         $data = [];
         $data['inviter_id'] = $this->inviter_id;;
         $data['active_id'] = $this->active_id;
@@ -190,7 +197,16 @@ class UserroleController extends BaseController
             }
 
         }
-        return $user = $activeUserModel->addUser($data);
+        return $user = $this->activeUserModel->addUser($data);
+    }
+
+    /**
+     * 添加用户信息
+     */
+    public function addinfoAction()
+    {
+
+        $this->activeUserModel->addinfo();
     }
 
     /**

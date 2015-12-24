@@ -278,6 +278,7 @@ class PrizeruleController extends BaseController
         return $filterPrize;
     }
 
+
     /**
      * 检查是否完善信息
      */

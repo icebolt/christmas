@@ -65,6 +65,7 @@ class ActiveController extends BaseController
         $this->_activeValid($active_id);
         $this->uid = $uid;
         $this->active_id = $active_id;
+        $this->prizeModel->aid = $active_id;
     }
 
     /**

@@ -54,7 +54,11 @@ class prizeModel extends baseModel{
     }
 
     public function getAll(){
-        $sql = $this->query()->select('*')->from($this->table)->where('remain > 0')->build();
+        $where = 'remain >0';
+        if ($this->aid){
+            $where.=' AND aid='.$this->aid;
+        }
+        $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
         $row = $this->db->executeS($sql);
         return $row;
     }
