@@ -7,7 +7,7 @@
  */
 
 $appid = 'wx9a57805496ad6b31';
-$appid = 'wxa084237437589671';
+$appid = 'wxc5ff4f2ca20ac54d';
 $redirect_uri = urlencode('http://weixin.bbwc.cn/active/active/test/callback.php');
 $state = "";
 $host = "https://open.weixin.qq.com/connect/oauth2/authorize";
