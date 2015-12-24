@@ -115,8 +115,7 @@ class UserruleController extends BaseController
      */
     private function _wenxinLogin()
     {
-        $code = $this->opend_id;
-        $retArr = $this->_getToken($code);
+        $retArr = $this->_getToken();
         $this->opend_id = $retArr['openid'];
 
 
@@ -214,10 +213,10 @@ class UserruleController extends BaseController
      * 获取weixin token
      * @return array
      */
-    private function _getToken($code){
+    private function _getToken(){
         $appid = C("weixin.appid");
         $secret = C("weixin.appsecret");
-        echo $url ="https://api.weixin.qq.com/sns/oauth2/access_token?appid=$appid&secret=$secret&code=$code&grant_type=authorization_code";
+        echo $url ="https://api.weixin.qq.com/sns/oauth2/access_token?appid=$appid&secret=$secret&code=$this->open_id&grant_type=authorization_code";
         return $ret = $this->getHttpResponse($url);
     }
     /**
