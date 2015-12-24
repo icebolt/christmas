@@ -52,6 +52,7 @@ class UserruleController extends BaseController
     }
     public function loginAction()
     {
+        var_dump($_POST);
         $open_id = I('open_id');
         $this->inviter_id = I('inviter_id', 0, 'intval');
         if(!$open_id){
