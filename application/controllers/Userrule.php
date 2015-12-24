@@ -117,10 +117,7 @@ class UserruleController extends BaseController
     private function _wenxinLogin()
     {
         $retArr = $this->_getToken();
-        var_dump($retArr);
         $this->opend_id = $retArr['openid'];
-
-
         //判断用户是否已经存在
         $userInfo = $this->_isUser();
         if($userInfo){
@@ -131,7 +128,7 @@ class UserruleController extends BaseController
             $content = $userInfo['content'];
         }else{
             $weixinInfo = $this->_getUserInfo($retArr['access_token'],$retArr['openid']);
-
+            var_dump($weixinInfo);
             $data = [
                 'content'=>json_encode($weixinInfo, JSON_UNESCAPED_UNICODE),
                 'nickname'=>$weixinInfo['nickname']
@@ -218,8 +215,13 @@ class UserruleController extends BaseController
     private function _getToken(){
         $appid = C("weixin.appid");
         $secret = C("weixin.appsecret");
-        echo $url ="https://api.weixin.qq.com/sns/oauth2/access_token?appid=$appid&secret=$secret&code=$this->open_id&grant_type=authorization_code";
-        return $ret = $this->getHttpResponse($url);
+        $url ="https://api.weixin.qq.com/sns/oauth2/access_token?appid=$appid&secret=$secret&code=$this->open_id&grant_type=authorization_code";
+        $ret = $this->getHttpResponse($url);
+        if($ret['status'] = 'success'){
+            return $ret['data'];
+        }else{
+            $this->returnJson(102);
+        }
     }
     /**
      * 获取用户信息
