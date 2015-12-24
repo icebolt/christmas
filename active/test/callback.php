@@ -9,7 +9,7 @@
 if($_GET['code']){
 
     $ret = login();
-    var_dump($ret);
+//    var_dump($ret);
 
 }
 function login(){
@@ -21,8 +21,8 @@ function login(){
     $post_data['open_id'] = $code;
     $post_data['active_id'] = $active_id;
     $post_data['type'] = $type;
-//    $res = request_post($login_url, $post_data);
-//    return $res = json_decode($res, 1);
+    $res = request_post($login_url, $post_data);
+    return $res = json_decode($res, 1);
 }
 /**
  * 模拟post进行url请求
