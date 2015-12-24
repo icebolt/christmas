@@ -52,7 +52,7 @@ class UserruleController extends BaseController
     public function loginAction()
     {
         $opend_id = I('opend_id');
-        $this->inviter_id = I('uid', 0, 'intval');
+        $this->inviter_id = I('inviter_id', 0, 'intval');
         if(!$opend_id){
             $this->returnJson(100);
         }
@@ -198,6 +198,15 @@ class UserruleController extends BaseController
 
         }
         return $user = $this->activeUserModel->addUser($data);
+    }
+
+    /**
+     * 添加用户信息
+     */
+    public function addinfoAction()
+    {
+
+        $this->activeUserModel->addinfo();
     }
 
     /**
