@@ -98,8 +98,8 @@ class prizeModel extends baseModel{
             return $row;
         }
     }
-    public function decRemain($active_id){
-        $sql = "UPDATE {$this->table} SET remain = remain -1 WHERE id = {$active_id} AND remain > 0 ";
+    public function decRemain($prize_id){
+        $sql = "UPDATE {$this->table} SET remain = remain -1 WHERE id = {$prize_id} AND remain > 0 ";
         $result =  $this->db->query($sql);
         return $result ? true : false;
     }

@@ -27,9 +27,11 @@ function httpPost($url,$params)
     return $output;
 
 }
-
+$active_id = intval($_REQUEST['aid']);
+$uid = $_REQUEST['uid'];
+$token = $_REQUEST['token'];
 $url = 'http://weixin.bbwc.cn/active/public/index.php/index/active/win';
-$argumengts = array('uid'=>125,'token'=>"6580f9fe4ba60f3deb070c5c6676fb1f",'active_id'=>2);
+$argumengts = array('uid'=>$uid,'token'=>"6580f9fe4ba60f3deb070c5c6676fb1f",'active_id'=>$active_id);
 $response = httpPost($url,$argumengts);
 file_put_contents('/tmp/winprize.log',var_export($response,true)."\n",FILE_APPEND);
 
