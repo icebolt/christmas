@@ -33,16 +33,16 @@ class PrizeruleController extends BaseController
         $uid = I('uid',2,'intval');
         $active_id = I('active_id',2, 'intval');
         $token = I('token');
-        if(!$uid || !$active_id || !$token){
-            $this->returnJson(100);
-        }
+//        if(!$uid || !$active_id || !$token){
+//            $this->returnJson(100);
+//        }
         $this->uid = $uid;
         $this->active_id = $active_id;
         $this->token = $token;
         //获取活动信息
         $this->getActiveInfo();
-        //判断用户是否存在
-        $this->CheckUser();
+//        //判断用户是否存在
+//        $this->CheckUser();
 
     }
 
@@ -87,17 +87,17 @@ class PrizeruleController extends BaseController
     public function winAction()
     {
         //检查用户资料是否完善
-        $this->_checkInfo();
+//        $this->_checkInfo();
         //检查用户抽奖次数
         $num = $this->_checkWinNum();
         if($num > 0){
            //大于0次的去判断其他规则
            //好友大于等于6可以抽奖
-            if($num == 1){
-                $this->_inviterNum();
-            }else{
-                $this->returnJson(205);
-            }
+//            if($num == 1){
+//                $this->_inviterNum();
+//            }else{
+//                $this->returnJson(205);
+//            }
         }
         //开始抽奖
         $prize = $this->_rule();
@@ -216,6 +216,8 @@ class PrizeruleController extends BaseController
                 break;
             }
         }
+        var_dump($this->interval);
+        var_dump($this->position);
     }
 
     /**
@@ -243,22 +245,12 @@ class PrizeruleController extends BaseController
      */
     private function _getPrizeList($level_id){
         $prizeModel = new prizeModel();
-        $prizeList = $prizeModel->getList($this->active_id, $level_id);
-        return $prizeList;
-    }
-    
-    /**
-     * 获取奖品等级信息
-     * @param int $type  0 =>抽奖等级 1 =>秒杀奖等级
-     * @return array
-     */
-    private function _getLevelInfo($type = 0){
-        $prizeLevelModel = new prizeLevelModel();
+        $prizes = $prizeModel->getList($this->active_id, $level_id);
         $winprizeModel = new winPrizeModel();
-        $prizes = $prizeLevelModel->getList($this->active_id, $type);
         $filterPrize = array();
         if (count($prizes) > 0){
             foreach ($prizes as $key => $prize){
+                file_put_contents('/tmp/newactive.log','奖品信息:'.var_export($prize,1)."\r\n",FILE_APPEND);
                 if (intval($prize['frequency']) > 0){
                     $this->initInterval($prize['frequency']);
                     $position = $this->position[$prize['frequency']];
@@ -276,6 +268,18 @@ class PrizeruleController extends BaseController
             }
         }
         return $filterPrize;
+        return $prizeList;
+    }
+    
+    /**
+     * 获取奖品等级信息
+     * @param int $type  0 =>抽奖等级 1 =>秒杀奖等级
+     * @return array
+     */
+    private function _getLevelInfo($type = 0){
+        $prizeLevelModel = new prizeLevelModel();
+        $prizes = $prizeLevelModel->getList($this->active_id, $type);
+        return $prizes;
     }
 
 

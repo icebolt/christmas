@@ -211,6 +211,12 @@ class UserruleController extends BaseController
     /**
      * 获取weixin token
      * @return array
+     * https://open.weixin.qq.com/connect/oauth2/authorize
+     * ?appid=wxb7f74b81b6e5ef76
+     * &redirect_uri=http%3A%2F%2Fsecret-ajax.hortor.net%2Fimpress%2F%3Fshare_code%3Dobk6yuDrbSrCvjCBBax32C33S7q8
+     * &response_type=code&scope=snsapi_userinfo&state=data#wechat_redirect
+     * https://open.weixin.qq.com/connect/oauth2/authorize
+     * ?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect
      */
     private function _getToken(){
         $appid = C("weixin.appid");

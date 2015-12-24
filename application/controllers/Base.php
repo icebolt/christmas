@@ -42,7 +42,7 @@ class BaseController extends \SlatePF\Extras\ExtrasController {
 		$this->pagesize = 20;
 		$this->httpRequest = new \GuzzleHttp\Client();
 		$this->api = $config->api;
-		file_put_contents('/tmp/public_active.log',"接口：".$_SERVER['HTTP_REFERER']."==数据Post：".var_export($_POST,1)."==数据get：".var_export($_GET,1)."\r\n",FILE_APPEND);
+//		file_put_contents('/tmp/public_active.log',"接口：".$_SERVER['HTTP_REFERER']."==数据Post：".var_export($_POST,1)."==数据get：".var_export($_GET,1)."\r\n",FILE_APPEND);
 	}
 	
 	/**
