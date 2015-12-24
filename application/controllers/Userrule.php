@@ -127,7 +127,7 @@ class UserruleController extends BaseController
             $uid = $userInfo['id'];
             $content = $userInfo['content'];
         }else{
-            $weixinInfo = $this->_getUserInfo($retArr['access_token'],$retArr['openid']);
+            $weixinInfo = $this->_getUserInfo($retArr['access_token']);
             var_dump($weixinInfo);
             $data = [
                 'content'=>json_encode($weixinInfo, JSON_UNESCAPED_UNICODE),
@@ -229,8 +229,8 @@ class UserruleController extends BaseController
      * @param $openid
      * @return array
      */
-    private function _getUserInfo($access_token, $openid){
-        echo $url = "https://api.weixin.qq.com/sns/auth?access_token=$access_token&openid=$openid";
+    private function _getUserInfo($access_token){
+        echo $url = "https://api.weixin.qq.com/sns/userinfo?access_token=$access_token&openid=$this->open_id";
         $ret = $this->getHttpResponse($url);
         return $ret;
     }
