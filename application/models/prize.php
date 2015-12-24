@@ -101,7 +101,21 @@ class prizeModel extends baseModel{
     public function decRemain($prize_id){
         $sql = "UPDATE {$this->table} SET remain = remain -1 WHERE id = {$prize_id} AND remain > 0 ";
         $result =  $this->db->query($sql);
-        return $result ? true : false;
+        if($result){
+            $res = $this->db->Affected_Rows();
+        }
+        return $res ? true : false;
+    }
+    /**
+     * 获取奖品列表
+     */
+    public function getList($active_id, $level_id)
+    {
+        $start_time = date('Y-m-d H:i:s',time());
+        $where = "level_id = $level_id and aid ={$active_id} and remain > 0 and start_time <'{$start_time}'";
+        $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
+        $row = $this->db->executeS($sql);
+        return $row;
     }
 
 }

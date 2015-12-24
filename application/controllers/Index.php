@@ -15,4 +15,9 @@
 class IndexController extends \SlatePF\Extras\ExtrasController {
 	public function indexAction(){echo 111;}
 	public function getAction(){echo 222;}
+	public function updateAction(){
+		$actionUserModel = new prizeModel();
+		$ret = $actionUserModel->decRemain(10025);
+		var_dump($ret);
+	}
 }
