@@ -36,6 +36,7 @@ class UserruleController extends BaseController
     public function init()
     {
         parent::init();
+
         $this->activeUserModel = new activeUserModel();
         $active_id = I('active_id');
         $type = I('type', 0);

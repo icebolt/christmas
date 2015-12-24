@@ -18,9 +18,10 @@ function login(){
     $type =1;
     $login_url = "http://weixin.bbwc.cn/active/public/index.php/index/userrule/login";
     $post_data = array();
-    $post_data['code'] = $code;
+    $post_data['opend_id'] = $code;
     $post_data['token'] = $type;
     $post_data['active_id'] = $active_id;
+    $post_data['type'] = $type;
     $res = request_post($login_url, $post_data);
     return $res = json_decode($res, 1);
 }
@@ -53,6 +54,6 @@ function request_post($url = '', $post_data = array())
     curl_close($ch);
     //var_dump($url);
     //var_dump($data);
-    file_put_contents('/tmp/active.log',"接口：".$postUrl."==数据：".var_export($post_data,1)."返回数据：".var_export($data,1)."\r\n",FILE_APPEND);
+    file_put_contents('/tmp/newactive.log',"接口：".$postUrl."==数据：".var_export($post_data,1)."返回数据：".var_export($data,1)."\r\n",FILE_APPEND);
     return $data;
 }
