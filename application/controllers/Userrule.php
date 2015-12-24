@@ -117,6 +117,7 @@ class UserruleController extends BaseController
     private function _wenxinLogin()
     {
         $retArr = $this->_getToken();
+        var_dump($retArr);
         $this->opend_id = $retArr['openid'];
 
 
