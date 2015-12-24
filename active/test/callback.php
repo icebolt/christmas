@@ -18,8 +18,7 @@ function login(){
     $type =1;
     $login_url = "http://weixin.bbwc.cn/active/public/index.php/index/userrule/login";
     $post_data = array();
-    $post_data['opend_id'] = $code;
-    $post_data['token'] = $type;
+    $post_data['open_id'] = $code;
     $post_data['active_id'] = $active_id;
     $post_data['type'] = $type;
     $res = request_post($login_url, $post_data);
