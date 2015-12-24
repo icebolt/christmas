@@ -36,6 +36,7 @@ class UserruleController extends BaseController
     public function init()
     {
         parent::init();
+
         $this->activeUserModel = new activeUserModel();
         $active_id = I('active_id');
         $type = I('type', 0);
@@ -51,12 +52,13 @@ class UserruleController extends BaseController
     }
     public function loginAction()
     {
-        $opend_id = I('opend_id');
+        var_dump($_POST);
+        $open_id = I('open_id');
         $this->inviter_id = I('inviter_id', 0, 'intval');
-        if(!$opend_id){
+        if(!$open_id){
             $this->returnJson(100);
         }
-        $this->open_id = $opend_id;
+        $this->open_id = $open_id;
         switch($this->type){
             case 0:
                 $this->_webLogin();
@@ -114,11 +116,8 @@ class UserruleController extends BaseController
      */
     private function _wenxinLogin()
     {
-        $code = $this->opend_id;
-        $retArr = $this->_getToken($code);
+        $retArr = $this->_getToken();
         $this->opend_id = $retArr['openid'];
-
-
         //判断用户是否已经存在
         $userInfo = $this->_isUser();
         if($userInfo){
@@ -128,8 +127,8 @@ class UserruleController extends BaseController
             $uid = $userInfo['id'];
             $content = $userInfo['content'];
         }else{
-            $weixinInfo = $this->_getUserInfo($retArr['access_token'],$retArr['openid']);
-
+            $weixinInfo = $this->_getUserInfo($retArr['access_token']);
+            var_dump($weixinInfo);
             $data = [
                 'content'=>json_encode($weixinInfo, JSON_UNESCAPED_UNICODE),
                 'nickname'=>$weixinInfo['nickname']
@@ -213,11 +212,16 @@ class UserruleController extends BaseController
      * 获取weixin token
      * @return array
      */
-    private function _getToken($code){
+    private function _getToken(){
         $appid = C("weixin.appid");
         $secret = C("weixin.appsecret");
-        $url ="https://api.weixin.qq.com/sns/oauth2/access_token?appid=$appid&secret=$secret&code=$code&grant_type=authorization_code";
-        return $ret = $this->getHttpResponse($url);
+        $url ="https://api.weixin.qq.com/sns/oauth2/access_token?appid=$appid&secret=$secret&code=$this->open_id&grant_type=authorization_code";
+        $ret = $this->getHttpResponse($url);
+        if($ret['status'] = 'success'){
+            return $ret['data'];
+        }else{
+            $this->returnJson(102);
+        }
     }
     /**
      * 获取用户信息
@@ -225,8 +229,8 @@ class UserruleController extends BaseController
      * @param $openid
      * @return array
      */
-    private function _getUserInfo($access_token, $openid){
-        $url = "https://api.weixin.qq.com/sns/auth?access_token=$access_token&openid=$openid";
+    private function _getUserInfo($access_token){
+        echo $url = "https://api.weixin.qq.com/sns/userinfo?access_token=$access_token&openid=$this->open_id";
         $ret = $this->getHttpResponse($url);
         return $ret;
     }
