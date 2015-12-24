@@ -15,7 +15,7 @@ $host = "https://open.weixin.qq.com/connect/oauth2/authorize";
 //https://open.weixin.qq.com/connect/oauth2/authorize
 //?appid=wxf0e81c3bee622d60&redirect_uri=http%3A%2F%2Fnba.bluewebgame.com%2Foauth_response.php
 //&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect
-echo $url = $host."?appid=$appid&redirect_uri=$redirect_uri&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
-//header("location:$url;");
+$url = $host."?appid=$appid&redirect_uri=$redirect_uri&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+header("location:$url;");
 ?>
 
