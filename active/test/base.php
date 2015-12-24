@@ -30,8 +30,8 @@ function is_weixin()
     if (strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false) {
         return true;
     }
-    echo "请使用微信浏览器打开";
-    exit;
+//    echo "请使用微信浏览器打开";
+//    exit;
 }
 if(!$_SESSION['inviter_id']){
     $_SESSION['inviter_id'] = isset($_GET['uid'])?$_GET['uid']:0;
