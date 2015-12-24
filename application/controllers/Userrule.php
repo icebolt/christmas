@@ -230,7 +230,7 @@ class UserruleController extends BaseController
      * @return array
      */
     private function _getUserInfo($access_token, $openid){
-        $url = "https://api.weixin.qq.com/sns/auth?access_token=$access_token&openid=$openid";
+        echo $url = "https://api.weixin.qq.com/sns/auth?access_token=$access_token&openid=$openid";
         $ret = $this->getHttpResponse($url);
         return $ret;
     }
