@@ -68,16 +68,16 @@ class PrizeruleController extends BaseController
         //检查用户资料是否完善
         $this->_checkInfo();
         //检查用户抽奖次数
-//        $num = $this->_checkWinNum();
-//        if($num > 0){
-//           //大于0次的去判断其他规则
-//           //好友大于等于6可以抽奖
-//            if($num == 1){
-//                $this->_inviterNum();
-//            }else{
-//                $this->returnJson(205);
-//            }
-//        }
+        $num = $this->_checkWinNum();
+        if($num > 0){
+           //大于0次的去判断其他规则
+           //好友大于等于6可以抽奖
+            if($num == 1){
+                $this->_inviterNum();
+            }else{
+                $this->returnJson(205);
+            }
+        }
         //开始抽奖
         file_put_contents('/tmp/newactive.log',"抽奖：".microtime()."\r\n",FILE_APPEND);
         $this->_rule(1);  //特殊大奖
