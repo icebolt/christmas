@@ -68,16 +68,16 @@ class PrizeruleController extends BaseController
         //检查用户资料是否完善
         $this->_checkInfo();
         //检查用户抽奖次数
-        $num = $this->_checkWinNum();
-        if($num > 0){
-           //大于0次的去判断其他规则
-           //好友大于等于6可以抽奖
-            if($num == 1){
-                $this->_inviterNum();
-            }else{
-                $this->returnJson(205);
-            }
-        }
+//        $num = $this->_checkWinNum();
+//        if($num > 0){
+//           //大于0次的去判断其他规则
+//           //好友大于等于6可以抽奖
+//            if($num == 1){
+//                $this->_inviterNum();
+//            }else{
+//                $this->returnJson(205);
+//            }
+//        }
         //开始抽奖
         $this->_rule(1);  //特殊大奖
         $this->_rule(0);  //普通抽奖
@@ -160,7 +160,7 @@ class PrizeruleController extends BaseController
 //            echo "levelinfo";
 //            var_dump($levelInfo);
             //判断是否中奖
-            $level = $this->_isWin($levelInfo, $this->rand_num);
+            $level = $this->_isWin($levelInfo);
             if($level){
                 //查询奖品列表
                 $prizeInfo = $this->_getPrizeList($level['id'], $type);
@@ -265,16 +265,17 @@ class PrizeruleController extends BaseController
      * @param $rand_num  抽奖号码
      * @return array
      */
-    private function _isWin($levelInfo, $rand_num){
+    private function _isWin($levelInfo){
         $num = 0;
         $winInfo = [];
         foreach($levelInfo as $k => $v){
-            $num += $v['probability'];
-            if($num > $rand_num){
+            $num += $v['probability']*100000;
+            if($num > $this->rand_num){
                 $winInfo = $levelInfo[$k];
                 break;
             }
         }
+        file_put_contents('/tmp/newactive.log',"是否中奖：". var_export($winInfo,1)."\r\n",FILE_APPEND);
         return $winInfo;
     }
     /**
