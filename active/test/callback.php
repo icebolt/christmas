@@ -8,12 +8,15 @@
  */
 if($_GET['code']){
 
-    $ret = login();
+    echo $ret = login();
 //    var_dump($ret);
 
 }
 function login(){
     $code = $_GET['code'];
+    $state = $_GET['state'];
+    $arr = explode("#",$state);
+    $inviter_id = intval($arr[0]);
     $active_id = 2;
     $type =1;
     $login_url = "http://weixin.bbwc.cn/active/public/index.php/index/userrule/login";
@@ -21,6 +24,7 @@ function login(){
     $post_data['open_id'] = $code;
     $post_data['active_id'] = $active_id;
     $post_data['type'] = $type;
+    $post_data['inviter_id'] = $inviter_id;
     $res = request_post($login_url, $post_data);
     return $res = json_decode($res, 1);
 }
