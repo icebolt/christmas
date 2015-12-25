@@ -52,7 +52,6 @@ class UserruleController extends BaseController
     }
     public function loginAction()
     {
-        var_dump($_POST);
         $open_id = I('open_id');
         $this->inviter_id = I('inviter_id', 0, 'intval');
         if(!$open_id){
@@ -117,11 +116,7 @@ class UserruleController extends BaseController
     private function _wenxinLogin()
     {
         $retArr = $this->_getToken();
-        echo "code:";
-        var_dump($this->open_id);
         $this->open_id = $retArr["openid"];
-        echo "openid:";
-        var_dump($this->open_id);
         //判断用户是否已经存在
         $userInfo = $this->_isUser();
         if($userInfo){
