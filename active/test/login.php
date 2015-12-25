@@ -8,6 +8,7 @@
 
 $appid = 'wx9a57805496ad6b31';
 $appid = 'wx5b318b313920170e';
+$appid = 'wx1f831aa265aa59bd'; //网页登录
 $redirect_uri = urlencode('http://weixin.bbwc.cn/active/active/test/callback.php');
 $state = "";
 $host = "https://open.weixin.qq.com/connect/oauth2/authorize";
