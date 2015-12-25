@@ -120,6 +120,8 @@ class UserruleController extends BaseController
         echo "code:";
         var_dump($this->open_id);
         $this->opend_id = $retArr['openid'];
+        echo "retArr";
+        var_dump($retArr);
         echo "openid:";
         var_dump($this->open_id);
         //判断用户是否已经存在
