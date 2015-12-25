@@ -117,7 +117,7 @@ class prizeModel extends baseModel{
         if($type == 1){
             $where .=" and start_time <'{$time}' and end_time > '{$time}'";
         }
-        echo $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
+        $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
         $row = $this->db->executeS($sql);
         return $row;
     }

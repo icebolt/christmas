@@ -12,7 +12,7 @@ class prizeLevelModel extends baseModel
 
     public function getList($active_id, $type){
         $where = "type='{$type}' AND active_id = {$active_id}";
-        echo $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
+        $sql = $this->query()->select('*')->from($this->table)->where($where)->build();
         return $this->db->executeS($sql);
     }
 }

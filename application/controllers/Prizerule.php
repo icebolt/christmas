@@ -79,6 +79,7 @@ class PrizeruleController extends BaseController
 //            }
 //        }
         //开始抽奖
+        file_put_contents('/tmp/newactive.log',"抽奖：".microtime()."\r\n",FILE_APPEND);
         $this->_rule(1);  //特殊大奖
         $this->_rule(0);  //普通抽奖
         $this->_addLog();  //没有中奖写入日志
@@ -155,12 +156,13 @@ class PrizeruleController extends BaseController
         //获取活动ID奖品等级信息
         $levelInfo = $this->_getLevelInfo($type);   //1 是特殊大奖
 
-        //是否有99特殊大奖
+        //是否有特殊大奖
         if($levelInfo){
 //            echo "levelinfo";
 //            var_dump($levelInfo);
             //判断是否中奖
             $level = $this->_isWin($levelInfo);
+
             if($level){
                 //查询奖品列表
                 $prizeInfo = $this->_getPrizeList($level['id'], $type);
@@ -173,8 +175,10 @@ class PrizeruleController extends BaseController
                     //获奖信息
                     //写入奖品表  写入日志表
                     if($this->_addWin($arr)){
+                        file_put_contents('/tmp/newactive.log',"中奖写入成功：". var_export($arr,1)."\r\n",FILE_APPEND);
                         $this->returnJson(200, $arr);
                     }
+                    file_put_contents('/tmp/newactive.log',"中奖写入失败：". var_export($arr,1)."\r\n",FILE_APPEND);
                 }
             }
         }
@@ -253,10 +257,6 @@ class PrizeruleController extends BaseController
                 break;
             }
         }
-        echo "interval:";
-        var_dump($this->interval);
-        echo "position";
-        var_dump($this->position);
     }
 
     /**
@@ -297,8 +297,8 @@ class PrizeruleController extends BaseController
                     $start_time = $this->interval[$prize['frequency']][$position];
                     $end_time = $start_time+86400*$prize['frequency']-1;
                     $num = $winprizeModel->fetchWinNum($this->active_id, $prize['id'], $start_time,$end_time);
-                    echo "已经抽中的num:";
-                    var_dump($num);
+//                    echo "已经抽中的num:";
+//                    var_dump($num);
                     if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
                         continue;
                     }else{
@@ -309,8 +309,8 @@ class PrizeruleController extends BaseController
                 }
             }
         }
-        echo "奖品列表:";
-        var_dump($filterPrize);
+//        echo "奖品列表:";
+//        var_dump($filterPrize);
         return $filterPrize;
     }
     
