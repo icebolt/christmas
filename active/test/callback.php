@@ -8,8 +8,9 @@
  */
 if($_GET['code']){
 
-    echo $ret = login();
+    $ret = login();
 //    var_dump($ret);
+    echo json_encode($ret);
 
 }
 function login(){
