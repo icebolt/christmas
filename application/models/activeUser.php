@@ -17,7 +17,6 @@ class activeUserModel extends baseModel
     public function __construct(){
         parent::__construct();
         $this->addtime = date('Y-m-d H:i:s',time());
-        $this->randNum();
     }
 
     /**
