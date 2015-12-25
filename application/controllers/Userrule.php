@@ -119,9 +119,9 @@ class UserruleController extends BaseController
         $retArr = $this->_getToken();
         echo "code:";
         var_dump($this->open_id);
-        $this->opend_id = $retArr['openid'];
+        $this->opend_id = $retArr["openid"];
         echo "retArr";
-        var_dump($retArr);
+        var_dump($retArr["openid"]);
         echo "openid:";
         var_dump($this->open_id);
         //判断用户是否已经存在
