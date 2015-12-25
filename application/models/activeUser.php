@@ -14,7 +14,6 @@ class activeUserModel extends baseModel
     private $type = 0;
     private $inviter_id = 0;
     private $addtime = '';
-    private $rand_string = '';
     public function __construct(){
         parent::__construct();
         $this->addtime = date('Y-m-d H:i:s',time());
@@ -49,7 +48,6 @@ class activeUserModel extends baseModel
     public function addUser($data)
     {
         $data['addtime'] = $this->addtime;
-        $data['rand_string'] = $this->rand_string;
 
         $ret = $this->db->insert($this->table,$data);
         if($ret){
@@ -57,12 +55,7 @@ class activeUserModel extends baseModel
         }
     }
 
-    /**
-     * 生成随机数
-     */
-    public function randNum(){
-        $this->rand_string = rand(10000,99999);
-    }
+
 
     /**
      * 修改用户信息
@@ -72,13 +65,6 @@ class activeUserModel extends baseModel
         $sql = "UPDATE {$this->table} SET content = '{$data}',inviter_id =$inviter_id,nickname='{$nickname}' WHERE id = {$uid}";
         $result =  $this->db->query($sql);
         return $result ? true : false;
-    }
-    /**
-     * 获取随机数字
-     * @return string
-     */
-    public function getRandNum(){
-        return $this->rand_string;
     }
 
     /**

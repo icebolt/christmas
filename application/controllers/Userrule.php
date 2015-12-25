@@ -32,12 +32,16 @@ class UserruleController extends BaseController
     /**
      * 用户MODEL
      */
-    private $activeUserModel;
+
+    /**
+     * 随机数
+     */
+    private $rand_string = 0;
     public function init()
     {
         parent::init();
 
-        $this->activeUserModel = new activeUserModel();
+
         $active_id = I('active_id');
         $type = I('type', 0);
         if(!$active_id){
@@ -45,6 +49,7 @@ class UserruleController extends BaseController
         }
         $this->active_id = $active_id;
         $this->type = $type;
+        $this->rand_string = rand(10000,99999);
     }
     public function indexAction()
     {
@@ -52,6 +57,7 @@ class UserruleController extends BaseController
     }
     public function loginAction()
     {
+        $activeUserModel = new activeUserModel();
         $open_id = I('open_id');
         $this->inviter_id = I('inviter_id', 0, 'intval');
         if(!$open_id){
@@ -78,6 +84,16 @@ class UserruleController extends BaseController
     }
 
     /**
+     * 添加用户信息
+     */
+    public function addinfoAction()
+    {
+        $activeUserModel = new activeUserModel();
+        $activeUserModel->addinfo();
+    }
+
+
+    /**
      * web登录
      */
     private function _webLogin()
@@ -94,8 +110,7 @@ class UserruleController extends BaseController
             //注册
             $ret = $this->_regUser();
             if($ret){
-                $rand_string = $this->activeUserModel->getRandNum();
-                $token = md5($ret.'@'. $this->open_id.'@'.$this->type.'@'.$rand_string);
+                $token = md5($ret.'@'. $this->open_id.'@'.$this->type.'@'.$this->rand_string);
                 $uid = $ret;
                 $content ='';
             }
@@ -135,8 +150,7 @@ class UserruleController extends BaseController
             //注册
             $ret = $this->_regUser($data);
             if($ret){
-                $rand_string = $this->activeUserModel->getRandNum();
-                $token = md5($ret.'@'. $this->open_id.'@'.$this->type.'@'.$rand_string);
+                $token = md5($ret.'@'. $this->open_id.'@'.$this->type.'@'.$this->rand_string);
                 $uid = $ret;
                 $content ='';
             }
@@ -152,7 +166,7 @@ class UserruleController extends BaseController
     }
 
     /**
-     * web登录
+     * sina登录
      */
     private function _sinaLogin()
     {
@@ -160,7 +174,7 @@ class UserruleController extends BaseController
     }
 
     /**
-     * web登录
+     * qq登录
      */
     private function _qqLogin()
     {
@@ -175,7 +189,8 @@ class UserruleController extends BaseController
     private function _isUser()
     {
         //是 返回true 不是返回 false
-        return $userinfo = $this->activeUserModel->getUser($this->active_id,$this->type, $this->open_id);
+        $activeUserModel = new activeUserModel();
+        return $userinfo = $activeUserModel->getUser($this->active_id,$this->type, $this->open_id);
     }
 
     /**
@@ -188,6 +203,7 @@ class UserruleController extends BaseController
         $data['active_id'] = $this->active_id;
         $data['open_id'] = $this->open_id;
         $data['type'] = $this->type;
+        $data['rand_string'] = $this->rand_string;
         if($data){
             //微信昵称等信息
             foreach($addinfo as $k => $v){
@@ -195,17 +211,10 @@ class UserruleController extends BaseController
             }
 
         }
-        return $user = $this->activeUserModel->addUser($data);
+        $activeUserModel = new activeUserModel();
+        return $user = $activeUserModel->addUser($data);
     }
 
-    /**
-     * 添加用户信息
-     */
-    public function addinfoAction()
-    {
-
-        $this->activeUserModel->addinfo();
-    }
 
     /**
      * 获取weixin token

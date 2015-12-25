@@ -26,6 +26,11 @@ class PrizeruleController extends BaseController
      * @var array  当天的所处的时间段
      */
     private $position = array();
+    /**
+     * 抽奖随机数
+     * @var int
+     */
+    private $rand_num = 0;
 
     public function init()
     {
@@ -33,16 +38,17 @@ class PrizeruleController extends BaseController
         $uid = I('uid',2,'intval');
         $active_id = I('active_id',2, 'intval');
         $token = I('token');
-//        if(!$uid || !$active_id || !$token){
-//            $this->returnJson(100);
-//        }
+        $this->rand_num = rand(1,100000);
+        if(!$uid || !$active_id || !$token){
+            $this->returnJson(100);
+        }
         $this->uid = $uid;
         $this->active_id = $active_id;
         $this->token = $token;
         //获取活动信息
         $this->getActiveInfo();
 //        //判断用户是否存在
-//        $this->CheckUser();
+        $this->CheckUser();
 
     }
 
@@ -52,6 +58,35 @@ class PrizeruleController extends BaseController
     public function indexAction()
     {
         echo "接口正常！";
+    }
+
+    /**
+     * 用户抽奖
+     */
+    public function winAction()
+    {
+        //检查用户资料是否完善
+        $this->_checkInfo();
+        //检查用户抽奖次数
+        $num = $this->_checkWinNum();
+        if($num > 0){
+           //大于0次的去判断其他规则
+           //好友大于等于6可以抽奖
+            if($num == 1){
+                $this->_inviterNum();
+            }else{
+                $this->returnJson(205);
+            }
+        }
+        //开始抽奖
+        $this->_rule(1);  //特殊大奖
+        $this->_rule(0);  //普通抽奖
+        $this->_addLog();  //没有中奖写入日志
+        $prize = [
+            'id' => 0,
+            'name'=> '没有中奖'
+        ];
+        $this->returnJson(200, $prize);
     }
 
     /**
@@ -80,28 +115,6 @@ class PrizeruleController extends BaseController
         }else{
             $this->returnJson(104);
         }
-    }
-    /**
-     * 用户抽奖
-     */
-    public function winAction()
-    {
-        //检查用户资料是否完善
-//        $this->_checkInfo();
-        //检查用户抽奖次数
-        $num = $this->_checkWinNum();
-        if($num > 0){
-           //大于0次的去判断其他规则
-           //好友大于等于6可以抽奖
-//            if($num == 1){
-//                $this->_inviterNum();
-//            }else{
-//                $this->returnJson(205);
-//            }
-        }
-        //开始抽奖
-        $prize = $this->_rule();
-        $this->returnJson(200, $prize);
     }
 
     /**
@@ -137,60 +150,84 @@ class PrizeruleController extends BaseController
      * 随机抽取一个2等奖奖品返回用户
      *
      */
-    private function _rule(){
-
+    private function _rule($type = 0){
         //随机数
-        $rand_num = rand(1,100000);
         //获取活动ID奖品等级信息
-        $levelInfo = $this->_getLevelInfo(1);
+        $levelInfo = $this->_getLevelInfo($type);   //1 是特殊大奖
+
         //是否有99特殊大奖
         if($levelInfo){
-            //查询奖品列表
-            $prizeInfo = $this->_getPrizeList($levelInfo[0]['id']);
-            if($prizeInfo){
-                $count = count($prizeInfo);
-                $num = rand(0,$count-1);
-                //中奖的话直接终止代码返回；
-                $arr = $prizeInfo[$num];
-                $this->returnJson(200, $arr);
-            }
-        }
-        //其他奖项
-        $levelInfo = $this->_getLevelInfo();
-        //是否存在其他奖项
-        if($levelInfo){
+//            echo "levelinfo";
+//            var_dump($levelInfo);
             //判断是否中奖
-            $level = $this->_isWin($levelInfo, $rand_num);
+            $level = $this->_isWin($levelInfo, $this->rand_num);
             if($level){
-                //取出奖品等级奖品
-                $prizeInfo = $this->_getPrizeList($level['id']);
+                //查询奖品列表
+                $prizeInfo = $this->_getPrizeList($level['id'], $type);
                 if($prizeInfo){
+                    //可以
                     $count = count($prizeInfo);
                     $num = rand(0,$count-1);
                     //中奖的话直接终止代码返回；
                     $arr = $prizeInfo[$num];
-                    $this->returnJson(200, $arr);
+                    //获奖信息
+                    //写入奖品表  写入日志表
+                    if($this->_addWin($arr)){
+                        $this->returnJson(200, $arr);
+                    }
                 }
             }
         }
-        //下面属于没中奖信息
-        $arr = [
-            'id' => 0,
-            'name'=> '没有中奖'
-        ];
-        $this->returnJson(200, $arr);
     }
 
     /**
-     * 测试方法
+     * 中奖了 写数据库
+     * @param $data
+     * @return mixed
      */
-    public function TestAction()
+   private function _addWin($data)
+   {
+
+       $prizeModel = new prizeModel();
+       $winprizeModel = new winPrizeModel();
+       $winprizelogModel = new winprizelogModel();
+       //更新大奖状态
+       $r = $prizeModel->decRemain($data['id']);
+       if($r){
+           //添加中奖信息
+           $info =[
+               'pid'=>$data['id'],
+               'active_id'=>$this->active_id,
+               'active_uid'=>$this->uid
+           ];
+           $winprizeModel->addWin($info);
+           //添加到中奖日志表
+           $info2 = [
+               'pid' => $data['id'],
+               'aid' => $this->active_id,
+               'uid' => $this->uid
+           ];
+           $winprizelogModel->addWin($info2);
+           return true;
+       }
+       return false;
+   }
+
+    /**
+     * 没中奖，写数据库
+     * @param int $id
+     * @return mixed
+     */
+    private function _addLog($id =0)
     {
-        $this->initInterval(2);
-        echo "interval=>";
-        var_dump($this->interval);
-        echo "position=>";
-        var_dump($this->position);
+        $winprizelogModel = new winprizelogModel();
+        $info2 = [
+            'pid' => $id,
+            'aid' => $this->active_id,
+            'uid' => $this->uid
+        ];
+        $ret = $winprizelogModel->addWin($info2);
+        return $ret;
     }
 
     /**
@@ -216,7 +253,9 @@ class PrizeruleController extends BaseController
                 break;
             }
         }
+        echo "interval:";
         var_dump($this->interval);
+        echo "position";
         var_dump($this->position);
     }
 
@@ -243,9 +282,9 @@ class PrizeruleController extends BaseController
      * @param $level_id
      * @return mixed
      */
-    private function _getPrizeList($level_id){
+    private function _getPrizeList($level_id, $type =0){
         $prizeModel = new prizeModel();
-        $prizes = $prizeModel->getList($this->active_id, $level_id);
+        $prizes = $prizeModel->getList($this->active_id, $level_id, $type);
         $winprizeModel = new winPrizeModel();
         $filterPrize = array();
         if (count($prizes) > 0){
@@ -257,6 +296,8 @@ class PrizeruleController extends BaseController
                     $start_time = $this->interval[$prize['frequency']][$position];
                     $end_time = $start_time+86400*$prize['frequency']-1;
                     $num = $winprizeModel->fetchWinNum($this->active_id, $prize['id'], $start_time,$end_time);
+                    echo "已经抽中的num:";
+                    var_dump($num);
                     if ($num && intval($num['num']) >= intval($prize['num'])){//已经抽过了奖品
                         continue;
                     }else{
@@ -267,8 +308,9 @@ class PrizeruleController extends BaseController
                 }
             }
         }
+        echo "奖品列表:";
+        var_dump($filterPrize);
         return $filterPrize;
-        return $prizeList;
     }
     
     /**
@@ -308,7 +350,7 @@ class PrizeruleController extends BaseController
         //是否抽过奖
         $winprizelogModel = new winprizelogModel();
         $num = $winprizelogModel->checkWinNum($this->active_id, $this->uid);
-        return $num;
+        return $num['num'];
     }
 
 }

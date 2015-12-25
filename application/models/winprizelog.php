@@ -19,7 +19,8 @@ class winprizelogModel extends  baseModel
     {
         $where = "uid =$uid and aid = $active_id";
         $sql = $this->query()->select("count(*) as num")->from($this->table)->where($where)->build();
-        return $ret = $this->db->getRow($sql);
+        $ret = $this->db->getRow($sql);
+        return $ret;
     }
     /**
      * 添加中奖人信息
