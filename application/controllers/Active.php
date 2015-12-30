@@ -71,12 +71,12 @@ class ActiveController extends BaseController
         $num = $this->_checkWinNum();
         if($num > 0){
            //大于0次的去判断其他规则
-           //好友大于等于6可以抽奖
-            if($num == 1){
-                $this->_inviterNum();
-            }else{
-                $this->returnJson(205);
-            }
+            //查询好友数量
+            $invtert_num = $this->_inviterNum();
+           if($num > $invtert_num){
+               $this->returnJson(204);
+           }
+
         }
         //开始抽奖
         file_put_contents('/tmp/newactive.log',"抽奖：".microtime()."\r\n",FILE_APPEND);
@@ -124,10 +124,8 @@ class ActiveController extends BaseController
     private function _inviterNum()
     {
         $activeUserModel = new activeUserModel();
-        $num = $activeUserModel->getInviter($this->active_id, $this->uid);
-        if($num['num'] < 6){
-            $this->returnJson(204);
-        }
+        $num = $activeUserModel->getInviterNum($this->active_id, $this->uid);
+        return $num;
     }
 
     /**

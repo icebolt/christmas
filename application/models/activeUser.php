@@ -76,4 +76,13 @@ class activeUserModel extends baseModel
         $sql = $this->query()->select("id,nickname,content")->from($this->table)->where($where)->limit(6)->build();
         return $ret = $this->db->executeS($sql);
     }
+    /**
+     * 获取好友数量
+     */
+    public function getInviterNum($aid, $uid){
+        $where = "inviter_id = $uid and active_id = $aid";
+        $sql = $this->query()->select("count(*) as num")->from($this->table)->where($where)->build();
+        $ret = $this->db->getRow($sql);
+        return $ret['num'];
+    }
 }
