@@ -96,7 +96,12 @@ class UserController extends BaseController
         if(is_array($content)){
             $content = json_encode($content,JSON_UNESCAPED_UNICODE);
         }
-        $activeUserModel->editInfo($uid, $content);
+        $ret = $activeUserModel->editInfo($uid, $content);
+        if($ret){
+            $this->returnJson(200);
+        }else{
+            $this->returnJson(102);
+        }
     }
 
     /**
