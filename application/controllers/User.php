@@ -236,7 +236,7 @@ class UserController extends BaseController
             }
 
         }
-        file_get_contents('/tmp/newactive.log',"注册:".var_export($data, 1)."\r\n", FILE_APPEND);
+        file_put_contents('/tmp/newactive.log',"注册：".var_export($data, 1)."\r\n",FILE_APPEND);
         $activeUserModel = new activeUserModel();
         return $user = $activeUserModel->addUser($data);
     }
