@@ -59,9 +59,8 @@ class activeUserModel extends baseModel
     /**
      * 修改用户信息
      */
-    public function editInfo($uid, $data,$nickname = '',$inviter_id = 0){
-        $inviter_id = intval($_SESSION['inviter_id'])?intval($_SESSION['inviter_id']):$inviter_id;
-        $sql = "UPDATE {$this->table} SET content = '{$data}',inviter_id =$inviter_id,nickname='{$nickname}' WHERE id = {$uid}";
+    public function editInfo($uid, $data,$nickname = ''){
+        $sql = "UPDATE {$this->table} SET content = '{$data}  WHERE id = {$uid}";
         $result =  $this->db->query($sql);
         return $result ? true : false;
     }

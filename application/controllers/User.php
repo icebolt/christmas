@@ -224,7 +224,7 @@ class UserController extends BaseController
      */
     private function _regUser($addinfo = []){
         $data = [];
-        $data['inviter_id'] = $this->inviter_id;;
+        $data['inviter_id'] = $this->inviter_id;
         $data['active_id'] = $this->active_id;
         $data['open_id'] = $this->open_id;
         $data['type'] = $this->type;
