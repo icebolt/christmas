@@ -8,6 +8,7 @@
  */
 class ActiveController extends BaseController
 {
+    private $uid = 0;
     //活动ID
     private $active_id = 0;
     private $token = "";

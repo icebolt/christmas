@@ -20,7 +20,7 @@ function login(){
     $inviter_id = intval($arr[0]);
     $active_id = 2;
     $type =1;
-    $login_url = "http://weixin.bbwc.cn/active/public/index.php/index/userrule/login";
+    $login_url = "http://weixin.bbwc.cn/active/public/index.php/index/user/login";
     $post_data = array();
     $post_data['open_id'] = $code;
     $post_data['active_id'] = $active_id;
